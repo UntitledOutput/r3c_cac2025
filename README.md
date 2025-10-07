@@ -8,7 +8,7 @@
         <img src="res/sample/1x1.png" style="width:50%" >
     </a>
 </div>
-<h2 align="center">mini description here</h2>
+<h2 align="center">slogan here</h2>
 
 ![cover photo](res/sample/3x2.png)
 
