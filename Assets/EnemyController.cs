@@ -6,6 +6,7 @@ using External;
 using MyBox;
 using NUnit.Framework;
 using ScriptableObj;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Animations;
@@ -15,6 +16,7 @@ public class EnemyController : ActorBehavior
 {
     private bool _isAlive = true;
     private Slider _slider;
+    private Animator _animator;
     
     private enum EnemyState
     {
@@ -76,6 +78,7 @@ public class EnemyController : ActorBehavior
     void Start()
     {
         _slider = GetComponentInChildren<Slider>();
+        _animator = GetComponentInChildren<Animator>();
 
         var source = new ConstraintSource();
         source.sourceTransform = Camera.main.transform;
@@ -185,6 +188,11 @@ public class EnemyController : ActorBehavior
             if (distance > enemyObject.DetectionRadius * 1.5)
                 _enemyState = EnemyState.Idle;
         }
+
+        if (_animator)
+        {
+            _animator.SetFloat("Velocity", _agent.velocity.magnitude);
+        }
     }
 
 
@@ -192,7 +200,9 @@ public class EnemyController : ActorBehavior
     {
         _isAlive = false;
         _matchController.DeregisterEnemy(this);
-        
+
+        var deathParticles = Instantiate(
+            Resources.Load<GameObject>("Prefabs/Particles/DeathParticle00"), transform.position, quaternion.identity);
         
         var collectible = Instantiate(Resources.Load<GameObject>("Prefabs/Collectibles/ItemProjectile"),transform.position+new Vector3(0,1,0),transform.rotation);
         

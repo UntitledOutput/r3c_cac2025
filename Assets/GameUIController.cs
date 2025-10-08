@@ -25,7 +25,7 @@ public class GameUIController : MonoBehaviour
             if (instance.data)
             {
                 Icon.sprite = instance.data.Icon;
-                AmmoCount.text = $"{instance.ammo}/{instance.data.AmmoCount + instance.upgrade?.AmmoChange ?? 0}";
+                AmmoCount.text = $"{instance.ammo}/{instance.data.AmmoCount + (instance.upgrade?.AmmoChange ?? 0)}";
                 ReloadMeter.fillAmount = instance.reload;
             }
             else

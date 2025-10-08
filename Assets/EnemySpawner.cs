@@ -27,7 +27,7 @@ public class EnemySpawner : MonoBehaviour
 
                 var enemy = Instantiate(
                     enemies.GetRandom().Prefab, transform.position + pos + new Vector3(0, 0.1f, 0),
-                    Quaternion.identity);
+                    Quaternion.Euler(0,180,0));
             }
         }
     }

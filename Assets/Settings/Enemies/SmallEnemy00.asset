@@ -15,7 +15,7 @@ MonoBehaviour:
   DisplayName: test enemy small
   Prefab: {fileID: 4304968330769695551, guid: b78906b543fbb004cbcbcca83722ecc1, type: 3}
   DetectionRadius: 5
-  StoppingDistance: 3
+  StoppingDistance: 5
   HealthMax: 1
   Abilities:
   - ability: {fileID: 11400000, guid: 07fda25ec843ec841b837f2d13f98de2, type: 2}
