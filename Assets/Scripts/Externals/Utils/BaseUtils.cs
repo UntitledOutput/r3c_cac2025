@@ -580,6 +580,21 @@ namespace External
             }
         }
 
+        public static void RemoveAllChildrenExcept(this Transform transform, List<string> excludedChilds)
+        {
+            // Iterate in reverse order to avoid issues when destroying elements
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                // Get the child Transform
+                Transform child = transform.GetChild(i);
+                
+                if (excludedChilds.Contains(child.name))
+                    continue;
+
+                // Destroy the GameObject associated with the child Transform
+                Object.Destroy(child.gameObject);
+            }
+        }
         
         public static void RemoveAllChildren(this Transform transform)
         {

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180f32c47ed74523b0c7f70248f62925, type: 3}
+  m_Name: GnTrash00
+  m_EditorClassIdentifier: 
+  DisplayName: test enemy small
+  Prefab: {fileID: 5329931309326265461, guid: 9947e36a69bb23e4580c94c173224cd7, type: 3}
+  Icon: {fileID: 21300000, guid: 432ab5407fe316b4b94bff9ec1243e52, type: 3}
+  DetectionRadius: 5
+  StoppingDistance: 5
+  HealthMax: 1
+  MegaDetectionOffset: 2.5
+  MegaStoppingOffset: 0
+  MegaHealthOffset: 1
+  SmallSize: 1
+  MegaSize: 2.5
+  Width: 0.5
+  Height: 2
+  Abilities:
+  - ability: {fileID: 11400000, guid: 07fda25ec843ec841b837f2d13f98de2, type: 2}
+    type: 2
+    cooldown: 1

@@ -50,7 +50,8 @@ namespace Controllers
             if (other.gameObject.layer == (Target == ActorBehavior.ActorTeam.Enemy ? LayerMask.NameToLayer("Enemy") : LayerMask.NameToLayer("Player")))
             {
                 var actor = other.gameObject.GetComponent<ActorBehavior>();
-                actor.ChangeHealth(-Damage);
+                if (actor)
+                    actor.ChangeHealth(-Damage);
             }
 
             _age += (Lifetime * LifetimeLossOnHit);

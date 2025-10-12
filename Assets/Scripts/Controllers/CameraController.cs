@@ -13,6 +13,12 @@ namespace Controllers
         private PlayerController _plrCtrl;
         private float _plrRotateAngle = 180;
         private float _plrOffsetY = 2.5f;
+
+        public bool FocusOnPlayer = true;
+
+        public Transform FocusPoint;
+        public Vector3 FocusOffset;
+        public Vector3 PositionOffset;
         
         private void Start()
         {
@@ -25,17 +31,27 @@ namespace Controllers
             //_plrRotateAngle += InputSystem.Look.x;
             //_plrOffsetY += InputSystem.Look.y;
 
-            _plrOffsetY = 2.5f;
-            _plrRotateAngle = Mathf.Deg2Rad * 180;
+            if (FocusOnPlayer)
+            {
+                
+                _plrOffsetY = 2.5f;
+                _plrRotateAngle = Mathf.Deg2Rad * 180;
 
-            _plrOffsetY = _plrOffsetY.Clamp(-1.0f, 2.5f);
+                _plrOffsetY = _plrOffsetY.Clamp(-1.0f, 2.5f);
             
-            transform.position = _plrCtrl.transform.position + new Vector3(
-                Mathf.Sin(_plrRotateAngle) * PlrRadius, PlrY + _plrOffsetY, Mathf.Cos(_plrRotateAngle) * PlrRadius);
+                transform.position = _plrCtrl.transform.position + new Vector3(
+                    Mathf.Sin(_plrRotateAngle) * PlrRadius, PlrY + _plrOffsetY, Mathf.Cos(_plrRotateAngle) * PlrRadius);
 
-            transform.position = transform.position.ClampZ(-105, Mathf.Infinity);
+                transform.position = transform.position.ClampZ(-105, Mathf.Infinity);
             
-            transform.LookAt(_plrCtrl.transform.position + new Vector3(0,1.5f,0));
+                transform.LookAt(_plrCtrl.transform.position + new Vector3(0,1.5f,0));
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(
+                    transform.position, FocusPoint.position + PositionOffset, Time.deltaTime * 3.0f);
+                transform.LookAt(FocusPoint.position+FocusOffset);
+            }
         }
     }
 }

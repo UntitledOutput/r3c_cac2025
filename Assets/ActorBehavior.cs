@@ -8,7 +8,7 @@ public class ActorBehavior : MonoBehaviour
     {
 
         protected MatchController _matchController;
-        private CapsuleCollider _capsuleCollider;
+        protected CapsuleCollider _capsuleCollider;
         protected NavMeshAgent _agent;
         
         [SerializeField]

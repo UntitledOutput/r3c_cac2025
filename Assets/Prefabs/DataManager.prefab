@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7378255339689314200
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3132160725863770334}
+  - component: {fileID: 1481468363498065390}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3132160725863770334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7378255339689314200}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1481468363498065390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7378255339689314200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1c3df4ff5004b5ebcabc44407d423eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _save:
+    Name: 
+    GlassCount: 0
+    PlasticCount: 0
+    MetalCount: 0
+    GlassBitCount: 10
+    PlasticBitCount: 10
+    MetalBitCount: 10
+    availableUpgrades: []
+    availableAbilities:
+    - {fileID: 11400000, guid: d8709b4dbbf37d4459f2a780b3d2c5d2, type: 2}
+    - {fileID: 11400000, guid: 3b5e673909ca7f044afa5f7ab21eec6c, type: 2}
+    - {fileID: 11400000, guid: d4395983d2dd65b47b60b6a15be56d56, type: 2}
+    availableAllies:
+    - ally: {fileID: 11400000, guid: 04ef2d16b1524d04ab4f844464c35e15, type: 2}
+      level: 0
+      levelProgress: 0
+    enemyInventory: []
+    allies: []
+    abilities:
+    - {fileID: 11400000, guid: d8709b4dbbf37d4459f2a780b3d2c5d2, type: 2}
+    - {fileID: 11400000, guid: 3b5e673909ca7f044afa5f7ab21eec6c, type: 2}
+    - {fileID: 11400000, guid: d4395983d2dd65b47b60b6a15be56d56, type: 2}
+    upgrades: []

@@ -10,7 +10,8 @@ namespace UI
         protected override void Start()
         {
             base.Start();
-            fillRect.GetComponent<Image>().material = new Material(fillRect.GetComponent<Image>().material.shader);
+            if (Application.isPlaying)
+                fillRect.GetComponent<Image>().material = new Material(fillRect.GetComponent<Image>().material.shader);
         }
 
         protected override void Update()

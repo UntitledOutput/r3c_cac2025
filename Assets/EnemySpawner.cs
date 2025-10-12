@@ -2,23 +2,34 @@ using System;
 using System.Collections.Generic;
 using External;
 using ScriptableObj;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
     public int SpawnCount;
     public float SpawnRadius;
+    
     public bool OnlyRunIfEnd;
+    public bool OnlyRunIfMatchEnd;
     public bool OnlyRunIfNotEnd;
+    public bool OnlyRunIfNotMatchEnd;
     
     public BaseUtils.WeightedList<EnemyObject> enemies;
 
-    public bool IsEnd;
+    [DoNotSerialize] public bool IsEnd;
+    [DoNotSerialize] public bool IsMatchEnd;
+    
+    public bool MakeMega;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if ((OnlyRunIfEnd && IsEnd) || (OnlyRunIfNotEnd && !IsEnd) || (!OnlyRunIfNotEnd && !OnlyRunIfNotEnd))
+        if ((OnlyRunIfEnd && IsEnd) ||
+            (OnlyRunIfNotEnd && !IsEnd) ||
+            (OnlyRunIfMatchEnd && IsMatchEnd) ||
+            (OnlyRunIfNotMatchEnd && !IsMatchEnd) ||
+            (!OnlyRunIfNotEnd && !OnlyRunIfNotEnd && !OnlyRunIfMatchEnd && !OnlyRunIfNotMatchEnd))
         {
             var deg = (360.0f / SpawnCount) * Mathf.Deg2Rad;
             for (int i = 0; i < SpawnCount; i++)
@@ -26,8 +37,15 @@ public class EnemySpawner : MonoBehaviour
                 var pos = new Vector3(Mathf.Sin(deg * i), 0, Mathf.Cos(deg * i)) * SpawnRadius;
 
                 var enemy = Instantiate(
-                    enemies.GetRandom().Prefab, transform.position + pos + new Vector3(0, 0.1f, 0),
+                    MakeMega ? Resources.Load<GameObject>("Prefabs/LargeEnemy") : Resources.Load<GameObject>("Prefabs/SmallEnemy"), transform.position + pos + new Vector3(0, 0.1f, 0),
                     Quaternion.Euler(0,180,0));
+
+                enemy.GetComponent<EnemyController>().enemyObject = enemies.GetRandom();
+                
+                if (MakeMega)
+                {
+                    enemy.GetComponent<EnemyController>().IsMegaEnemy = true;
+                }
             }
         }
     }

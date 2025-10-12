@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using DG.Tweening;
 using External;
 using MyBox;
@@ -11,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace Controllers
 {
-    public class MatchController : MonoBehaviour
+    public class MatchController : IntraDataBehavior
     {
         public static MatchController _instance;
 
@@ -20,6 +21,9 @@ namespace Controllers
         private Dictionary<CollectibleController.CollectibleType, int> collectibleCount =
             new Dictionary<CollectibleController.CollectibleType, int>();
 
+        private List<EnemyObject> caughtEnemies = new List<EnemyObject>();
+
+        [Serializable]
         public class MapSection
         {
             public MatchSectionObject Ref;
@@ -42,17 +46,25 @@ namespace Controllers
             }
         }
         
+        [Serializable]
         public class MatchRound
         {
             public MapSection root;
 
-            public List<MatchRound> NextRounds;
+            public List<MatchRound> NextRounds = new List<MatchRound>();
+            public bool IsSetup { get; private set; }
 
             public MatchRound()
             {
-                var sectionCt = 0;
 
+            }
+
+            public void Setup()
+            {
+                var sectionCt = 0;
                 root = new MapSection(Resources.Load<MatchSectionObject>("MapSections/Test00/StartSection"), ref sectionCt, _instance.SectionCount);
+                GenerateNextRounds();
+                IsSetup = true;
             }
 
             public void GenerateNextRounds()
@@ -62,7 +74,8 @@ namespace Controllers
 
                 for (int i = 0; i < endCount; i++)
                 {
-                    NextRounds.Add(new MatchRound());
+                    var round = new MatchRound();
+                    NextRounds.Add(round);
                 }
             }
 
@@ -85,13 +98,16 @@ namespace Controllers
         public MatchRound _currentRound;
 
 
-        public int SectionCount = 2;
-        public int RoundAmount = 2;
+        public int SectionCount = 1;
+        public int RoundAmount = 1;
         public List<AbilityObject> PassedAbilities;
         public List<AbilityObject.AbilityUpgrade> PassedUpgrades;
-        
-        private int RoundCount = 0;
-        
+
+        public List<EnemyObject> SmallEnemies;
+        public List<EnemyObject> LargeEnemies;
+ 
+        [ReadOnly] public int RoundProgress { get; private set; }
+
         public void RegisterEnemy(EnemyController _enemy)
         {
             _enemiesAlive++;
@@ -117,19 +133,34 @@ namespace Controllers
                 (() => _collectibleTexts[(int)collectibleType].DOColor(Color.white, 0.5f)));
         }
 
+        public void AddCaughtEnemy(EnemyObject enemy)
+        {
+            caughtEnemies.Add(enemy);
+        }
+        
+
         [SerializeField] private List<GateController> _gateControllers = new List<GateController>();
         private List<TMP_Text> _collectibleTexts = new List<TMP_Text>();
 
         public class PostMatchData
         {
+            public int roundCount;
+            public int roundProgress;
+            public bool won => roundProgress >= roundCount;
+            
             public Dictionary<CollectibleController.CollectibleType, int> newCollectibles = new Dictionary<CollectibleController.CollectibleType, int>();
+            public List<EnemyObject> CaughtEnemies;
         }
 
         public PostMatchData CreatePostMatchData()
         {
             var data = new PostMatchData();
 
+            data.roundCount = RoundAmount;
+            data.roundProgress = RoundProgress;
+            
             data.newCollectibles = collectibleCount;
+            data.CaughtEnemies = caughtEnemies;
             
             return data;
         }
@@ -145,8 +176,12 @@ namespace Controllers
             
             _instance = this;
             DontDestroyOnLoad(gameObject);
+
+            _currentRound = null;
+            RoundProgress = 1;
             
             OnSceneLoaded(SceneManager.GetActiveScene());
+
 
             SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -167,10 +202,14 @@ namespace Controllers
                 _currentRound = new MatchRound();
             }
             
+            if (!_currentRound.IsSetup)
+                _currentRound.Setup();
+            
             FindAnyObjectByType<MapController>().SetupMap(_currentRound);
             
             _enemiesAlive = 0;
             _gateControllers = FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
+            
             
             if (PassedUpgrades.Count < PassedAbilities.Count)
                 while(PassedUpgrades.Count < PassedAbilities.Count)
@@ -188,13 +227,15 @@ namespace Controllers
                 var text = score.GetComponentInChildren<TMP_Text>();
                 _collectibleTexts.Insert(i,text);
             }
+            
         }
 
         public void NextStage()
         {
-            if (RoundAmount >= RoundCount)
+            RoundProgress++;
+            if (RoundProgress > RoundAmount)
             {
-                SceneManager.LoadScene("HomeScene");
+                ReturnToHome();
             }
             else
             {
@@ -204,7 +245,12 @@ namespace Controllers
                 
                 SceneManager.LoadScene("GameScene");
             }
-            RoundAmount++;
+        }
+
+        public void ReturnToHome()
+        {
+            
+            SceneManager.LoadScene("HomeScene");
         }
 
         private void Update()

@@ -1,3 +1,4 @@
+using System.Linq;
 using Controllers;
 using External;
 using Unity.AI.Navigation;
@@ -44,6 +45,8 @@ public class MapController : MonoBehaviour
             foreach (var enemySpawner in spawners)
             {
                 enemySpawner.IsEnd = true;
+                enemySpawner.IsMatchEnd =
+                    MatchController._instance.RoundAmount == MatchController._instance.RoundProgress;
             }
         }
     }
@@ -51,6 +54,10 @@ public class MapController : MonoBehaviour
     public void SetupMap(MatchController.MatchRound round)
     {
         transform.Find("Sections").RemoveAllChildren();
+        foreach (var gate in transform.GetComponentsInChildren<GateController>())
+        {
+            Destroy(gate.gameObject);
+        }
         if (GetComponentInChildren<GateController>()) Destroy(GetComponentInChildren<GateController>().gameObject);
         
         AttachSection(round.root, new Vector3(0,0,-80));

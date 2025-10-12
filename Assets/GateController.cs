@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Controllers;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,22 +13,20 @@ public class GateController : MonoBehaviour
 
     private bool _lastActive = false;
 
-    private RectTransform _mainFrame, _endFrame;
-
     public int GateIndex;
     
     
     public static int ChosenGateIndex;
-    private static int GateCount = -1;
-    
+    private static int GateCount = 0;
+
+    private void Awake()
+    {
+        GateCount = 0;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _mainFrame = GameObject.Find("Canvas").transform.Find("MainFrame").GetComponent<RectTransform>();
-        _endFrame = GameObject.Find("Canvas").transform.Find("EndFrame").GetComponent<RectTransform>();
-        
-        _endFrame.gameObject.SetActive(false);
-
         GateIndex = GateCount;
         GateCount++;
     }
@@ -84,49 +83,8 @@ public class GateController : MonoBehaviour
             plr.BlockMovement = true;
             ChosenGateIndex = GateIndex;
             GateCount = 0;
-            StartCoroutine(ClosingCoroutine(plr));
+            MatchController._instance.NextStage();
         }
     }
-
-    IEnumerator ClosingCoroutine(PlayerController p)
-    {
-        _mainFrame.gameObject.SetActive(false);
-        
-        /*// move to center of gate
-        {
-            var end = transform.position + (transform.forward * 5);
-            while (Vector3.Distance(p.transform.position, end) > 1.0f)
-            {
-                var dir = Vector3.MoveTowards(p.transform.position, end, Time.deltaTime*p.MoveSpeed);
-                p.rigidbody.MovePosition(dir);
-
-                yield return null;
-            }
-        }
-        
-        // move into gate
-        {
-            var end = transform.position - (transform.forward * 3);
-            while (Vector3.Distance(p.transform.position, transform.position) > 1.0f)
-            {
-                var dir = Vector3.MoveTowards(p.transform.position, end, Time.deltaTime*p.MoveSpeed);
-                p.rigidbody.MovePosition(dir);
-
-
-                yield return null;
-            }
-        }*/
-
-        var endFrame = _endFrame.GetComponentInChildren<Image>();
-        _endFrame.gameObject.SetActive(true);
-
-        endFrame.color = Color.clear;
-        yield return endFrame.DOColor(Color.black, 1.0f);
-
-        yield return new WaitForSeconds(0.9f);
-        
-        var postRound = _endFrame.Find("PostRoundFrame").GetComponent<RectTransform>();
-        postRound.anchoredPosition = new Vector2(0, -1080);
-        yield return         postRound.DOLocalMoveY(0, 1.0f);
-    }
+    
 }

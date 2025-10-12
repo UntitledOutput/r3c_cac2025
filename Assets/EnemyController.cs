@@ -14,6 +14,8 @@ using UnityEngine.UI;
 
 public class EnemyController : ActorBehavior
 {
+    private static readonly int Attack = Animator.StringToHash("Attack");
+    private static readonly int IsMega = Shader.PropertyToID("_IsMega");
     private bool _isAlive = true;
     private Slider _slider;
     private Animator _animator;
@@ -22,12 +24,14 @@ public class EnemyController : ActorBehavior
     {
         Idle,
         Attacking,
+        Stunned,
     }
 
-    private EnemyState _enemyState = EnemyState.Idle;
+    [SerializeField, ReadOnly] private EnemyState _enemyState = EnemyState.Idle;
     private PlayerController _player;
 
     public EnemyObject enemyObject;
+    public bool IsMegaEnemy;
 
     private AbilityController _abilityController;
     
@@ -40,7 +44,7 @@ public class EnemyController : ActorBehavior
         [SerializeField] private int abilityIndex = -1;
         private AbilityController _controller;
 
-        public bool Trigger(Vector3 shootPoint)
+        public bool Trigger(Vector3 shootPoint, Animator animator)
         {
             if (abilityIndex < 0)
                 return false;
@@ -53,8 +57,11 @@ public class EnemyController : ActorBehavior
             var worked = _controller.TryShoot(shootPoint);
 
             if (worked)
+            {
                 cooldownTimer = Ability.cooldown;
-            
+                animator.SetTrigger(Attack);
+            }
+
             return worked;
         }
         
@@ -77,7 +84,34 @@ public class EnemyController : ActorBehavior
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if (enemyObject == null)
+        {
+            enemyObject = IsMegaEnemy
+                ? _matchController.LargeEnemies.GetRandom()
+                : _matchController.SmallEnemies.GetRandom();
+        }
+        
+        var model = transform.Find("Model");
+        var enemyModel = Instantiate(enemyObject.Prefab, model);
+
+        if (IsMegaEnemy)
+        {
+            enemyModel.transform.localScale = Vector3.one * enemyObject.MegaSize;
+        }
+        else
+        {
+            enemyModel.transform.localScale = Vector3.one * enemyObject.SmallSize;
+        }
+        
+        _agent.radius = enemyObject.Width * (IsMegaEnemy ? enemyObject.MegaSize : enemyObject.SmallSize);
+        _agent.height = enemyObject.Height * (IsMegaEnemy ? enemyObject.MegaSize : enemyObject.SmallSize);
+
+        _capsuleCollider.radius = _agent.radius;
+        _capsuleCollider.height = _agent.height;
+        
         _slider = GetComponentInChildren<Slider>();
+        
+        
         _animator = GetComponentInChildren<Animator>();
 
         var source = new ConstraintSource();
@@ -87,7 +121,7 @@ public class EnemyController : ActorBehavior
         _slider.GetComponentInParent<LookAtConstraint>().constraintActive = true;
         _slider.GetComponentInParent<Canvas>().worldCamera = Camera.main;
 
-        _health = enemyObject.HealthMax;
+        _health = enemyObject.HealthMax + ((IsMegaEnemy ? enemyObject.MegaHealthOffset : 0));
         
         _matchController.RegisterEnemy(this);
         Team = ActorTeam.Enemy;
@@ -98,9 +132,17 @@ public class EnemyController : ActorBehavior
             abilities.Add(new EnemyAbilityInstance(enemyObjectAbility,_abilityController));
         }
         
-        Debug.Log(abilities.Count);
-        
         _abilityController.SetupAbilities(abilities.Select((instance => instance.Ability.ability)).ToList(), null);
+
+        var renderers = GetComponentsInChildren<Renderer>();
+        
+        foreach (var renderer in renderers)
+        {
+            foreach (var rendererMaterial in renderer.materials)
+            {
+                rendererMaterial.SetFloat(IsMega, IsMegaEnemy ? 1 : 0);
+            }
+        }
 
     }
 
@@ -112,7 +154,7 @@ public class EnemyController : ActorBehavior
             if (enemyAbilityInstance.Ability.type == type || enemyAbilityInstance.Ability.type == EnemyObject.EnemyAbilityType.Any)
             {
 
-                if (enemyAbilityInstance.Trigger(shootPoint))
+                if (enemyAbilityInstance.Trigger(shootPoint, _animator))
                 {
                     return;
                 }
@@ -135,58 +177,70 @@ public class EnemyController : ActorBehavior
             enemyAbilityInstance.Update();
         }
         
-        
-        _slider.value = Mathf.Lerp(_slider.value, (_health / enemyObject.HealthMax), Time.deltaTime * 10f);
 
-        if ((_health / enemyObject.HealthMax) < 1 || _enemyState == EnemyState.Attacking)
+        if (_isAlive)
         {
-            if (!_slider.gameObject.activeSelf)
-                _slider.gameObject.SetActive(true);
-        }
-        else
-        {
-            if (_slider.gameObject.activeSelf)
-                _slider.gameObject.SetActive(false); 
-        }
-        
-        foreach (var collider in Physics.OverlapSphere(transform.position, enemyObject.DetectionRadius))
-        {
-            var enemy = collider.GetComponent<EnemyController>();
-            var player = collider.GetComponent<PlayerController>();
 
-            if (player)
-            {
-                _enemyState = EnemyState.Attacking;
-                _player = player;
-            }
-            else if (enemy)
-            {
-                
-            }
-        }
+                    
+            _slider.value = Mathf.Lerp(_slider.value, (_health / (enemyObject.HealthMax + (IsMegaEnemy ? enemyObject.MegaHealthOffset : 0))), Time.deltaTime * 10f);
 
-        if (_enemyState == EnemyState.Attacking)
-        {
-            var distance = Vector3.Distance(_player.transform.position, transform.position);
-            _agent.isStopped = false;
-            if (distance > enemyObject.StoppingDistance)
+            if ((_health / (enemyObject.HealthMax + (IsMegaEnemy ? enemyObject.MegaHealthOffset : 0) ) ) < 1 || _enemyState == EnemyState.Attacking)
             {
-                _agent.SetDestination(_player.transform.position);
-                TriggerAbilityOnCondition(_player.transform.position,EnemyObject.EnemyAbilityType.OnChase);
+                if (!_slider.gameObject.activeSelf)
+                    _slider.gameObject.SetActive(true);
             }
             else
             {
-                _agent.isStopped = true;
+                if (_slider.gameObject.activeSelf)
+                    _slider.gameObject.SetActive(false); 
+            }
+            
+            foreach (var collider in Physics.OverlapSphere(transform.position, enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0)))
+            {
+                var enemy = collider.GetComponent<EnemyController>();
+                var player = collider.GetComponent<PlayerController>();
 
-                var eul = transform.eulerAngles;
-                transform.LookAt(_player.transform.position);
-                transform.eulerAngles = Vector3.Slerp(eul, transform.eulerAngles, Time.deltaTime * 5f);
-                
-                TriggerAbilityOnCondition(_player.transform.position,EnemyObject.EnemyAbilityType.OnStop);
+                if (player)
+                {
+                    _enemyState = EnemyState.Attacking;
+                    _player = player;
+                }
+                else if (enemy)
+                {
+
+                }
             }
 
-            if (distance > enemyObject.DetectionRadius * 1.5)
-                _enemyState = EnemyState.Idle;
+            if (_enemyState == EnemyState.Attacking && _isAlive)
+            {
+                var distance = Vector3.Distance(_player.transform.position, transform.position);
+                _agent.isStopped = false;
+                if (distance > enemyObject.StoppingDistance + (IsMegaEnemy ? enemyObject.MegaStoppingOffset : 0))
+                {
+                    _agent.SetDestination(_player.transform.position);
+                    TriggerAbilityOnCondition(_player.transform.position, EnemyObject.EnemyAbilityType.OnChase);
+                }
+                else
+                {
+                    _agent.isStopped = true;
+
+                    var eul = transform.eulerAngles;
+                    transform.LookAt(_player.transform.position);
+                    transform.eulerAngles = Vector3.Slerp(eul, transform.eulerAngles, Time.deltaTime * 5f);
+
+                    TriggerAbilityOnCondition(_player.transform.position, EnemyObject.EnemyAbilityType.OnStop);
+                }
+
+                if (distance > (enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0)) * 1.5)
+                    _enemyState = EnemyState.Idle;
+            }
+
+        }
+
+        if (_enemyState == EnemyState.Stunned)
+        {
+            _agent.isStopped = true;
+            _slider.gameObject.SetActive(false);
         }
 
         if (_animator)
@@ -198,28 +252,39 @@ public class EnemyController : ActorBehavior
 
     public void OnDeath()
     {
+        _enemyState = EnemyState.Stunned;
         _isAlive = false;
         _matchController.DeregisterEnemy(this);
 
         var deathParticles = Instantiate(
             Resources.Load<GameObject>("Prefabs/Particles/DeathParticle00"), transform.position, quaternion.identity);
-        
-        var collectible = Instantiate(Resources.Load<GameObject>("Prefabs/Collectibles/ItemProjectile"),transform.position+new Vector3(0,1,0),transform.rotation);
-        
-        Destroy(gameObject);
+
+        if (!IsMegaEnemy)
+        {
+            var collectible = Instantiate(
+                Resources.Load<GameObject>("Prefabs/Collectibles/ItemProjectile"),
+                transform.position + new Vector3(0, 1, 0), transform.rotation);
+            Destroy(gameObject);
+        }
+        else
+        {
+            FindFirstObjectByType<GameUIController>().StartCatchProcess(this);
+        }
+
+
 
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, enemyObject.DetectionRadius);
+        Gizmos.DrawWireSphere(transform.position, enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0));
         
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, enemyObject.DetectionRadius*1.5f);
+        Gizmos.DrawWireSphere(transform.position, (enemyObject.DetectionRadius+(IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0))*1.5f);
         
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, enemyObject.StoppingDistance);
+        Gizmos.DrawWireSphere(transform.position, enemyObject.StoppingDistance +(IsMegaEnemy ? enemyObject.MegaStoppingOffset : 0));
 
         if (_enemyState == EnemyState.Attacking)
         {

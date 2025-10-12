@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Controllers;
 using ScriptableObj;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
-    public class DataController : MonoBehaviour
+    public class DataController : IntraDataBehavior
     {
         public static DataController Instance;
 
@@ -20,6 +21,13 @@ namespace DefaultNamespace
 
             public List<AbilityObject.AbilityUpgrade> availableUpgrades = new List<AbilityObject.AbilityUpgrade>();
             public List<AbilityObject> availableAbilities = new List<AbilityObject>();
+            public List<AllyObject.AllyInstance> availableAllies;
+                
+            public List<EnemyObject> enemyInventory;
+
+            public List<AllyObject.AllyInstance> allies;
+            public List<AbilityObject> abilities;
+            public List<AbilityObject.AbilityUpgrade> upgrades;
         }
 
 
@@ -29,7 +37,7 @@ namespace DefaultNamespace
 
         private void Awake()
         {
-            if (Instance)
+            if (Instance && Instance != this)
             {
                 DestroyImmediate(gameObject);
 
@@ -39,6 +47,12 @@ namespace DefaultNamespace
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
+        }
+
+        private void Update()
+        {
+            if (!Instance)
+                Instance = this;
         }
     }
 }

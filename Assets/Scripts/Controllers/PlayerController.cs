@@ -21,6 +21,7 @@ public class PlayerController : ActorBehavior
     public bool BlockMovement = false;
 
     public float Health => _health;
+    private bool _IsDead = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -30,11 +31,23 @@ public class PlayerController : ActorBehavior
         Team = ActorTeam.Player;
     }
 
+    public void OnDeath()
+    {
+        _IsDead = true;
+        BlockMovement = true;
+        FindAnyObjectByType<GameUIController>().Fail();
+    }
+
     // Update is called once per frame
     void Update()
     {
         if (_abilityController == null)
             _abilityController = GetComponent<AbilityController>();
+
+        if (_IsDead)
+            return;
+        if (_health <= 0.01f && !_IsDead)
+            OnDeath();
 
         var attacking = InputSystem.Attack || InputSystem.SubAttack || InputSystem.SideAttack_OneTime;
         

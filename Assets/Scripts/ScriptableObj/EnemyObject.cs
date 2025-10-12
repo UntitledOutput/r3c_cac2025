@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MyBox;
 using UnityEngine;
 
 namespace ScriptableObj
@@ -9,11 +10,25 @@ namespace ScriptableObj
     {
         public string DisplayName;
         public GameObject Prefab;
-
+        public Sprite Icon;
+        
+        [Separator("Stats")]
+        
         public float DetectionRadius = 3.5f;
         public float StoppingDistance = 3f;
         public float HealthMax = 1f;
 
+        public float MegaDetectionOffset = 0;
+        public float MegaStoppingOffset = 0;
+        public float MegaHealthOffset = 0;
+
+        [Separator("Model Stats")] 
+        public float SmallSize = 1f;
+        public float MegaSize = 1.5f;
+
+        public float Width = 1f;
+        public float Height = 2f;
+        
         [Serializable]
         public enum EnemyAbilityType
         {
@@ -30,6 +45,8 @@ namespace ScriptableObj
             public float cooldown;
         }
 
+        [Separator("Abilities")]
+        
         public List<EnemyAbility> Abilities;
     }
 }
