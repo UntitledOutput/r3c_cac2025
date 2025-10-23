@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5052e9e187f440c883ea16e34179b7e4, type: 3}
+  m_Name: HealBot00Ally
+  m_EditorClassIdentifier: 
+  Name: Test Ally
+  Prefab: {fileID: 650237115694665637, guid: b07c041e7f7fa79458f63f89b53ee575, type: 3}
+  Icon: {fileID: 21300000, guid: 432ab5407fe316b4b94bff9ec1243e52, type: 3}
+  abilities:
+  - {fileID: 11400000, guid: 2933b2047029a744fbaa74ea69b4fd26, type: 2}
+  - {fileID: 11400000, guid: 43cea3112fdc65b4abea4f0c5e15d4ed, type: 2}

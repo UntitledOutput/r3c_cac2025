@@ -18,7 +18,6 @@ public class EnemyController : ActorBehavior
     private static readonly int IsMega = Shader.PropertyToID("_IsMega");
     private bool _isAlive = true;
     private Slider _slider;
-    private Animator _animator;
     
     private enum EnemyState
     {
@@ -110,8 +109,7 @@ public class EnemyController : ActorBehavior
         _capsuleCollider.height = _agent.height;
         
         _slider = GetComponentInChildren<Slider>();
-        
-        
+
         _animator = GetComponentInChildren<Animator>();
 
         var source = new ConstraintSource();
@@ -245,7 +243,7 @@ public class EnemyController : ActorBehavior
 
         if (_animator)
         {
-            _animator.SetFloat("Velocity", _agent.velocity.magnitude);
+            _animator.SetFloat("Velocity", Velocity.magnitude);
         }
     }
 
@@ -256,11 +254,12 @@ public class EnemyController : ActorBehavior
         _isAlive = false;
         _matchController.DeregisterEnemy(this);
 
-        var deathParticles = Instantiate(
-            Resources.Load<GameObject>("Prefabs/Particles/DeathParticle00"), transform.position, quaternion.identity);
-
         if (!IsMegaEnemy)
         {
+            
+            var deathParticles = Instantiate(
+                Resources.Load<GameObject>("Prefabs/Particles/DeathParticle00"), transform.position, quaternion.identity);
+
             var collectible = Instantiate(
                 Resources.Load<GameObject>("Prefabs/Collectibles/ItemProjectile"),
                 transform.position + new Vector3(0, 1, 0), transform.rotation);

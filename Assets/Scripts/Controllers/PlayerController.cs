@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Controllers;
+using External;
 using MyBox;
 using ScriptableObj;
 using UnityEngine;
@@ -7,14 +9,16 @@ using Utils;
 
 public class PlayerController : ActorBehavior
 {
+    private static readonly int Velocity1 = Animator.StringToHash("Velocity");
+    private static readonly int MoveX = Animator.StringToHash("MoveX");
+    private static readonly int MoveY = Animator.StringToHash("MoveY");
     private Camera camera;
     public Rigidbody rigidbody;
     private AbilityController _abilityController;
     private float _timeSinceAttack = 0;
+    private List<AllyController> _allies = new List<AllyController>();
+    private Animator _animator;
     
-    
-    private bool isGrounded;
-    private float timeSinceGrounded = 0f;
     private Vector3 _shootPoint;
 
     public float MoveSpeed = 2.5f;
@@ -23,35 +27,71 @@ public class PlayerController : ActorBehavior
     public float Health => _health;
     private bool _IsDead = false;
     
+    public  AbilityController AbilityController
+    {
+        get { return _abilityController; }
+    }
+
+    public List<AllyController> Allies
+    {
+        get => _allies;
+    }
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
         Team = ActorTeam.Player;
+        
+        // loading allies
+        foreach (var matchControllerPassedAlly in _matchController.PassedAllies)
+        {
+            if (matchControllerPassedAlly != null && matchControllerPassedAlly.ally)
+            {
+                var allyInstance = Instantiate(matchControllerPassedAlly.ally.Prefab, transform.position + (Vector3.up * 3f), Quaternion.identity);
+                allyInstance.GetComponent<AllyController>().ally = matchControllerPassedAlly;
+                _allies.Add(allyInstance.GetComponent<AllyController>());
+            }
+        }
+
+        while (_allies.Count < 3)
+        {
+            _allies.Add(null);
+        }
     }
 
     public void OnDeath()
     {
         _IsDead = true;
         BlockMovement = true;
+        foreach (var allyController in _allies)
+        {
+            if (allyController)
+                allyController.OnDeath();
+        }
+        
         FindAnyObjectByType<GameUIController>().Fail();
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (_abilityController == null)
             _abilityController = GetComponent<AbilityController>();
 
         if (_IsDead)
+        {
             return;
+        }
+
         if (_health <= 0.01f && !_IsDead)
             OnDeath();
 
         var attacking = InputSystem.Attack || InputSystem.SubAttack || InputSystem.SideAttack_OneTime;
         
-        var jump = false;
         var moveDirection = CalculateMoveDirection(InputSystem.Move);
         if ((moveDirection.magnitude > 0 && _timeSinceAttack > 1f) || attacking )
         {
@@ -69,16 +109,13 @@ public class PlayerController : ActorBehavior
             }
         }
 
+        var lerpSpeed = Time.deltaTime * 10f;
+        _animator.SetBool("Shooting", attacking || _timeSinceAttack <= 1f );
+        _animator.LerpFloat(Velocity1,InputSystem.Move.magnitude,lerpSpeed);
+        _animator.LerpFloat(MoveX,InputSystem.Move.x,lerpSpeed);
+        _animator.LerpFloat(MoveY,InputSystem.Move.y,lerpSpeed);
+
         moveDirection *= MoveSpeed;
-        
-        if (jump && isGrounded)
-        {
-            rigidbody.AddForce(transform.up * 2.5f, ForceMode.Impulse);
-        }
-        else if (!isGrounded)
-        {
-            timeSinceGrounded += Time.fixedDeltaTime;
-        }
 
         if (!BlockMovement)
         {
@@ -94,7 +131,14 @@ public class PlayerController : ActorBehavior
                     _abilityController.ChosenAbility = 2;
                 
                 _shootPoint = _abilityController.GetShootPoint();
-                _abilityController.TryShoot(_shootPoint);
+                if (_abilityController.TryShoot(_shootPoint))
+                {
+                    foreach (var allyController in _allies)
+                    {
+                        if (allyController)
+                            allyController.OnPlayerShot(_abilityController.ChosenAbility,_shootPoint);
+                    }
+                }
             }
         }
 
@@ -114,62 +158,16 @@ public class PlayerController : ActorBehavior
             
         }
         
+
+        
     }
     
     private Vector3 CalculateMoveDirection(Vector2 movement)
     {
-        var forward = camera.transform.forward.SetY(0).normalized;
-        var right = camera.transform.right.SetY(0).normalized;
         var moveDirection = new Vector3(movement.x, 0, movement.y).normalized;
 
         return camera.transform.TransformDirection(moveDirection).SetY(0);
     }
-    
-    /*private void OnCollisionEnter(Collision other)
-    {
-        currentSurface = other.gameObject.GetComponent<SurfaceController>();
-        if (currentSurface)
-        {
-            isGrounded = true;
-            StartCoroutine(HandleGrounding(timeSinceGrounded, lastSurfacePosition));
-            timeSinceGrounded = 0f;
-            lastSurfacePosition = other.GetContact(0).point;
-            surfaceNormal = other.GetContact(0).normal.normalized;
-        }
-    }
-
-    private void OnCollisionStay(Collision other)
-    {
-        currentSurface = other.gameObject.GetComponent<SurfaceController>();
-        if (!isGrounded)
-        {
-            if (currentSurface)
-            {
-                isGrounded = true;
-                StartCoroutine(HandleGrounding(timeSinceGrounded, lastSurfacePosition));
-                timeSinceGrounded = 0f;
-            }
-        }
-        else
-        {
-            surfaceNormal = other.GetContact(0).normal.normalized;
-        }
-
-        if (currentSurface)
-        {
-            lastSurfacePosition = other.GetContact(0).point;
-        }
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (currentSurface && currentSurface.gameObject == other.gameObject)
-        {
-            currentSurface = null;
-            isGrounded = false;
-            //surfaceNormal = Vector3.up;
-        }
-    }*/
 
     private void OnDrawGizmos()
     {

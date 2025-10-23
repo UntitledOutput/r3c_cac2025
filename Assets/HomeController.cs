@@ -194,6 +194,7 @@ public class HomeController : MonoBehaviour
         var matchController = new GameObject().AddComponent<MatchController>();
         matchController.PassedAbilities = abilities;
         matchController.PassedUpgrades = upgrades;
+        matchController.PassedAllies = allies;
 
 #if UNITY_EDITOR
         matchController.RoundAmount = RoundCount;
@@ -362,14 +363,16 @@ public class HomeController : MonoBehaviour
             upgradeFrame.gameObject.SetActive(true);
         }
         
-        foreach (var ally in DataController.saveData.availableAllies)
+        for (var i = 0; i < DataController.saveData.availableAllies.Count; i++)
         {
+            var ally = DataController.saveData.availableAllies[i];
             if (ally != null && ally.ally)
             {
                 var upgradeFrame = Instantiate(_allyTemplate, _allyTemplate.parent);
                 upgradeFrame.Find("AllyIcon").GetComponent<Image>().sprite = ally.ally.Icon;
+                var i1 = i;
                 upgradeFrame.GetComponent<Button>().onClick
-                    .AddListener((() => ChangeAllyInSlot(ally, __selectedAllySlot)));
+                    .AddListener((() => ChangeAllyInSlot(DataController.saveData.availableAllies[i1], __selectedAllySlot)));
 
                 upgradeFrame.gameObject.SetActive(true);
             }
@@ -512,7 +515,7 @@ public class HomeController : MonoBehaviour
         {
             foreach (var abilityObject in abilities)
             {
-                if (abilityObject == ability)
+                if (abilityObject == ability || abilityObject.Type == ability.Type)
                 {
                     return;
                 }
@@ -547,29 +550,22 @@ public class HomeController : MonoBehaviour
     {
         if (ally != null && ally.ally != null)
         {
-            foreach (var abilityObject in allies)
+            for (var i = 0; i < allies.Count; i++)
             {
-                if (abilityObject == ally)
+                var abilityObject = allies[i];
+
+                if (allyIndex == i)
+                {
+                    continue;
+                }
+
+
+                if (abilityObject != null &&
+                    abilityObject.ally &&
+                    (abilityObject.ally == ally.ally || ally.ally.Type == abilityObject.ally.Type))
                 {
                     return;
                 }
-            }
-        }
-        else
-        {
-            var found = 0;
-            foreach (var abilityObject in allies)
-            {
-                if (abilityObject != null && abilityObject.ally != null)
-                {
-                    found++;
-                }
-            }
-
-            // if the only ability listed is the one being changed to null
-            if (found == 1 && allies[allyIndex] != null && allies[allyIndex].ally != null)
-            {
-                return;
             }
         }
 
@@ -981,8 +977,7 @@ public class HomeController : MonoBehaviour
                     yield return icon.DOFade(0, 0.05f/2).SetEase(Ease.InOutQuad);
 
                     yield return new WaitForSeconds(0.075f/2);
-
-                    Destroy(icon.gameObject);
+                    
 
                     var ct = int.Parse(target.text);
                     ct++;

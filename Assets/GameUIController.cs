@@ -98,6 +98,7 @@ public class GameUIController : MonoBehaviour
     {
         IEnumerator catchProcess()
         {
+            FindFirstObjectByType<PlayerController>().BlockMovement = true;
 
             var cam = Camera.main.GetComponent<CameraController>();
             cam.FocusOnPlayer = false;

@@ -102,6 +102,7 @@ namespace Controllers
         public int RoundAmount = 1;
         public List<AbilityObject> PassedAbilities;
         public List<AbilityObject.AbilityUpgrade> PassedUpgrades;
+        public List<AllyObject.AllyInstance> PassedAllies;
 
         public List<EnemyObject> SmallEnemies;
         public List<EnemyObject> LargeEnemies;

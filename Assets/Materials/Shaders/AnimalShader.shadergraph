@@ -173,6 +173,20 @@
                 },
                 "m_SlotId": 0
             }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "fa16d79a9ceb4e35ace3d67bc1fe74bd"
+                },
+                "m_SlotId": 2
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "a8a5a0c4555e4ff682d776a4bd542aca"
+                },
+                "m_SlotId": 0
+            }
         }
     ],
     "m_VertexContext": {

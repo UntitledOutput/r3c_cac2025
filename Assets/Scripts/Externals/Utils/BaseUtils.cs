@@ -219,6 +219,11 @@ namespace External
             scrollRect.verticalNormalizedPosition = Mathf.Clamp(scrollPos, 0f, 1f);
         }
 
+        public static void LerpFloat(this Animator animator,int id, float value,float t)
+        {
+            animator.SetFloat(id,Mathf.Lerp(animator.GetFloat(id),value,t));
+        }
+
         public static Color ColorFromHex(string hex)
         {
             Color color = Color.white;
@@ -596,6 +601,38 @@ namespace External
             }
         }
         
+        public static void RemoveAllChildrenIf(this Transform transform, string excludedChild)
+        {
+            // Iterate in reverse order to avoid issues when destroying elements
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                // Get the child Transform
+                Transform child = transform.GetChild(i);
+                
+                if (child.name != excludedChild)
+                    continue;
+
+                // Destroy the GameObject associated with the child Transform
+                Object.Destroy(child.gameObject);
+            }
+        }
+        
+        public static void RemoveAllChildrenIf(this Transform transform, List<string> includedChilds)
+        {
+            // Iterate in reverse order to avoid issues when destroying elements
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                // Get the child Transform
+                Transform child = transform.GetChild(i);
+                
+                if (!includedChilds.Contains(child.name))
+                    continue;
+
+                // Destroy the GameObject associated with the child Transform
+                Object.Destroy(child.gameObject);
+            }
+        }
+        
         public static void RemoveAllChildren(this Transform transform)
         {
             // Iterate in reverse order to avoid issues when destroying elements
@@ -616,6 +653,19 @@ namespace External
             foreach (Transform o in transform)
             {
                 children.Add(o);
+            }
+            
+            return children;
+        }
+        public static List<Transform> RecursiveGetAllChildren(this Transform transform)
+        {
+            List<Transform> children = new List<Transform>();
+
+            foreach (Transform o in transform)
+            {
+                children.Add(o);
+                if (o.childCount > 0)
+                    children.AddRange(o.RecursiveGetAllChildren());
             }
             
             return children;

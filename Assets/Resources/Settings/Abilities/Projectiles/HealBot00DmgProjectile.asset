@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
+  m_Name: HealBot00DmgProjectile
+  m_EditorClassIdentifier: 
+  DisplayName: 
+  Description: 
+  Icon: {fileID: 0}
+  Type: 0
+  Reload: 1
+  Target: 1
+  AmmoCount: 15
+  Damage: 0.03
+  ReloadTime: 0.5
+  BlastRadius: 0
+  LaunchY: 0
+  Speed: 12
+  Lifetime: 0.5
+  LifetimeLossOnHit: 0.5
+  Prefab: {fileID: 12657403502098571, guid: 759821cbbcc1f1c4b96b0d4a3aacc923, type: 3}
+  Upgrades: []
