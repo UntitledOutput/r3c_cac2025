@@ -62,7 +62,7 @@ namespace Controllers
             public void Setup()
             {
                 var sectionCt = 0;
-                root = new MapSection(Resources.Load<MatchSectionObject>("MapSections/Test00/StartSection"), ref sectionCt, _instance.SectionCount);
+                root = new MapSection(_instance.CurrentMap.StartSection, ref sectionCt, _instance.CurrentMap.SectionCount);
                 GenerateNextRounds();
                 IsSetup = true;
             }
@@ -96,9 +96,7 @@ namespace Controllers
         }
 
         public MatchRound _currentRound;
-
-
-        public int SectionCount = 1;
+        
         public int RoundAmount = 1;
         public List<AbilityObject> PassedAbilities;
         public List<AbilityObject.AbilityUpgrade> PassedUpgrades;
@@ -106,6 +104,7 @@ namespace Controllers
 
         public List<EnemyObject> SmallEnemies;
         public List<EnemyObject> LargeEnemies;
+        public MapObject CurrentMap;
  
         [ReadOnly] public int RoundProgress { get; private set; }
 

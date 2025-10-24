@@ -4685,7 +4685,6 @@ MonoBehaviour:
       Ref: {fileID: 0}
       Nexts: []
     NextRounds: []
-  SectionCount: 2
   RoundAmount: 1
   PassedAbilities:
   - {fileID: 11400000, guid: d8709b4dbbf37d4459f2a780b3d2c5d2, type: 2}
@@ -4698,6 +4697,7 @@ MonoBehaviour:
     levelProgress: 0
   SmallEnemies: []
   LargeEnemies: []
+  CurrentMap: {fileID: 11400000, guid: 95fe06f06ebd2234f90c8e40976543f8, type: 2}
   _gateControllers: []
 --- !u!4 &1767696529
 Transform:

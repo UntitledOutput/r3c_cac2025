@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 
+
 public class CameraIconTaker : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,6 +19,9 @@ public class CameraIconTaker : MonoBehaviour
         
     }
 
+    public string ExportPath = "Sprites/camera_screenshot.png";
+
+#if UNITY_EDITOR
     [ButtonMethod]
     public void Take()
     {
@@ -36,8 +40,9 @@ public class CameraIconTaker : MonoBehaviour
         Destroy(rt); // Destroy the temporary Render Texture
 
         byte[] bytes = screenShot.EncodeToPNG();
-        string filePath = Path.Combine(Application.dataPath, "Sprites/camera_screenshot.png");
+        string filePath = Path.Combine(Application.dataPath, ExportPath);
         File.WriteAllBytes(filePath, bytes);
         AssetDatabase.Refresh();
     }
+#endif
 }

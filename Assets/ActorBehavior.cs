@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 using UnityEngine;
 using UnityEngine.AI;
@@ -81,6 +83,7 @@ public class ActorBehavior : MonoBehaviour
         
         private void Awake()
         {
+            _camera = Camera.main;
             _matchController = FindAnyObjectByType<MatchController>();
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _agent = GetComponent<NavMeshAgent>();
@@ -88,8 +91,34 @@ public class ActorBehavior : MonoBehaviour
         }
 
         private Vector3 _cachedPosition;
+        private Camera _camera;
+        private List<Renderer> _renderers = new List<Renderer>();
+
         protected virtual void LateUpdate()
         {
+            if (_renderers.Count <= 0)
+                _renderers = gameObject.GetComponentsInChildren<Renderer>().ToList();
+            
             _cachedPosition = transform.position;
+
+            var distanceFromCamera = Vector3.Distance(transform.position, _camera.transform.position);
+            if (distanceFromCamera > 40f)
+            {
+                foreach (var renderer in _renderers)
+                {
+                    renderer.enabled = false;
+                }
+
+                _animator.enabled = false;
+            }
+            else
+            {
+                foreach (var renderer in _renderers)
+                {
+                    renderer.enabled = true;
+                }
+
+                _animator.enabled = true;
+            }
         }
     }

@@ -196,9 +196,11 @@ public class HomeController : MonoBehaviour
         matchController.PassedUpgrades = upgrades;
         matchController.PassedAllies = allies;
 
+
+        matchController.CurrentMap = Random.Range(0,100) >= 50 ? Resources.Load<MapObject>("Settings/Maps/TestMap00") : Resources.Load<MapObject>("Settings/Maps/StreetMap00");
+        
 #if UNITY_EDITOR
         matchController.RoundAmount = RoundCount;
-        matchController.SectionCount = SectionCount;
 #endif
         
         SceneManager.LoadScene("GameScene");
