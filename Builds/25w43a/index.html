@@ -6,8 +6,14 @@
     <title>Unity Web Player | CAC2025</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+      <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
   </head>
   <body>
+    <div id="title-container" class="cac-title">
+      <h1>Congressional App Challenge Entry</h1>
+      <h2>Robo Recycler</h2>
+    </div>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -18,12 +24,14 @@
       </div>
       <div id="unity-warning"> </div>
       <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
         <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">CAC2025</div>
       </div>
     </div>
+
+
     <script>
+      return;
       var canvas = document.querySelector("#unity-canvas");
 
       // Shows a temporary message banner/ribbon for a few seconds, or
@@ -128,6 +136,20 @@
 
       document.body.appendChild(script);
 
+    </script>
+
+    
+    <div id="bottom-container">
+      <div id="markdown-container"></div>
+    </div>
+
+    <script>
+        fetch('https://raw.githubusercontent.com/UntitledOutput/r3c_cac2025/refs/heads/main/README.md')
+            .then(response => response.text())
+            .then(markdownText => {
+                document.getElementById('markdown-container').innerHTML = marked.parse(markdownText);
+            })
+            .catch(error => console.error('Error fetching or parsing Markdown:', error));
     </script>
   </body>
 </html>
