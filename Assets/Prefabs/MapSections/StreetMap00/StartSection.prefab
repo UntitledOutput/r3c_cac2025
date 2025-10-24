@@ -52,7 +52,7 @@ MonoBehaviour:
   OnlyRunIfNotMatchEnd: 0
   enemies:
     list:
-    - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
+    - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
       weight: 1
   IsEnd: 0
   IsMatchEnd: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
   OnlyRunIfNotMatchEnd: 0
   enemies:
     list:
-    - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
+    - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
       weight: 1
   IsEnd: 0
   IsMatchEnd: 0
