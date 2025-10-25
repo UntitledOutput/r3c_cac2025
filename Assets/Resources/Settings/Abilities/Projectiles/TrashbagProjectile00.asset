@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
+  m_Name: TrashbagProjectile00
+  m_EditorClassIdentifier: 
+  DisplayName: enemy projectile
+  Description: you aint supposed to have this
+  Icon: {fileID: 21300000, guid: d3089a3567c351a4ca5bdb2e13283e27, type: 3}
+  Type: 0
+  Reload: 1
+  Target: 0
+  AmmoCount: 12
+  Damage: 0.03
+  ReloadTime: 1
+  BlastRadius: 0
+  LaunchY: 0
+  Speed: 5.5
+  Lifetime: 1
+  LifetimeLossOnHit: 1
+  Prefab: {fileID: 12657403502098571, guid: 974b88c2852dd664aba9f8a6f58ebbf0, type: 3}
+  Upgrades: []

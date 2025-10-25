@@ -20,15 +20,16 @@ MonoBehaviour:
   HealthMax: 1
   MegaDetectionOffset: 2.5
   MegaStoppingOffset: 0
-  MegaHealthOffset: 1
+  MegaHealthOffset: 3
+  MegaDamageMultiplier: 2
   SmallSize: 1
   MegaSize: 2.5
   Width: 0.5
   Height: 2
   Abilities:
-  - ability: {fileID: 11400000, guid: ead4e48452e24884f8a3d48809f22cd9, type: 2}
+  - ability: {fileID: 11400000, guid: acecbf87d5e6319418ff74a03ed56e0e, type: 2}
     type: 1
     cooldown: 5
-  - ability: {fileID: 11400000, guid: 07fda25ec843ec841b837f2d13f98de2, type: 2}
+  - ability: {fileID: 11400000, guid: 123f31fef8a96b145813fa76478412a2, type: 2}
     type: 2
     cooldown: 1

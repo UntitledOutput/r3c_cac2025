@@ -213,6 +213,9 @@ public class EnemyController : ActorBehavior
             {
                 var distance = Vector3.Distance(_player.transform.position, transform.position);
                 _agent.isStopped = false;
+
+                _abilityController._targetActor = _player;
+                
                 if (distance > enemyObject.StoppingDistance + (IsMegaEnemy ? enemyObject.MegaStoppingOffset : 0))
                 {
                     _agent.SetDestination(_player.transform.position);
@@ -231,6 +234,10 @@ public class EnemyController : ActorBehavior
 
                 if (distance > (enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0)) * 1.5)
                     _enemyState = EnemyState.Idle;
+            }
+            else
+            {
+                _abilityController._targetActor = null;
             }
 
         }

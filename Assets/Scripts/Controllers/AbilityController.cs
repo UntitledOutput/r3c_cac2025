@@ -13,6 +13,9 @@ namespace Controllers
         private Camera _camera;
         private ParticleSystem _particleSystem;
         private ActorBehavior _actor;
+
+        public ActorBehavior _targetActor;
+        private EnemyController _baseEnemy;
         
         [Serializable]
         public class AbilityInstance
@@ -69,6 +72,8 @@ namespace Controllers
 
             _particleSystem = GetComponentInChildren<ParticleSystem>();
             _actor = GetComponent<ActorBehavior>();
+
+            _baseEnemy = GetComponent<EnemyController>();
         }
 
         private void Update()
@@ -148,16 +153,23 @@ namespace Controllers
                 if (_ability.data.Type == AbilityObject.AbilityType.Bomb)
                     bullet.transform.position += transform.up;
                 else
-                    bullet.transform.position += (transform.forward * (_actor.Size*2));
-                
+                {
+                    bullet.transform.position += (transform.forward * (_actor.Size * 2));
+
+                    if (_actor.Team == ActorBehavior.ActorTeam.Enemy)
+                    {
+                        bullet.transform.position = bullet.transform.position.SetY(shootPoint.y + (_targetActor.Height/2));
+                    }
+                }
+
                 bullet.transform.eulerAngles = transform.eulerAngles;
                 if (_ability.data.Type == AbilityObject.AbilityType.Shooter)
-                    bullet.GetComponent<BulletController>().Derive(_ability.data, _ability.upgrade);
+                    bullet.GetComponent<BulletController>().Derive(_ability.data, _ability.upgrade, _baseEnemy);
                 else
                 {
 
                     
-                    bullet.GetComponent<BombController>().Derive(_ability.data,_ability.upgrade);
+                    bullet.GetComponent<BombController>().Derive(_ability.data,_ability.upgrade, _baseEnemy );
                     bullet.GetComponent<BombController>().LaunchPosition = shootPoint;
                 }
 

@@ -10,37 +10,37 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
-  m_Name: TestProjectile00
+  m_Name: PlayerBomb00
   m_EditorClassIdentifier: 
-  DisplayName: Test Projectile
-  Description: 'shoot
+  DisplayName: Test Bomb
+  Description: 'its a bomb
 
 '
-  Icon: {fileID: 21300000, guid: d3089a3567c351a4ca5bdb2e13283e27, type: 3}
-  Type: 0
+  Icon: {fileID: 21300000, guid: 27c194d9d864d51419243148e65430ee, type: 3}
+  Type: 1
   Reload: 1
   Target: 1
-  AmmoCount: 12
-  Damage: 0.15
+  AmmoCount: 3
+  Damage: 1
   ReloadTime: 1
-  BlastRadius: 0
-  LaunchY: 0
-  Speed: 11
-  Lifetime: 1
-  LifetimeLossOnHit: 0.5
-  Prefab: {fileID: 12657403502098571, guid: 759821cbbcc1f1c4b96b0d4a3aacc923, type: 3}
+  BlastRadius: 2
+  LaunchY: 3
+  Speed: 1
+  Lifetime: 4
+  LifetimeLossOnHit: 0.1
+  Prefab: {fileID: 12657403502098571, guid: 41c3acd580a5cf949bc044ae10458e12, type: 3}
   Upgrades:
-  - Name: Test Upgrade
+  - Name: Bomb Upgrade
     Description: Description
     Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
-    AmmoChange: 3
-    DamageChange: 0.15
-    ReloadChange: -0.5
-    BlastChange: 0
-    LaunchYChange: 0
-    SpeedChange: 0
-    LifetimeChange: 0
+    AmmoChange: 2
+    DamageChange: 0
+    ReloadChange: 3
+    BlastChange: 1
+    LaunchYChange: -0.5
+    SpeedChange: 1.5
+    LifetimeChange: 1
     LossChange: 0
     CulletPrice: 0
-    PelletPrice: 0
+    PelletPrice: 2
     SheetPrice: 0

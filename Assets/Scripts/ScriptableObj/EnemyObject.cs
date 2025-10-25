@@ -21,6 +21,7 @@ namespace ScriptableObj
         public float MegaDetectionOffset = 0;
         public float MegaStoppingOffset = 0;
         public float MegaHealthOffset = 0;
+        public float MegaDamageMultiplier = 1f;
 
         [Separator("Model Stats")] 
         public float SmallSize = 1f;

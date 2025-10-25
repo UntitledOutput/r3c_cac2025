@@ -129,10 +129,15 @@ public class GameUIController : MonoBehaviour
 
                 _catchProgress -= 0.1f * Time.deltaTime;
 
-                progressCircle.fillAmount = _catchProgress;
+                progressCircle.fillAmount = Mathf.Lerp(progressCircle.fillAmount, _catchProgress, Time.deltaTime*10f);
                 progressCircle.color = Color.Lerp(Color.red, Color.green, _catchProgress);
                 
                 yield return null;
+            }
+
+            if (_catchProgress >= 0.75f)
+            {
+                progressCircle.fillAmount = 1;
             }
 
             yield return captureButtonFrame.DOMoveY(-400f, 0.5f).SetEase(Ease.InOutQuad);

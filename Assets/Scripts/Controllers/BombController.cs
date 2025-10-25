@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using MyBox;
 using ScriptableObj;
 using UnityEngine;
@@ -13,10 +15,13 @@ namespace Controllers
         public float BlastRadius;
         public ActorBehavior.ActorTeam Target;
         
-        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade)
+        public GameObject ObjectToSpawnOnDestroy;
+        private List<ParticleSystem> _particleSystems;
+         
+        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, EnemyController enemy)
         {
             Lifetime = a.Lifetime + (upgrade?.LifetimeChange ?? 0);
-            Damage = a.Damage + (upgrade?.DamageChange ?? 0);
+            Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy  && enemy.IsMegaEnemy ? enemy.enemyObject.MegaDamageMultiplier : 1);
             Speed = a.Speed + (upgrade?.SpeedChange ?? 0);
             BlastRadius = a.BlastRadius + (upgrade?.BlastChange ?? 0);
             yMax = a.LaunchY + (upgrade?.LaunchYChange ?? 0);
@@ -49,6 +54,11 @@ namespace Controllers
             Vector3 velocity = velocityXZ + velocityY;
             
             _rigidbody.linearVelocity = velocity;
+            
+            if (ObjectToSpawnOnDestroy)
+                ObjectToSpawnOnDestroy.SetActive(false);
+
+            _particleSystems = GetComponentsInChildren<ParticleSystem>().ToList();
         }
 
         private void Update()
@@ -68,6 +78,18 @@ namespace Controllers
                 
                 if (enemy && enemy.Team == Target)
                     enemy.ChangeHealth(-Damage);
+            }
+            
+            
+            if (ObjectToSpawnOnDestroy)
+            {
+                ObjectToSpawnOnDestroy.SetActive(true);
+                ObjectToSpawnOnDestroy.transform.SetParent(null);
+                ObjectToSpawnOnDestroy.transform.localScale = Vector3.one;
+            }
+            foreach (var system in _particleSystems)
+            {
+                system.transform.SetParent(null);
             }
             
             Destroy(gameObject);

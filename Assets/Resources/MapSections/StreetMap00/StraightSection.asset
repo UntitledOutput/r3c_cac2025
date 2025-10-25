@@ -16,3 +16,4 @@ MonoBehaviour:
   AllowedConnections:
   - list:
     - {fileID: 11400000}
+    - {fileID: 11400000, guid: 9e0a989db7c796643acb95b994cd085d, type: 2}

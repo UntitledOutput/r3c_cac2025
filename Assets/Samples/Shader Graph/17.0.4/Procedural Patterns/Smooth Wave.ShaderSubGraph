@@ -11,6 +11,9 @@
         },
         {
             "m_Id": "723ce84b731df1859323d2826e40b83b"
+        },
+        {
+            "m_Id": "4a18a6ce8f4e4964a2b6220ead33e7df"
         }
     ],
     "m_Keywords": [],
@@ -71,6 +74,9 @@
         },
         {
             "m_Id": "b30dbb8909affb8d99dc7cbd4d445aef"
+        },
+        {
+            "m_Id": "89f96a27de174f858b7095992459c8da"
         }
     ],
     "m_GroupDatas": [
@@ -235,6 +241,20 @@
                     "m_Id": "98d5fbbff44f6083b1478e4383138f49"
                 },
                 "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "89f96a27de174f858b7095992459c8da"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "ccd0e0fdeb980f89947ae56aeab9ad9f"
+                },
+                "m_SlotId": 0
             }
         },
         {
@@ -721,6 +741,8 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": {
         "x": 1.0,
         "y": 1.0,
@@ -984,6 +1006,36 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector2ShaderProperty",
+    "m_ObjectId": "4a18a6ce8f4e4964a2b6220ead33e7df",
+    "m_Guid": {
+        "m_GuidSerialized": "f8c701d0-5ee3-4670-b4ea-f9ed41477858"
+    },
+    "m_Name": "UV",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "UV",
+    "m_DefaultReferenceName": "_UV",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "w": 0.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "4e927e3e86260186bbb36c64abac70a1",
@@ -1141,6 +1193,9 @@
     "m_Name": "",
     "m_ChildObjectList": [
         {
+            "m_Id": "4a18a6ce8f4e4964a2b6220ead33e7df"
+        },
+        {
             "m_Id": "33be3a4b197c6b8c8eab72929cb2585a"
         },
         {
@@ -1256,12 +1311,24 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": 0.25,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
-    }
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
 }
 
 {
@@ -1402,8 +1469,8 @@
     "m_ObjectId": "7d8eaa2d4f6e4dd0b6914d9575a3712e",
     "m_Title": "Calculate waved UVs",
     "m_Position": {
-        "x": 10.0,
-        "y": 10.0
+        "x": -677.0000610351563,
+        "y": -94.00003814697266
     }
 }
 
@@ -1511,6 +1578,42 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "89f96a27de174f858b7095992459c8da",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -1211.78466796875,
+            "y": -31.441818237304689,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "998fb035354247f7b2d036b855941688"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "4a18a6ce8f4e4964a2b6220ead33e7df"
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.DynamicVectorMaterialSlot",
     "m_ObjectId": "98bde37da64bb586bfa3daf211802ef5",
     "m_Id": 0,
@@ -1575,6 +1678,27 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
+    "m_ObjectId": "998fb035354247f7b2d036b855941688",
+    "m_Id": 0,
+    "m_DisplayName": "UV",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_Labels": []
 }
 
 {
@@ -1740,8 +1864,8 @@
     "m_ObjectId": "b5d31272f18646c8842bc87e760deadd",
     "m_Title": "Repeat wave and draw smooth edges",
     "m_Position": {
-        "x": 690.0,
-        "y": -96.0
+        "x": 690.0000610351563,
+        "y": -93.0000228881836
     }
 }
 
@@ -2133,12 +2257,24 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": 0.5,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
-    }
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
 }
 
 {

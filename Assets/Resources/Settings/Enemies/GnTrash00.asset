@@ -26,6 +26,6 @@ MonoBehaviour:
   Width: 0.5
   Height: 2
   Abilities:
-  - ability: {fileID: 11400000, guid: 07fda25ec843ec841b837f2d13f98de2, type: 2}
+  - ability: {fileID: 11400000, guid: 8a7a5a539d4393a479f185942158cccf, type: 2}
     type: 2
     cooldown: 1

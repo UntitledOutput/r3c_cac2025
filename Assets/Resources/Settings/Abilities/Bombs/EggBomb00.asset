@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
-  m_Name: TestBomb00
+  m_Name: EggBomb00
   m_EditorClassIdentifier: 
   DisplayName: Test Bomb
   Description: 'its a bomb
@@ -19,28 +19,14 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 1543f758baaa13d4e8b39ed9b90f392e, type: 3}
   Type: 1
   Reload: 1
-  Target: 1
+  Target: 0
   AmmoCount: 3
-  Damage: 1
+  Damage: 0.25
   ReloadTime: 1
   BlastRadius: 2
-  LaunchY: 3
+  LaunchY: 5
   Speed: 1
   Lifetime: 4
   LifetimeLossOnHit: 0.1
-  Prefab: {fileID: 12657403502098571, guid: 6ce89f5334fa07d4b8710a6988aaffac, type: 3}
-  Upgrades:
-  - Name: Bomb Upgrade
-    Description: Description
-    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
-    AmmoChange: 2
-    DamageChange: 0
-    ReloadChange: 3
-    BlastChange: 1
-    LaunchYChange: -0.5
-    SpeedChange: 1.5
-    LifetimeChange: 1
-    LossChange: 0
-    CulletPrice: 0
-    PelletPrice: 2
-    SheetPrice: 0
+  Prefab: {fileID: 12657403502098571, guid: 4c98b3aea011b4948af86b54dabb8b83, type: 3}
+  Upgrades: []

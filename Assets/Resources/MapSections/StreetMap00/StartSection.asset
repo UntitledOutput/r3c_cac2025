@@ -15,4 +15,4 @@ MonoBehaviour:
   Prefab: {fileID: 7185830479266547773, guid: 698d0af48f834594fbfa9c2a1ca36551, type: 3}
   AllowedConnections:
   - list:
-    - {fileID: 11400000, guid: d1908c7e30a0db747bb5f820de5df2a7, type: 2}
+    - {fileID: 11400000, guid: 9e0a989db7c796643acb95b994cd085d, type: 2}

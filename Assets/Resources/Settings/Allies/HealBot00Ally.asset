@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Test Ally
   Prefab: {fileID: 650237115694665637, guid: b07c041e7f7fa79458f63f89b53ee575, type: 3}
-  Icon: {fileID: 21300000, guid: 432ab5407fe316b4b94bff9ec1243e52, type: 3}
+  Icon: {fileID: 21300000, guid: ceab239a790ae3a49819d02d423bb328, type: 3}
+  Type: 0
   abilities:
   - {fileID: 11400000, guid: 2933b2047029a744fbaa74ea69b4fd26, type: 2}
   - {fileID: 11400000, guid: 43cea3112fdc65b4abea4f0c5e15d4ed, type: 2}

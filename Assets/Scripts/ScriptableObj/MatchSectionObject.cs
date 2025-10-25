@@ -15,5 +15,6 @@ namespace ScriptableObj
         }
 
         public List<SectionList> AllowedConnections;
+        public float Size = 40;
     }
 }

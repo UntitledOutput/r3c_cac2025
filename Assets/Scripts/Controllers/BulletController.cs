@@ -18,21 +18,38 @@ namespace Controllers
         
         private float _age;
 
-        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade)
+        public GameObject ObjectToSpawnOnDestroy;
+
+        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, EnemyController enemy)
         {
             Speed = a.Speed + (upgrade?.SpeedChange ?? 0);
             Lifetime = a.Lifetime + (upgrade?.LifetimeChange ?? 0);
-            Damage = a.Damage + (upgrade?.DamageChange ?? 0);
+            Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy  && enemy.IsMegaEnemy ? enemy.enemyObject.MegaDamageMultiplier : 1);;
             LifetimeLossOnHit = a.LifetimeLossOnHit + (upgrade?.LifetimeChange ?? 0); 
             Target = a.Target;
-        } 
+        }
+
+        private void Start()
+        {
+            if (ObjectToSpawnOnDestroy)
+                ObjectToSpawnOnDestroy.SetActive(false);
+        }
 
         private void Update()
         {
             _age += Time.deltaTime;
-            
+
             if (_age > Lifetime)
+            {
+                if (ObjectToSpawnOnDestroy)
+                {
+                    ObjectToSpawnOnDestroy.SetActive(true);
+                    ObjectToSpawnOnDestroy.transform.SetParent(null);
+                    ObjectToSpawnOnDestroy.transform.localScale = Vector3.one;
+                }
+
                 Destroy(gameObject);
+            }
 
             transform.position += transform.forward * (Time.deltaTime * Speed);
         }

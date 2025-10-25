@@ -27,10 +27,10 @@ public class TestLauncher : MonoBehaviour
                 
         bullet.transform.eulerAngles = transform.eulerAngles;
         if (ability.Type == AbilityObject.AbilityType.Shooter)
-            bullet.GetComponent<BulletController>().Derive(ability, null);
+            bullet.GetComponent<BulletController>().Derive(ability, null, null);
         else
         {
-            bullet.GetComponent<BombController>().Derive(ability, null);
+            bullet.GetComponent<BombController>().Derive(ability, null,null);
             bullet.GetComponent<BombController>().LaunchPosition = new Vector3(0,0,0);
             bullet.GetComponent<BombController>().yMax = YMax + Random.Range(-1.0f,1.0f);
             bullet.GetComponent<Rigidbody>().AddForce(new Vector3(0,2,0),ForceMode.Impulse);
