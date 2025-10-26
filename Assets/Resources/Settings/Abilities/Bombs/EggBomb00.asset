@@ -21,7 +21,7 @@ MonoBehaviour:
   Reload: 1
   Target: 0
   AmmoCount: 3
-  Damage: 0.25
+  Damage: 0.125
   ReloadTime: 1
   BlastRadius: 2
   LaunchY: 5

@@ -3578,6 +3578,7 @@ GameObject:
   - component: {fileID: 1439469372}
   - component: {fileID: 1439469371}
   - component: {fileID: 1439469373}
+  - component: {fileID: 1439469375}
   - component: {fileID: 1439469374}
   m_Layer: 3
   m_Name: Map
@@ -3679,6 +3680,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e70ada4b2ee4ff2428e12fd9e265b80c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1439469375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439469370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 264
+  m_UseGeometry: 1
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
 --- !u!1 &1497142209
 GameObject:
   m_ObjectHideFlags: 0
@@ -4708,9 +4741,12 @@ MonoBehaviour:
   - ally: {fileID: 11400000, guid: 04ef2d16b1524d04ab4f844464c35e15, type: 2}
     level: 0
     levelProgress: 0
+  - ally: {fileID: 11400000, guid: c9b7d6af995b193439c40941e9901ba8, type: 2}
+    level: 0
+    levelProgress: 0
   SmallEnemies: []
   LargeEnemies: []
-  CurrentMap: {fileID: 11400000, guid: f88787dded7c8f640b611dc11f076425, type: 2}
+  CurrentMap: {fileID: 11400000, guid: 95fe06f06ebd2234f90c8e40976543f8, type: 2}
   _gateControllers: []
 --- !u!4 &1767696529
 Transform:

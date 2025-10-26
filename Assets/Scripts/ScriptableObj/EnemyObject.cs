@@ -49,5 +49,7 @@ namespace ScriptableObj
         [Separator("Abilities")]
         
         public List<EnemyAbility> Abilities;
+
+        [Separator("Recycling")] public List<AllyObject> PossibleAllies;
     }
 }

@@ -124,13 +124,13 @@ namespace Controllers
             if (_ability.ammo <= 0)
                 return false;
             _ability.ammo -= 1;
-            if (_ability.data.Type != AbilityObject.AbilityType.Effect)
+            if (_ability.data.Type != AbilityObject.AbilityType.Effect && _ability.data.Type != AbilityObject.AbilityType.Melee)
             {
                 if (_ability.data.Type == AbilityObject.AbilityType.Bomb)
                 {
                     // check if it fails or not
-                    var g = 9.8f * (_ability.data.Speed +  (_ability.upgrade?.SpeedChange) ?? 0);
-                    var yMax = _ability.data.LaunchY +  (_ability.upgrade?.LaunchYChange ?? 0);
+                    var g = 9.8f * (_ability.data.Speed +  ((_ability.upgrade?.SpeedChange) ?? 0));
+                    var yMax = _ability.data.LaunchY +  ((_ability.upgrade?.LaunchYChange ?? 0));
                     var y_0 = transform.position.y - shootPoint.y;
 
                     Vector3 displacementXZ = shootPoint - transform.position;
@@ -174,13 +174,40 @@ namespace Controllers
                 }
 
             }
-            else
+            else if (_ability.data.Type == AbilityObject.AbilityType.Effect)
             {
                 
                 var effect = Instantiate(_ability.data.Prefab);
                 effect.transform.position = transform.position;
 
                 effect.GetComponent<AbilityEffectController>().ability = _ability.data;
+            } else if (_ability.data.Type == AbilityObject.AbilityType.Melee)
+            {
+                // speed poses as a distance value
+                var distance = _ability.data.Speed + ((_ability.upgrade?.SpeedChange) ?? 0);
+
+
+                Collider[] results = new Collider[1];
+                var size = Physics.OverlapSphereNonAlloc(transform.position, distance, results, _actor.Team == ActorBehavior.ActorTeam.Enemy
+                    ? LayerMask.GetMask("Player")
+                    : LayerMask.GetMask("Enemy"));
+                
+                // Debug.Log(results[0]);
+                // Debug.Log(                  _actor.Team == ActorBehavior.ActorTeam.Enemy
+                //     ? "Player"
+                //     : "Enemy");
+                // Debug.Log(distance);
+                // Debug.Log(_ability.data.Speed);
+                
+                if (results[0])
+                {
+                    ActorBehavior actor = results[0].GetComponent<ActorBehavior>();
+
+                    if (actor && actor.Team != _actor.Team)
+                    {
+                        actor.ChangeHealth(-(_ability.data.Damage + ((_ability.upgrade?.DamageChange) ?? 0)));
+                    }
+                }
             }
 
             return true;

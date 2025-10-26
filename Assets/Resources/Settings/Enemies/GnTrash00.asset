@@ -21,6 +21,7 @@ MonoBehaviour:
   MegaDetectionOffset: 2.5
   MegaStoppingOffset: 0
   MegaHealthOffset: 1
+  MegaDamageMultiplier: 1
   SmallSize: 1
   MegaSize: 2.5
   Width: 0.5
@@ -29,3 +30,5 @@ MonoBehaviour:
   - ability: {fileID: 11400000, guid: 8a7a5a539d4393a479f185942158cccf, type: 2}
     type: 2
     cooldown: 1
+  PossibleAllies:
+  - {fileID: 11400000, guid: c9b7d6af995b193439c40941e9901ba8, type: 2}

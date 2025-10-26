@@ -755,7 +755,7 @@ public class HomeController : MonoBehaviour
                 // making new ally
                 if (_selectedAllySlot == -1)
                 {
-                    AllyObject ally = Resources.LoadAll<AllyObject>("Settings/Allies").GetRandom();
+                    AllyObject ally = _recycleEnemies.GetRandom().PossibleAllies.GetRandom();
 
                     _recycleResultFrame.Find("Icon").GetComponent<Image>().sprite = ally.Icon;
                     _recycleResultFrame.Find("AllyName").GetComponent<TMP_Text>().text = ally.Name;

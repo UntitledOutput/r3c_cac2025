@@ -20,6 +20,7 @@ namespace ScriptableObj
             Shooter,
             Bomb,
             Effect,
+            Melee
         }
         
         public enum ReloadType

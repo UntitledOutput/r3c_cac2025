@@ -29,6 +29,8 @@ namespace Controllers
             [SerializeField] private int abilityIndex = -1;
             private AbilityController _controller;
 
+            public float GetCooldownTimer() => cooldownTimer;
+
             public bool Trigger(Vector3 shootPoint, Animator animator)
             {
                 if (abilityIndex < 0)
@@ -67,6 +69,7 @@ namespace Controllers
         
         [SerializeField] private List<AllyAbilityInstance> abilities = new List<AllyAbilityInstance>();
 
+        public AllyAbilityInstance GetAbility(int index) => abilities[index];
 
         public AllyObject.AllyInstance ally;
         
@@ -104,9 +107,9 @@ namespace Controllers
             }
         }
 
-        protected void TryAbility(int abilityIndex, Vector3 point)
+        protected bool TryAbility(int abilityIndex, Vector3 point)
         {
-            abilities[abilityIndex].Trigger(point, _animator);
+            return abilities[abilityIndex].Trigger(point, _animator);
         }
 
         public virtual void OnDeath()
