@@ -20,7 +20,8 @@ namespace ScriptableObj
             Shooter,
             Bomb,
             Effect,
-            Melee
+            Melee,
+            Trigger
         }
         
         public enum ReloadType
@@ -46,13 +47,22 @@ namespace ScriptableObj
         [ConditionalField("Type", false,AbilityType.Bomb)]
         public float LaunchY;
         
-        [ConditionalField("Type", true,AbilityType.Effect)]
+        [ConditionalField("Type", true,new object[]{AbilityType.Effect, AbilityType.Melee}, 0)]
         public float Speed;
+        
+        [ConditionalField("Type", false,AbilityType.Melee, 0)]
+        public float Distance;
+
+        [ConditionalField("Type", false,AbilityType.Melee)]
+        public int PossibleTargetCount = 1;
 
         public float Lifetime;
         
         [ConditionalField("Type", false,AbilityType.Shooter)]
         public float LifetimeLossOnHit;
+        
+        [ConditionalField("Type", false,AbilityType.Trigger)]
+        public string Trigger;
 
 
         public GameObject Prefab;
@@ -73,6 +83,9 @@ namespace ScriptableObj
             public float SpeedChange;
             public float LifetimeChange;
             public float LossChange;
+            public float DistanceChange;
+            public int TargetCountChange = 1;
+
             
             [Header("Prices")]
             public int CulletPrice;

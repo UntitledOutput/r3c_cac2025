@@ -119,12 +119,14 @@ namespace Controllers
             return Vector3.zero;
         }
 
+        private Collider[] _results = new Collider[10];
+
         public bool TryShoot(Vector3 shootPoint)
         {
             if (_ability.ammo <= 0)
                 return false;
             _ability.ammo -= 1;
-            if (_ability.data.Type != AbilityObject.AbilityType.Effect && _ability.data.Type != AbilityObject.AbilityType.Melee)
+            if (_ability.data.Type != AbilityObject.AbilityType.Effect && _ability.data.Type != AbilityObject.AbilityType.Melee && _ability.data.Type != AbilityObject.AbilityType.Trigger)
             {
                 if (_ability.data.Type == AbilityObject.AbilityType.Bomb)
                 {
@@ -164,12 +166,12 @@ namespace Controllers
 
                 bullet.transform.eulerAngles = transform.eulerAngles;
                 if (_ability.data.Type == AbilityObject.AbilityType.Shooter)
-                    bullet.GetComponent<BulletController>().Derive(_ability.data, _ability.upgrade, _baseEnemy);
+                    bullet.GetComponent<BulletController>().Derive(_ability.data, _ability.upgrade, _actor);
                 else
                 {
 
                     
-                    bullet.GetComponent<BombController>().Derive(_ability.data,_ability.upgrade, _baseEnemy );
+                    bullet.GetComponent<BombController>().Derive(_ability.data,_ability.upgrade, _actor );
                     bullet.GetComponent<BombController>().LaunchPosition = shootPoint;
                 }
 
@@ -181,14 +183,14 @@ namespace Controllers
                 effect.transform.position = transform.position;
 
                 effect.GetComponent<AbilityEffectController>().ability = _ability.data;
+                effect.GetComponent<AbilityEffectController>().actor = _actor;
             } else if (_ability.data.Type == AbilityObject.AbilityType.Melee)
             {
                 // speed poses as a distance value
-                var distance = _ability.data.Speed + ((_ability.upgrade?.SpeedChange) ?? 0);
+                var distance = _ability.data.Distance + ((_ability.upgrade?.DistanceChange) ?? 0);
 
-
-                Collider[] results = new Collider[1];
-                var size = Physics.OverlapSphereNonAlloc(transform.position, distance, results, _actor.Team == ActorBehavior.ActorTeam.Enemy
+                
+                var size = Physics.OverlapSphereNonAlloc(transform.position, distance, _results, _actor.Team == ActorBehavior.ActorTeam.Enemy
                     ? LayerMask.GetMask("Player")
                     : LayerMask.GetMask("Enemy"));
                 
@@ -198,16 +200,20 @@ namespace Controllers
                 //     : "Enemy");
                 // Debug.Log(distance);
                 // Debug.Log(_ability.data.Speed);
-                
-                if (results[0])
+
+                for (int i = 0; i < Mathf.Min(size,_ability.data.PossibleTargetCount + (_ability.upgrade?.SpeedChange ?? 0)); i++)
                 {
-                    ActorBehavior actor = results[0].GetComponent<ActorBehavior>();
+
+                    ActorBehavior actor = _results[i].GetComponent<ActorBehavior>();
 
                     if (actor && actor.Team != _actor.Team)
                     {
-                        actor.ChangeHealth(-(_ability.data.Damage + ((_ability.upgrade?.DamageChange) ?? 0)));
+                        actor.ChangeHealth(-(_ability.data.Damage + ((_ability.upgrade?.DamageChange) ?? 0)),actor);
                     }
                 }
+            } else if (_ability.data.Type == AbilityObject.AbilityType.Trigger)
+            {
+                _actor.SendMessage(_ability.data.Trigger,shootPoint, SendMessageOptions.RequireReceiver);
             }
 
             return true;

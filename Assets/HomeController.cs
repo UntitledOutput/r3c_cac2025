@@ -887,7 +887,7 @@ public class HomeController : MonoBehaviour
 
             int glassCount = 0, metalCount = 0, plasticCount = 0;
 
-            int tl_itr = 0;
+            int tl_itr = Random.Range(0,2);
             while (trashLeft > 0)
             {
                 var val = Random.Range(1, trashLeft);
@@ -950,7 +950,7 @@ public class HomeController : MonoBehaviour
 
             _postMatchFrame.gameObject.SetActive(true);
 
-            yield return _postMatchFrame.DOMoveY(540, 0.5f).SetEase(Ease.InOutQuad);
+            yield return _postMatchFrame.DOAnchorPosY(540, 0.5f).SetEase(Ease.InOutQuad);
 
             if (pmd.won)
             {
@@ -1033,7 +1033,7 @@ public class HomeController : MonoBehaviour
 
             yield return new WaitForSeconds(2.5f);
             
-            yield return _postMatchFrame.DOMoveY(-540, 0.5f).SetEase(Ease.InOutQuad);
+            yield return _postMatchFrame.DOAnchorPosY(-540, 0.5f).SetEase(Ease.InOutQuad);
 
             yield return new WaitForSeconds(0.75f);
             

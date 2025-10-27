@@ -34,6 +34,9 @@ public class CrushBot00AllyController : AllyController
         base.Update();
         
         ProceduralLegs();
+        
+        if (!_isAlive)
+            return;
 
         if (_targetEnemy == null)
         {
@@ -161,6 +164,13 @@ public class CrushBot00AllyController : AllyController
 
 
             yield return new WaitForSeconds(0.125f);
+            
+            if (!_targetEnemy)
+            {
+                _IsAttacking = false;
+                _agent.radius = 0.75f;
+                yield break;
+            }
 
             var startPosition = transform.position;
             var endPosition = _targetEnemy.transform.position;

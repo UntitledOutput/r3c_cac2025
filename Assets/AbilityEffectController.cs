@@ -11,11 +11,13 @@ public class AbilityEffectController : MonoBehaviour
     public AbilityObject.AbilityUpgrade upgrade;
 
     private float _time = 0;
+    public float Radius = 1f;
 
     private Renderer _renderer;
     private ParticleSystem[] _particleSystems;
 
-    private List<ActorBehavior> actorsInRange = new List<ActorBehavior>();
+    public List<ActorBehavior> actorsInRange = new List<ActorBehavior>();
+    public ActorBehavior actor;
 
 #if UNITY_EDITOR
     [ButtonMethod]
@@ -35,12 +37,17 @@ public class AbilityEffectController : MonoBehaviour
     void Start()
     {
         _renderer = GetComponent<Renderer>();
+
+        if (!_renderer)
+            _renderer = GetComponentInChildren<Renderer>();
+        
+        
         _particleSystems = GetComponentsInChildren<ParticleSystem>();
         _renderer.material.SetFloat(EffectTime, 0);
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (ability && ability.Type != AbilityObject.AbilityType.Effect)
         {
@@ -74,25 +81,21 @@ public class AbilityEffectController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        foreach (var actorBehavior in actorsInRange)
+        var caughtColliders = Physics.OverlapSphere(transform.position, Radius*transform.lossyScale.magnitude, LayerMask.GetMask("Enemy", "Player", "Default"));
+        
+        foreach (var caughtCollider in caughtColliders)
         {
+            var actorBehavior = caughtCollider.GetComponent<ActorBehavior>();
             if (ability && actorBehavior && actorBehavior.Team == ability.Target)
             {
-                actorBehavior.ChangeHealth(-(ability.Damage+(upgrade?.DamageChange ?? 0))*Time.fixedDeltaTime);
+                actorBehavior.ChangeHealth(-(ability.Damage+(upgrade?.DamageChange ?? 0))*Time.fixedDeltaTime,actor);
+
             }
         }
     }
 
-
-    private void OnTriggerEnter(Collider other)
+    private void OnDrawGizmosSelected()
     {
-        var actorBehavior = other.GetComponent<ActorBehavior>();
-        actorsInRange.Add(actorBehavior);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        var actorBehavior = other.GetComponent<ActorBehavior>();
-        actorsInRange.Remove(actorBehavior);
+        Gizmos.DrawWireSphere(transform.position,Radius*transform.lossyScale.magnitude);
     }
 }

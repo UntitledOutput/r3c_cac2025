@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers;
@@ -13,6 +14,7 @@ public class ActorBehavior : MonoBehaviour
         protected CapsuleCollider _capsuleCollider;
         protected NavMeshAgent _agent;
         protected Animator _animator;
+        public Transform Model { get; private set; }
         
         [SerializeField]
         protected float _health = 1;
@@ -75,10 +77,53 @@ public class ActorBehavior : MonoBehaviour
 
         public ActorTeam Team;
 
-        public void ChangeHealth(float diff)
+        public virtual void ChangeHealth(float diff, ActorBehavior source)
         {
             _health += diff;
             _health = Mathf.Clamp(_health, 0, 1);
+        }
+
+        private bool lerping = false;
+        IEnumerator LerpToPos(Vector3 p, float length)
+        {
+            lerping = true;
+
+            float timeElapsed = 0;
+            float moveDuration = length;
+
+            var startPosition = transform.position;
+            
+            do
+            {
+                // Add time since last frame to the time elapsed
+                timeElapsed += Time.deltaTime;
+
+                float normalizedTime = timeElapsed / moveDuration;
+                //normalizedTime = Easing.EaseInOutQuint(normalizedTime);
+
+                // Interpolate position and rotation
+                transform.position = Vector3.Lerp(startPosition, p,normalizedTime);
+
+                var pos = transform.position;
+                if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 0.1f, NavMesh.AllAreas))
+                {
+                    transform.position = hit.position;
+                }
+
+                _agent.isStopped = true;
+                
+                // Wait for one frame
+                yield return null;
+            } while (timeElapsed < moveDuration);
+            
+            lerping = false;
+        }
+        public void LerpToPosition(Vector3 position, float time)
+        {
+            if (!lerping)
+            {
+                StartCoroutine(LerpToPos(position, time));
+            }
         }
         
         private void Awake()
@@ -88,6 +133,7 @@ public class ActorBehavior : MonoBehaviour
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponentInChildren<Animator>();
+            Model = transform.Find("Model");
         }
 
         private Vector3 _cachedPosition;

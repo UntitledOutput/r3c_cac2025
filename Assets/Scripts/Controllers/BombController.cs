@@ -14,12 +14,17 @@ namespace Controllers
         public float Speed;
         public float BlastRadius;
         public ActorBehavior.ActorTeam Target;
+
+        private ActorBehavior actor;
         
         public GameObject ObjectToSpawnOnDestroy;
         private List<ParticleSystem> _particleSystems;
          
-        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, EnemyController enemy)
+        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, ActorBehavior actor)
         {
+            var enemy = actor.GetComponent<EnemyController>();
+            this.actor = actor;
+            
             Lifetime = a.Lifetime + (upgrade?.LifetimeChange ?? 0);
             Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy  && enemy.IsMegaEnemy ? enemy.enemyObject.MegaDamageMultiplier : 1);
             Speed = a.Speed + (upgrade?.SpeedChange ?? 0);
@@ -77,7 +82,7 @@ namespace Controllers
                 var enemy = collider.GetComponent<ActorBehavior>();
                 
                 if (enemy && enemy.Team == Target)
-                    enemy.ChangeHealth(-Damage);
+                    enemy.ChangeHealth(-Damage,actor);
             }
             
             

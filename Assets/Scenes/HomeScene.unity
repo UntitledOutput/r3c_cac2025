@@ -16217,6 +16217,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
       propertyPath: '_save.enemyInventory.Array.data[0]'
       value: 
       objectReference: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
@@ -16229,11 +16233,35 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
     - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.data[1].ally
+      value: 
+      objectReference: {fileID: 11400000, guid: c9b7d6af995b193439c40941e9901ba8, type: 2}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.data[2].ally
+      value: 
+      objectReference: {fileID: 11400000, guid: 4dcd6f121139609429666f6fcb18bbe8, type: 2}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
       propertyPath: _save.availableAllies.Array.data[0].level
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.data[1].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.data[2].level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
       propertyPath: _save.availableAllies.Array.data[0].levelProgress
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.data[1].levelProgress
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1481468363498065390, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}
+      propertyPath: _save.availableAllies.Array.data[2].levelProgress
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3132160725863770334, guid: 79e6ed39934ed1343931106260c4e6a8, type: 3}

@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayName: test enemy small
   Prefab: {fileID: 3894466861749004057, guid: b5245df3ad4246542afadc94c9ff9b48, type: 3}
-  Icon: {fileID: 21300000, guid: 432ab5407fe316b4b94bff9ec1243e52, type: 3}
-  DetectionRadius: 5
-  StoppingDistance: 5
+  Icon: {fileID: 21300000, guid: 19c4f2842e092044e96a830aac408772, type: 3}
+  DetectionRadius: 3.5
+  StoppingDistance: 2
   HealthMax: 1
   MegaDetectionOffset: 2.5
   MegaStoppingOffset: 0
   MegaHealthOffset: 1
-  MegaDamageMultiplier: 1
+  MegaDamageMultiplier: 3
   SmallSize: 1
   MegaSize: 2.5
   Width: 0.5
@@ -30,5 +30,8 @@ MonoBehaviour:
   - ability: {fileID: 11400000, guid: b064109c5a4a40b488d0d5b0e29dd79d, type: 2}
     type: 1
     cooldown: 12.5
+  - ability: {fileID: 11400000, guid: a485a0d179ad283419dcf06ac739abf1, type: 2}
+    type: 2
+    cooldown: 3
   PossibleAllies:
-  - {fileID: 11400000, guid: c9b7d6af995b193439c40941e9901ba8, type: 2}
+  - {fileID: 11400000, guid: 4dcd6f121139609429666f6fcb18bbe8, type: 2}

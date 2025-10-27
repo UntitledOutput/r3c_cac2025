@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9121857784128354090}
   - component: {fileID: 1672129222319339669}
   - component: {fileID: 6808711853229553881}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TrashBullet00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 8947127895435033157}
   - component: {fileID: 6166730603618748056}
   - component: {fileID: 473045018403972085}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5011,7 +5011,7 @@ GameObject:
   - component: {fileID: 1017484770252454972}
   - component: {fileID: 7841380358465625333}
   - component: {fileID: 531399243172073856}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9988,6 +9988,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 5d0f58339a88fbd488578aafb586e45d, type: 3}
       propertyPath: m_Name
       value: trashbag00
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5d0f58339a88fbd488578aafb586e45d, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

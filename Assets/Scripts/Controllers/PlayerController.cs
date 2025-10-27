@@ -161,7 +161,17 @@ public class PlayerController : ActorBehavior
 
         
     }
-    
+
+    public override void ChangeHealth(float diff, ActorBehavior source)
+    {
+        base.ChangeHealth(diff, source);
+        foreach (var allyController in Allies)
+        {
+            if (allyController)
+                allyController.OnPlayerChangeHealth(diff, source);
+        }
+    }
+
     private Vector3 CalculateMoveDirection(Vector2 movement)
     {
         var moveDirection = new Vector3(movement.x, 0, movement.y).normalized;

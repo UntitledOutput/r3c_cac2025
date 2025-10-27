@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9121857784128354090}
   - component: {fileID: 1672129222319339669}
   - component: {fileID: 6808711853229553881}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlayerBullet00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 2192268510516709507}
   - component: {fileID: 3369161937864673999}
   - component: {fileID: 7719996805757838918}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4953,7 +4953,7 @@ GameObject:
   - component: {fileID: 6671797522370248890}
   - component: {fileID: 3404653539570968613}
   - component: {fileID: 7095729568934343831}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5042,7 +5042,7 @@ GameObject:
   - component: {fileID: 5610883524758049514}
   - component: {fileID: 1958198976141890350}
   - component: {fileID: 2837483389553598175}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}

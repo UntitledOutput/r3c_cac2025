@@ -74,7 +74,7 @@ MonoBehaviour:
   _health: 1
   Team: 0
   _enemyState: 0
-  enemyObject: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
+  enemyObject: {fileID: 11400000, guid: e058b6c6180d4f04f93bc23212ab7aa2, type: 2}
   IsMegaEnemy: 0
   abilities: []
 --- !u!195 &5116434440611176131

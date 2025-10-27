@@ -358,7 +358,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "MainLighting",
+    "m_Name": "Main Lighting",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -476,6 +476,8 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": {
         "x": 1.0,
         "y": 0.0,
@@ -513,8 +515,8 @@
     "m_ObjectId": "0f43a906558540e7a358bfd875f1114f",
     "m_Title": "Mega Effect",
     "m_Position": {
-        "x": 1601.000244140625,
-        "y": 394.0000305175781
+        "x": 1601.0,
+        "y": 394.0
     }
 }
 
@@ -538,12 +540,24 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": 1.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
         "y": 1.0
-    }
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
 }
 
 {
@@ -982,6 +996,8 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": {
         "x": 0.0,
         "y": 0.0,
@@ -1448,6 +1464,8 @@
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
     "m_Value": false
 }
 

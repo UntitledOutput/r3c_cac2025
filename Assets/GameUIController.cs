@@ -99,7 +99,16 @@ public class GameUIController : MonoBehaviour
         IEnumerator catchProcess()
         {
             FindFirstObjectByType<PlayerController>().BlockMovement = true;
+            
+            FindFirstObjectByType<PlayerController>().Model.gameObject.SetActive(false);
+            var allies = FindObjectsByType<AllyController>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+            foreach (var allyController in allies)
+            {
+                allyController.Model.gameObject.SetActive(false);
+            }
 
+            
+            
             var cam = Camera.main.GetComponent<CameraController>();
             cam.FocusOnPlayer = false;
             
@@ -110,7 +119,7 @@ public class GameUIController : MonoBehaviour
             
             
             var catchFrame = transform.Find("CatchFrame");
-            var captureButtonFrame = catchFrame.Find("CaptureFrame");
+            var captureButtonFrame = catchFrame.Find("CaptureFrame") as RectTransform;
             
             var progressCircle = captureButtonFrame.Find("ProgressCircle").GetComponent<Image>();
             
@@ -118,7 +127,7 @@ public class GameUIController : MonoBehaviour
             
             captureButtonFrame.position = captureButtonFrame.position.SetY(-400f);
             
-            yield return captureButtonFrame.DOMoveY(27.5f, 0.5f).SetEase(Ease.InOutQuad);
+            yield return captureButtonFrame.DOAnchorPosY(27.5f, 0.5f).SetEase(Ease.InOutQuad);
             
             catchFrame.gameObject.SetActive(true);
 
@@ -140,7 +149,7 @@ public class GameUIController : MonoBehaviour
                 progressCircle.fillAmount = 1;
             }
 
-            yield return captureButtonFrame.DOMoveY(-400f, 0.5f).SetEase(Ease.InOutQuad);
+            yield return captureButtonFrame.DOAnchorPosY(-400f, 0.5f).SetEase(Ease.InOutQuad);
 
             yield return new WaitForSeconds(0.5f);
             
@@ -152,12 +161,12 @@ public class GameUIController : MonoBehaviour
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
-                yield return captureText.DOMoveY(540f, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(540f, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,15f), 1.5f).SetEase(Ease.InOutBack);
 
                 yield return new WaitForSeconds(2.5f);
                 
-                yield return captureText.DOMoveY(-250, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(-250, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,0f), 1.5f).SetEase(Ease.InOutBack);
 
                 MatchController._instance.AddCaughtEnemy(enemy.enemyObject);
@@ -172,12 +181,12 @@ public class GameUIController : MonoBehaviour
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
-                yield return captureText.DOMoveY(540f, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(540f, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,5f), 1.5f).SetEase(Ease.InOutBack);
 
                 yield return new WaitForSeconds(2.5f);
                 
-                yield return captureText.DOMoveY(-250, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(-250, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,0f), 1.5f).SetEase(Ease.InOutBack);
 
 

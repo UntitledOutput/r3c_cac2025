@@ -19,9 +19,14 @@ namespace Controllers
         private float _age;
 
         public GameObject ObjectToSpawnOnDestroy;
+        private ActorBehavior actor;
 
-        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, EnemyController enemy)
+        public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, ActorBehavior actor)
         {
+            var enemy = actor.GetComponent<EnemyController>();
+
+            this.actor = actor;
+            
             Speed = a.Speed + (upgrade?.SpeedChange ?? 0);
             Lifetime = a.Lifetime + (upgrade?.LifetimeChange ?? 0);
             Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy  && enemy.IsMegaEnemy ? enemy.enemyObject.MegaDamageMultiplier : 1);;
@@ -63,14 +68,10 @@ namespace Controllers
 
                 transform.forward = reflectedVelocity;
             }
-
-            if (other.gameObject.layer == (Target == ActorBehavior.ActorTeam.Enemy ? LayerMask.NameToLayer("Enemy") : LayerMask.NameToLayer("Player")))
-            {
-                var actor = other.gameObject.GetComponent<ActorBehavior>();
-                if (actor)
-                    actor.ChangeHealth(-Damage);
-            }
-
+            var actor = other.gameObject.GetComponent<ActorBehavior>();
+            if (actor && actor.Team == Target)
+                actor.ChangeHealth(-Damage,this.actor);
+            
             _age += (Lifetime * LifetimeLossOnHit);
         }
     }

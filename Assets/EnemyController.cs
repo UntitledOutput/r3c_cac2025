@@ -27,7 +27,7 @@ public class EnemyController : ActorBehavior
     }
 
     [SerializeField, ReadOnly] private EnemyState _enemyState = EnemyState.Idle;
-    private PlayerController _player;
+    public ActorBehavior target;
 
     public EnemyObject enemyObject;
     public bool IsMegaEnemy;
@@ -193,43 +193,43 @@ public class EnemyController : ActorBehavior
                     _slider.gameObject.SetActive(false); 
             }
             
-            foreach (var collider in Physics.OverlapSphere(transform.position, enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0)))
+            foreach (var collider in Physics.OverlapSphere(transform.position, enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0), LayerMask.GetMask("Player")))
             {
-                var enemy = collider.GetComponent<EnemyController>();
-                var player = collider.GetComponent<PlayerController>();
+                var enemy = collider.GetComponent<ActorBehavior>();
 
-                if (player)
+                if (enemy && enemy.Team == ActorTeam.Player && enemy.IsAlive)
                 {
+                    var ally = enemy.As<AllyController>();
+                    if (ally && !ally._isAlive)
+                        continue;
+                    
                     _enemyState = EnemyState.Attacking;
-                    _player = player;
-                }
-                else if (enemy)
-                {
-
+                    target = enemy;
                 }
             }
+            
 
             if (_enemyState == EnemyState.Attacking && _isAlive)
             {
-                var distance = Vector3.Distance(_player.transform.position, transform.position);
+                var distance = Vector3.Distance(target.transform.position, transform.position);
                 _agent.isStopped = false;
 
-                _abilityController._targetActor = _player;
+                _abilityController._targetActor = target;
                 
                 if (distance > enemyObject.StoppingDistance + (IsMegaEnemy ? enemyObject.MegaStoppingOffset : 0))
                 {
-                    _agent.SetDestination(_player.transform.position);
-                    TriggerAbilityOnCondition(_player.transform.position, EnemyObject.EnemyAbilityType.OnChase);
+                    _agent.SetDestination(target.transform.position);
+                    TriggerAbilityOnCondition(target.transform.position, EnemyObject.EnemyAbilityType.OnChase);
                 }
                 else
                 {
                     _agent.isStopped = true;
 
                     var eul = transform.eulerAngles;
-                    transform.LookAt(_player.transform.position);
+                    transform.LookAt(target.transform.position);
                     transform.eulerAngles = Vector3.Slerp(eul, transform.eulerAngles, Time.deltaTime * 5f);
 
-                    TriggerAbilityOnCondition(_player.transform.position, EnemyObject.EnemyAbilityType.OnStop);
+                    TriggerAbilityOnCondition(target.transform.position, EnemyObject.EnemyAbilityType.OnStop);
                 }
 
                 if (distance > (enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0)) * 1.5)
@@ -283,19 +283,22 @@ public class EnemyController : ActorBehavior
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0));
-        
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, (enemyObject.DetectionRadius+(IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0))*1.5f);
-        
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, enemyObject.StoppingDistance +(IsMegaEnemy ? enemyObject.MegaStoppingOffset : 0));
 
+        Gizmos.DrawIcon(transform.position+new Vector3(0,Height/2,0), $"Enemy/{enemyObject.Icon.name}.png");
         if (_enemyState == EnemyState.Attacking)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position,_player.transform.position);
+            Gizmos.DrawLine(transform.position,target.transform.position);
+            
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, enemyObject.StoppingDistance +(IsMegaEnemy ? enemyObject.MegaStoppingOffset : 0));
+            
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, (enemyObject.DetectionRadius+(IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0))*1.5f);
+            
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, enemyObject.DetectionRadius + (IsMegaEnemy ? enemyObject.MegaDetectionOffset : 0));
+
             
         }
 

@@ -24,7 +24,8 @@ MonoBehaviour:
   BlastRadius: 0
   LaunchY: 0
   Speed: 12
+  PossibleTargetCount: 1
   Lifetime: 0.5
-  LifetimeLossOnHit: 0.9
+  LifetimeLossOnHit: 1
   Prefab: {fileID: 12657403502098571, guid: 759821cbbcc1f1c4b96b0d4a3aacc923, type: 3}
   Upgrades: []

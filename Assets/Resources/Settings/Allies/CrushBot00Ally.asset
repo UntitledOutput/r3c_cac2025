@@ -19,3 +19,6 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 324e70044f7b4d646bd5c09e2551688d, type: 2}
   - {fileID: 11400000, guid: b035b7b2877568f478b5ad5426498c67, type: 2}
+  Health: 1
+  TimeToRecover: 16
+  ShowHealthBar: 1

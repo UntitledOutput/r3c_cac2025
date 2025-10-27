@@ -19,12 +19,15 @@ MonoBehaviour:
   Reload: 1
   Target: 1
   AmmoCount: 1
-  Damage: 3
-  ReloadTime: 1
+  Damage: 0.75
+  ReloadTime: 2.5
   BlastRadius: 0
   LaunchY: 0
-  Speed: 7.5
+  Speed: 5
+  Distance: 1
+  PossibleTargetCount: 3
   Lifetime: 0
   LifetimeLossOnHit: 0
+  Trigger: 
   Prefab: {fileID: 0}
   Upgrades: []

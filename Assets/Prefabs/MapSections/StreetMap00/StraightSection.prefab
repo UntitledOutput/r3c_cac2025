@@ -54,6 +54,8 @@ MonoBehaviour:
     list:
     - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
       weight: 1
+    - value: {fileID: 11400000, guid: e058b6c6180d4f04f93bc23212ab7aa2, type: 2}
+      weight: 1
   IsEnd: 0
   IsMatchEnd: 0
   MakeMega: 0
@@ -110,7 +112,11 @@ MonoBehaviour:
   enemies:
     list:
     - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
-      weight: 1
+      weight: 0.33333334
+    - value: {fileID: 11400000, guid: e058b6c6180d4f04f93bc23212ab7aa2, type: 2}
+      weight: 0.33333334
+    - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
+      weight: 0.33333334
   IsEnd: 0
   IsMatchEnd: 0
   MakeMega: 1
@@ -231,6 +237,8 @@ MonoBehaviour:
     list:
     - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
       weight: 1
+    - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
+      weight: 1
   IsEnd: 0
   IsMatchEnd: 0
   MakeMega: 0
@@ -286,7 +294,7 @@ MonoBehaviour:
   OnlyRunIfNotMatchEnd: 0
   enemies:
     list:
-    - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
+    - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
       weight: 1
   IsEnd: 0
   IsMatchEnd: 0
@@ -344,6 +352,8 @@ MonoBehaviour:
   enemies:
     list:
     - value: {fileID: 11400000, guid: eef4f085a8bd8ed42ac86ce5d9b8032b, type: 2}
+      weight: 1
+    - value: {fileID: 11400000, guid: e058b6c6180d4f04f93bc23212ab7aa2, type: 2}
       weight: 1
   IsEnd: 0
   IsMatchEnd: 0

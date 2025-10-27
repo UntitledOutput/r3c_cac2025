@@ -21,11 +21,12 @@ MonoBehaviour:
   Reload: 1
   Target: 0
   AmmoCount: 3
-  Damage: 0.125
+  Damage: 0.0625
   ReloadTime: 1
   BlastRadius: 2
   LaunchY: 5
   Speed: 1
+  PossibleTargetCount: 1
   Lifetime: 4
   LifetimeLossOnHit: 0.1
   Prefab: {fileID: 12657403502098571, guid: 4c98b3aea011b4948af86b54dabb8b83, type: 3}

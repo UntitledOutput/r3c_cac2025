@@ -21,7 +21,10 @@ namespace ScriptableObj
 
         public AllyType Type;
         public List<AbilityObject> abilities;
-        
+
+        public float Health = 1; 
+        public float TimeToRecover = 0;
+        public bool ShowHealthBar = true;
         
         [Serializable]
         public class AllyInstance

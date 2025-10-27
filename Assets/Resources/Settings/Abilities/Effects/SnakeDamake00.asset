@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
+  m_Name: SnakeDamake00
+  m_EditorClassIdentifier: 
+  DisplayName: Test Heal
+  Description: heal urself
+  Icon: {fileID: 21300000, guid: c85ba607ea44d1c4ea0bebe7f0adced7, type: 3}
+  Type: 2
+  Reload: 1
+  Target: 1
+  AmmoCount: 1
+  Damage: 0.25
+  ReloadTime: 5
+  BlastRadius: 0
+  LaunchY: 0
+  Speed: 0
+  Distance: 0
+  PossibleTargetCount: 1
+  Lifetime: 10
+  LifetimeLossOnHit: 0.1
+  Trigger: 
+  Prefab: {fileID: 5706137304252803328, guid: b301fcce3e32e22439c395b366daebba, type: 3}
+  Upgrades: []
