@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class ClothingController : MonoBehaviour
 {
+    [SerializeField]
     private List<ClothingObject> clothing = new List<ClothingObject>();
 
     public class ClothingPiece
@@ -119,7 +120,8 @@ public class ClothingController : MonoBehaviour
 // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        clothing = DataController.saveData.BuildListOfClothing();
+        if (GetComponentInParent<PlayerController>())
+            clothing = DataController.saveData.BuildListOfClothing();
         
         FitClothing();
 
