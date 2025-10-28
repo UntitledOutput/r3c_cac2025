@@ -131,8 +131,8 @@ public class ActorBehavior : MonoBehaviour
         {
             _camera = Camera.main;
             _matchController = FindAnyObjectByType<MatchController>();
-
-            if (SceneManager.GetActiveScene().name != "GameScene")
+            
+            if (SceneManager.GetActiveScene().buildIndex != 1)
                 _matchController = null;
             
             _capsuleCollider = GetComponent<CapsuleCollider>();

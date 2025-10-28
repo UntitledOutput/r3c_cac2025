@@ -13348,10 +13348,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2779357621685858735, guid: d9ff2dd92f9aac44e97a9fc72d5ccf9d, type: 3}
-      propertyPath: m_Constraints
-      value: 112
-      objectReference: {fileID: 0}
     - target: {fileID: 3185493223025661563, guid: d9ff2dd92f9aac44e97a9fc72d5ccf9d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10
@@ -13395,28 +13391,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5309179905954711497, guid: d9ff2dd92f9aac44e97a9fc72d5ccf9d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 856691706}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d9ff2dd92f9aac44e97a9fc72d5ccf9d, type: 3}
---- !u!1 &856691705 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5309179905954711497, guid: d9ff2dd92f9aac44e97a9fc72d5ccf9d, type: 3}
-  m_PrefabInstance: {fileID: 856691704}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &856691706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 856691705}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c11ab25e10e2e47afaabeafea6d770, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ClothingController
 --- !u!1 &869580195
 GameObject:
   m_ObjectHideFlags: 0
