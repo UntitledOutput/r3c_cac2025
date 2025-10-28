@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using External;
 using MyBox;
 using UnityEngine;
 
@@ -22,6 +23,8 @@ namespace ScriptableObj
         public float MegaStoppingOffset = 0;
         public float MegaHealthOffset = 0;
         public float MegaDamageMultiplier = 1f;
+
+        public BaseUtils.WeightedList<CollectibleController.CollectibleType> DropCollectible;
 
         [Separator("Model Stats")] 
         public float SmallSize = 1f;

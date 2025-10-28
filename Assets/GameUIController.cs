@@ -157,16 +157,16 @@ public class GameUIController : MonoBehaviour
             {
                 var captureText = catchFrame.Find("CaptureText") as RectTransform;
 
-                captureText.position = captureText.position.SetY(1300);
+                captureText.position = captureText.position.SetY(400);
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
-                yield return captureText.DOAnchorPosY(540f, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(0, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,15f), 1.5f).SetEase(Ease.InOutBack);
 
                 yield return new WaitForSeconds(2.5f);
                 
-                yield return captureText.DOAnchorPosY(-250, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(-400, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,0f), 1.5f).SetEase(Ease.InOutBack);
 
                 MatchController._instance.AddCaughtEnemy(enemy.enemyObject);
@@ -177,16 +177,16 @@ public class GameUIController : MonoBehaviour
             {
                 var captureText = catchFrame.Find("FailCaptureText") as RectTransform;
 
-                captureText.position = captureText.position.SetY(1300);
+                captureText.position = captureText.position.SetY(400);
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
-                yield return captureText.DOAnchorPosY(540f, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(0f, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,5f), 1.5f).SetEase(Ease.InOutBack);
 
                 yield return new WaitForSeconds(2.5f);
                 
-                yield return captureText.DOAnchorPosY(-250, 1.0f).SetEase(Ease.InOutQuad);
+                yield return captureText.DOAnchorPosY(-400, 1.0f).SetEase(Ease.InOutQuad);
                 yield return captureText.DORotate(new Vector3(0,0,0f), 1.5f).SetEase(Ease.InOutBack);
 
 

@@ -24,11 +24,14 @@ MonoBehaviour:
   BlastRadius: 0
   LaunchY: 0
   Speed: 0
+  Distance: 0
+  PossibleTargetCount: 1
   Lifetime: 10
   LifetimeLossOnHit: 0.1
+  Trigger: 
   Prefab: {fileID: 5706137304252803328, guid: 89ec8cf8b49e15f4bb106310034879ae, type: 3}
   Upgrades:
-  - Name: Heal Upgrade
+  - DisplayName: Upgrade0
     Description: Description
     Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
     AmmoChange: 0
@@ -39,6 +42,8 @@ MonoBehaviour:
     SpeedChange: 0
     LifetimeChange: 0
     LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
     CulletPrice: 0
     PelletPrice: 0
     SheetPrice: 0

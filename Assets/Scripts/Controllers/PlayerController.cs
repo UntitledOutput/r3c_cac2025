@@ -5,6 +5,7 @@ using External;
 using MyBox;
 using ScriptableObj;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 public class PlayerController : ActorBehavior
@@ -46,13 +47,19 @@ public class PlayerController : ActorBehavior
         Team = ActorTeam.Player;
         
         // loading allies
-        foreach (var matchControllerPassedAlly in _matchController.PassedAllies)
+        if (_matchController )
         {
-            if (matchControllerPassedAlly != null && matchControllerPassedAlly.ally)
+            foreach (var matchControllerPassedAlly in _matchController.PassedAllies)
             {
-                var allyInstance = Instantiate(matchControllerPassedAlly.ally.Prefab, transform.position + (Vector3.up * 3f), Quaternion.identity);
-                allyInstance.GetComponent<AllyController>().ally = matchControllerPassedAlly;
-                _allies.Add(allyInstance.GetComponent<AllyController>());
+                if (matchControllerPassedAlly != null && matchControllerPassedAlly.ally)
+                {
+                    var allyInstance = Instantiate(
+                        matchControllerPassedAlly.ally.Prefab, transform.position + (Vector3.up * 3f),
+                        Quaternion.identity);
+
+                    allyInstance.GetComponent<AllyController>().ally = matchControllerPassedAlly;
+                    _allies.Add(allyInstance.GetComponent<AllyController>());
+                }
             }
         }
 
@@ -91,6 +98,8 @@ public class PlayerController : ActorBehavior
             OnDeath();
 
         var attacking = InputSystem.Attack || InputSystem.SubAttack || InputSystem.SideAttack_OneTime;
+        if (!_matchController)
+            attacking = false;
         
         var moveDirection = CalculateMoveDirection(InputSystem.Move);
         if ((moveDirection.magnitude > 0 && _timeSinceAttack > 1f) || attacking )
@@ -121,7 +130,7 @@ public class PlayerController : ActorBehavior
         {
             rigidbody.linearVelocity = new Vector3(moveDirection.x, rigidbody.linearVelocity.y, moveDirection.z);
 
-            if ((InputSystem.Attack_OneTime || InputSystem.SubAttack_OneTime || InputSystem.SideAttack_OneTime) && _abilityController)
+            if ((InputSystem.Attack_OneTime || InputSystem.SubAttack_OneTime || InputSystem.SideAttack_OneTime) && _abilityController && _matchController)
             {
                 if (InputSystem.Attack_OneTime)
                     _abilityController.ChosenAbility = 0;

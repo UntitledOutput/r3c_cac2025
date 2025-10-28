@@ -26,11 +26,14 @@ MonoBehaviour:
   BlastRadius: 2
   LaunchY: 3
   Speed: 1
+  Distance: 0
+  PossibleTargetCount: 1
   Lifetime: 4
   LifetimeLossOnHit: 0.1
+  Trigger: 
   Prefab: {fileID: 12657403502098571, guid: 41c3acd580a5cf949bc044ae10458e12, type: 3}
   Upgrades:
-  - Name: Bomb Upgrade
+  - DisplayName: Upgrade0
     Description: Description
     Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
     AmmoChange: 2
@@ -41,6 +44,8 @@ MonoBehaviour:
     SpeedChange: 1.5
     LifetimeChange: 1
     LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
     CulletPrice: 0
     PelletPrice: 2
     SheetPrice: 0

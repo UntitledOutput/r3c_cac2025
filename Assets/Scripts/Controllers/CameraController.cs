@@ -9,6 +9,9 @@ namespace Controllers
     {
         public float PlrRadius = 3;
         public float PlrY;
+        public float TargetFieldOfView = 75;
+
+        public bool CollideWithMap = true;
         
         private PlayerController _plrCtrl;
         private float _plrRotateAngle = 180;
@@ -54,24 +57,28 @@ namespace Controllers
 
                 
                 RaycastHit hit;
-                if (Physics.Raycast(_plrCtrl.transform.position, (targetPosition - _plrCtrl.transform.position).normalized, out hit, PlrRadius, LayerMask.GetMask("Map", "MapObject")))
+                if (Physics.Raycast(_plrCtrl.transform.position, (targetPosition - _plrCtrl.transform.position).normalized, out hit, PlrRadius, LayerMask.GetMask("Map", "MapObject")) && CollideWithMap)
                 {
                     // If an obstruction is found, adjust the current distance
                     currentDistance = Mathf.Lerp(
                         currentDistance, Mathf.Max(minDistance, hit.distance), Time.deltaTime * 3.0f);
                     var multiplier = (1.0f - (currentDistance / PlrRadius)) * 35f;
-                    currentFOV = Mathf.Lerp(currentFOV, 75 + multiplier, Time.deltaTime * 3.0f);
+                    currentFOV = Mathf.Lerp(currentFOV, TargetFieldOfView + multiplier, Time.deltaTime * 3.0f);
                 }
                 else
                 {
                     // No obstruction, return to max distance
                     currentDistance = Mathf.Lerp(currentDistance, PlrRadius, Time.deltaTime * 3.0f);
-                    currentFOV = Mathf.Lerp(currentFOV, 75, Time.deltaTime * 3.0f);
+                    currentFOV = Mathf.Lerp(currentFOV, TargetFieldOfView, Time.deltaTime * 3.0f);
                 }
                 
                 _camera.fieldOfView = currentFOV;
-                transform.position = _plrCtrl.transform.position + new Vector3(
+                
+                var _targetPosition = _plrCtrl.transform.position + new Vector3(
                     Mathf.Sin(_plrRotateAngle) * currentDistance, PlrY + _plrOffsetY, Mathf.Cos(_plrRotateAngle) * currentDistance);
+                
+                transform.position = Vector3.Lerp(
+                    transform.position, targetPosition, Time.deltaTime * 3.0f);
 
                 transform.position = transform.position.ClampZ(-105, Mathf.Infinity);
             

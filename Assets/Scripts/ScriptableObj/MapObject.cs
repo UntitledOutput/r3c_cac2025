@@ -8,6 +8,8 @@ namespace ScriptableObj
     {
         public MatchSectionObject StartSection;
         public int SectionCount;
+        public Sprite MapCover;
+        public string MapName;
 
     }
 }

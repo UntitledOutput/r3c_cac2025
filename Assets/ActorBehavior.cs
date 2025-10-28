@@ -5,6 +5,7 @@ using System.Linq;
 using Controllers;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 
 public class ActorBehavior : MonoBehaviour
@@ -130,6 +131,10 @@ public class ActorBehavior : MonoBehaviour
         {
             _camera = Camera.main;
             _matchController = FindAnyObjectByType<MatchController>();
+
+            if (SceneManager.GetActiveScene().name != "GameScene")
+                _matchController = null;
+            
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponentInChildren<Animator>();
@@ -148,23 +153,34 @@ public class ActorBehavior : MonoBehaviour
             _cachedPosition = transform.position;
 
             var distanceFromCamera = Vector3.Distance(transform.position, _camera.transform.position);
-            if (distanceFromCamera > 40f)
+            if (distanceFromCamera > 40f || distanceFromCamera < 3f)
             {
                 foreach (var renderer in _renderers)
                 {
-                    renderer.enabled = false;
+                    if (renderer) 
+                        renderer.enabled = false;
                 }
 
-                _animator.enabled = false;
+                if (_animator)
+                    _animator.enabled = false;
             }
             else
             {
                 foreach (var renderer in _renderers)
                 {
-                    renderer.enabled = true;
+                    if (renderer)
+                        renderer.enabled = true;
                 }
 
-                _animator.enabled = true;
+                if (_animator)
+                    _animator.enabled = true;
             }
+
+            _renderers.RemoveAll(x => x == null);
+        }
+
+        public void RecaptureRenderers()
+        {
+            _renderers.Clear();
         }
     }

@@ -25,10 +25,7 @@ public class HomeController : MonoBehaviour
     public List<AbilityObject.AbilityUpgrade> upgrades => DataController.saveData.upgrades;
     public List<AllyObject.AllyInstance> allies => DataController.saveData.allies;
 
-    public bool IsReadyToSpin = true;
-    private int SectionIndex = 0;
-    
-    
+    private List<ClothingObject> _clothingObjects;
     
     public enum SubRecycleType
     {
@@ -36,21 +33,7 @@ public class HomeController : MonoBehaviour
         Plastic,
         Metal
     }
-
-    [ButtonMethod]
-    public void MoveRight()
-    {
-        SectionIndex = (SectionIndex + 1 > 3) ? 0 : SectionIndex + 1;
-        AlignUISection();
-    }
     
-    [ButtonMethod]
-    public void MoveLeft()
-    {
-        SectionIndex = (SectionIndex - 1 < 0) ? 3 : SectionIndex - 1;
-        AlignUISection();
-    }
-
 #if UNITY_EDITOR
     [Separator("Debug Settings")] 
     public int SectionCount = 1;
@@ -61,32 +44,7 @@ public class HomeController : MonoBehaviour
     void Start()
     {
         _playFrame = BaseUtils.RecursiveFind("PlayFrame") as RectTransform;
-        _playAbilityIcons = _playFrame.RecursiveFind("AbilityIconContent").GetAllChildren()
-            .Select((transform1 => transform1.GetChild(0).GetComponent<Image>())).ToList();
-        
-        _changeFrame = _playFrame.parent.Find("ChangeFrame") as RectTransform;
-        
-        _upgradeFrame = _changeFrame.Find("AbilitySelectFrame") as RectTransform;
-        _homeFrame = _changeFrame.Find("HomeFrame") as RectTransform;
-        _allyFrame = _changeFrame.Find("AllySelectFrame") as RectTransform;
-        
-        _homeAbilityIcons = _changeFrame.RecursiveFind("HomeAbilityContent").GetAllChildren()
-            .Select((transform1 => transform1.GetChild(0).GetComponent<Image>())).ToList();
-        
-        _homeAllyIcons = _changeFrame.RecursiveFind("HomeAllyContent").GetAllChildren()
-            .Select((transform1 => transform1.GetChild(0).GetComponent<Image>())).ToList();
-        
-        _upgradeContent = _changeFrame.RecursiveFind<RectTransform>("UpgradeContent");
-        _upgradeTemplate = _upgradeContent.Find("UpgradeTemplate") as RectTransform;
 
-        _selectPreview = _changeFrame.RecursiveFind("SelectPreview") as RectTransform;
-        _selectContent = _changeFrame.RecursiveFind("SelectContent") as RectTransform;
-        _selectTemplate = _selectContent.RecursiveFind<RectTransform>("SelectTemplate");
-        
-        _allyPreview = _allyFrame.RecursiveFind("AllySelectPreview") as RectTransform;
-        _allyContent = _allyFrame.RecursiveFind("AllySelectContent") as RectTransform;
-        _allyTemplate = _allyFrame.RecursiveFind<RectTransform>("AllySelectTemplate");
-        
         _recycleFrame = _playFrame.parent.Find("RecycleFrame") as RectTransform;
         _recycleGlassCount = _recycleFrame.RecursiveFind<TMP_Text>("GlassCount");
         _recyclePlasticCount = _recycleFrame.RecursiveFind<TMP_Text>("PlasticCount");
@@ -96,23 +54,44 @@ public class HomeController : MonoBehaviour
         _recycleMetalBitCount = _recycleFrame.RecursiveFind<TMP_Text>("SubMetalCount");
         
         _recycleEnemyContent = _recycleFrame.RecursiveFind("EnemyContent") as RectTransform;
-        _recycleAllyContent = _recycleFrame.RecursiveFind("AllyContent") as RectTransform;
         _recycleTryContent = _recycleFrame.RecursiveFind("TryContent") as RectTransform;
+        _recycleChanceFrame = _recycleFrame.RecursiveFind("EnemyRecycleChance") as RectTransform;
+        _recycleChanceTemplate = _recycleFrame.RecursiveFind("ChanceTemplate") as RectTransform;
         _recycleAllyInfo = _recycleFrame.RecursiveFind("AllyInfo") as RectTransform;
-        _recycleAllyFrame = _recycleFrame.RecursiveFind("EnemyRecycleFrame") as RectTransform;
         _recycleResultFrame = _recycleFrame.RecursiveFind("RecycleResultFrame") as RectTransform;
         
+        _recycleItemCounter = _recycleFrame.RecursiveFind("ItemCounters") as RectTransform;
+        _recycleSubItemCounter = _recycleFrame.RecursiveFind("SubItemCounter") as RectTransform;
+        
         _recycleEnemyTemplate = _recycleEnemyContent.RecursiveFind<RectTransform>("EnemyButtonTemplate");
-        _recycleAllyTemplate = _recycleAllyContent.RecursiveFind<RectTransform>("AllyButtonTemplate");
+        
+                
+        _homeAbilityIcons = _recycleFrame.RecursiveFind("HomeAbilityContent").GetAllChildren()
+            .Select((transform1 => transform1.GetComponent<Image>())).ToList();
+        
+        _homeAllyIcons = _recycleFrame.RecursiveFind("HomeAllyContent").GetAllChildren()
+            .Select((transform1 => transform1.GetComponent<Image>())).ToList();
 
+        _abilitySelectFrame = _recycleFrame.RecursiveFind("AbilitySelectFrame") as RectTransform;
+
+        
+        _abilityUpgradeFrame = _recycleFrame.RecursiveFind("AbilityUpgradeFrame") as RectTransform;
         
         _postMatchFrame = _playFrame.parent.Find("PostMatchFrame") as RectTransform;
         _postInfoFrame = _postMatchFrame.RecursiveFind("InfoFrame")  as RectTransform;
         _postFailFrame = _postMatchFrame.RecursiveFind("FailFrame")  as RectTransform;
         _postTrashInfo = _postInfoFrame.RecursiveFind("TrashInfo") as RectTransform;
+        _postClothInfo = _postInfoFrame.RecursiveFind("ClothInfo") as RectTransform;
         _postGlassInfo = _postInfoFrame.RecursiveFind("GlassSection") as RectTransform;
         _postPlasticInfo = _postInfoFrame.RecursiveFind("PlasticSection") as RectTransform;
         _postMetalInfo = _postInfoFrame.RecursiveFind("MetalSection") as RectTransform;
+        _postFinalClothInfo = _postInfoFrame.RecursiveFind("ClothSection") as RectTransform;
+
+        _changeFrame = _playFrame.parent.Find("ChangeFrame") as RectTransform;
+        _partChoiceFrame = _changeFrame.Find("PartSelectFrame") as RectTransform;
+        _pieceChoiceFrame = _changeFrame.Find("PieceSelectFrame") as RectTransform;
+
+        _clothingScrapCount = _pieceChoiceFrame.RecursiveFind<TMP_Text>("ScrapCount");
         
         if (upgrades.Count < abilities.Count)
         {
@@ -130,7 +109,7 @@ public class HomeController : MonoBehaviour
             }
         }
         
-        AlignUISection();
+        AlignUISection(-1);
 
         var matchCtrl = FindAnyObjectByType<MatchController>();
         if (matchCtrl)
@@ -150,10 +129,10 @@ public class HomeController : MonoBehaviour
             //
             // RunPostMatchSequence(testPostData);
         }
-        
+
+        _clothingObjects = Resources.LoadAll<ClothingObject>("Settings/Clothing/").ToList();
                                 
         SetupPlayFrame();
-        SetupUpgradeFrame();
         SetupRecycleFrame();
         
 
@@ -162,14 +141,6 @@ public class HomeController : MonoBehaviour
 
     private void Update()
     {
-         if (!_isPostInfoRunning)
-         {
-             if (InputSystem.NavigateNext)
-                MoveRight();
-             else if (InputSystem.NavigateBack)
-                 MoveLeft();
-             
-         }
 
          if (upgrades.Count < abilities.Count)
          {
@@ -179,13 +150,7 @@ public class HomeController : MonoBehaviour
              }
          }
          
-         _recyclePlasticCount.text = $"{DataController.saveData.PlasticCount:00}";
-         _recycleGlassCount.text = $"{DataController.saveData.GlassCount:00}";
-         _recycleMetalCount.text = $"{DataController.saveData.MetalCount:00}";
-         
-         _recyclePlasticBitCount.text = $"{DataController.saveData.PlasticBitCount:00}";
-         _recycleGlassBitCount.text = $"{DataController.saveData.GlassBitCount:00}";
-         _recycleMetalBitCount.text = $"{DataController.saveData.MetalBitCount:00}";
+
          
     }
 
@@ -197,7 +162,7 @@ public class HomeController : MonoBehaviour
         matchController.PassedAllies = allies;
 
 
-        matchController.CurrentMap = Random.Range(0,100) >= 50 ? Resources.Load<MapObject>("Settings/Maps/TestMap00") : Resources.Load<MapObject>("Settings/Maps/StreetMap00");
+        matchController.CurrentMap = DataController.saveData.NextMap;
         
 #if UNITY_EDITOR
         matchController.RoundAmount = RoundCount;
@@ -208,35 +173,22 @@ public class HomeController : MonoBehaviour
     
     // ui section
 
-    private Sprite MissingSprite = null;
+    public Sprite MissingSprite = null;
+    public Sprite TrashSprite = null;
+    public Sprite GlassSprite, MetalSprite, PlasticSprite;
 
     private RectTransform _playFrame;
     private List<Image> _playAbilityIcons = new List<Image>();
-    
 
-    private RectTransform _changeFrame;
-
-    private RectTransform _homeFrame;
     private List<Image> _homeAbilityIcons = new List<Image>();
     private List<Image> _homeAllyIcons = new List<Image>();
-    
-    private RectTransform _upgradeFrame;
-    private RectTransform _upgradeContent;
-    private RectTransform _upgradeTemplate;
-    
-    private RectTransform _selectPreview;
-    private RectTransform _selectContent;
-    private RectTransform _selectTemplate;
-    private int _selectedAbilitySlot = -1;
 
-    private RectTransform _allyFrame;
-    
-    
-    private RectTransform _allyPreview;
-    private RectTransform _allyContent;
-    private RectTransform _allyTemplate;
-    private int __selectedAllySlot = -1;
-    
+    private RectTransform _abilitySelectFrame;
+
+    private RectTransform _abilityUpgradeFrame;
+
+    private int _selectedSlotIndex = -1;
+    private RectTransform _openSelectFrame;
 
     private RectTransform _recycleFrame;
     private TMP_Text _recycleGlassCount;
@@ -247,30 +199,39 @@ public class HomeController : MonoBehaviour
     private TMP_Text _recycleMetalBitCount;
 
     private RectTransform _recycleEnemyContent;
-    private RectTransform _recycleAllyContent;
     private RectTransform _recycleTryContent;
+    private RectTransform _recycleChanceFrame;
+    private RectTransform _recycleChanceTemplate;
     private RectTransform _recycleAllyInfo;
-    private RectTransform _recycleAllyFrame;
     private RectTransform _recycleEnemyTemplate;
     private RectTransform _recycleAllyTemplate;
     private RectTransform _recycleResultFrame;
+
+    private RectTransform _recycleItemCounter;
+    private RectTransform _recycleSubItemCounter;
+    
     private List<EnemyObject> _recycleEnemies = new List<EnemyObject>();
-    private int _selectedAllySlot = -1;
     
     private RectTransform _postMatchFrame;
     private RectTransform _postInfoFrame;
     private RectTransform _postFailFrame;
     private RectTransform _postTrashInfo;
-    private RectTransform _postGlassInfo, _postPlasticInfo, _postMetalInfo;
+    private RectTransform _postClothInfo;
+    private RectTransform _postGlassInfo, _postPlasticInfo, _postMetalInfo, _postFinalClothInfo;
     private bool _isPostInfoRunning = false;
 
-    public void AlignUISection()
+    private RectTransform _changeFrame;
+    private RectTransform _partChoiceFrame;
+    private RectTransform _pieceChoiceFrame;
+    private TMP_Text _clothingScrapCount;
+
+    public void AlignUISection(int SectionIndex)
     {
         
         _playFrame.gameObject.SetActive(false);
-        _changeFrame.gameObject.SetActive(false);
         _recycleFrame.gameObject.SetActive(false);
         _postMatchFrame.gameObject.SetActive(false);
+        _changeFrame.gameObject.SetActive(false);
         switch (SectionIndex)
         {
             case 0:
@@ -279,7 +240,7 @@ public class HomeController : MonoBehaviour
                 break;
             case 1:
                 _changeFrame.gameObject.SetActive(true);
-                SetupUpgradeFrame();
+                SetupChangeFrame();
                 break;
             case 2:
                 _recycleFrame.gameObject.SetActive(true);
@@ -290,9 +251,143 @@ public class HomeController : MonoBehaviour
     
     public void SetupPlayFrame()
     {
-
+        _playFrame.RecursiveFind("CoverPhoto").GetComponent<Image>().sprite = DataController.saveData.NextMap.MapCover;
+        _playFrame.RecursiveFind("NextMapText").GetComponent<TMP_Text>().text =
+            $"Next Map:\n<b>{DataController.saveData.NextMap.MapName}</b>";
     }
 
+    public void SetupChangeFrame()
+    {
+        var hatIcon = _partChoiceFrame.RecursiveFind<Image>("HatIcon");
+        var clothingIcon = _partChoiceFrame.RecursiveFind<Image>("ShirtIcon");
+        var pantsIcon = _partChoiceFrame.RecursiveFind<Image>("PantsIcon");
+        var shoesIcon = _partChoiceFrame.RecursiveFind<Image>("ShoesIcon");
+
+        hatIcon.sprite = DataController.saveData.HatObject?.Icon ?? MissingSprite;
+        clothingIcon.sprite = DataController.saveData.ShirtObject?.Icon ?? MissingSprite;
+        pantsIcon.sprite = DataController.saveData.PantsObject?.Icon ?? MissingSprite;
+        shoesIcon.sprite = DataController.saveData.ShoesObject?.Icon ?? MissingSprite;
+        
+        _clothingScrapCount.text = DataController.saveData.ClothingScrapCount.ToString();
+    }
+
+    public void ChangeClothing(ClothingObject.ClothingType type, ClothingObject clothing)
+    {
+        if (!DataController.saveData.availableClothing.Contains(clothing))
+        {
+            if (DataController.saveData.ClothingScrapCount >= clothing.Cost)
+            {
+                DataController.saveData.ClothingScrapCount -= clothing.Cost;
+                DataController.saveData.availableClothing.Add(clothing);
+                
+                _clothingScrapCount.DOColor(Color.red, 0.1f).OnComplete((() => _clothingScrapCount.DOColor(Color.white, 0.1f)));
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        switch (type)
+        {
+            case ClothingObject.ClothingType.Hat:
+                DataController.saveData.HatObject = clothing;
+                break;
+            case ClothingObject.ClothingType.Shirt:
+                DataController.saveData.ShirtObject = clothing;
+                break;
+            case ClothingObject.ClothingType.Bottom:
+                DataController.saveData.PantsObject = clothing;
+                break;
+            case ClothingObject.ClothingType.Shoe:
+                DataController.saveData.ShoesObject = clothing;
+                break;
+        }
+        
+        OpenPartFrame((int)type);
+        PreviewPart(clothing,type);
+        SetupChangeFrame();
+
+        FindAnyObjectByType<ClothingController>().ChangeClothing(DataController.saveData.BuildListOfClothing());
+    }
+    
+    public void PreviewPart(ClothingObject clothingObject, ClothingObject.ClothingType type)
+    {
+        var buyButton = _pieceChoiceFrame.RecursiveFind("BuyButton").GetComponent<Image>();
+
+        buyButton.transform.Find("EquipText").gameObject.SetActive(DataController.saveData.availableClothing.Contains(clothingObject));
+        buyButton.transform.Find("BuyFrame").gameObject.SetActive(!DataController.saveData.availableClothing.Contains(clothingObject));
+        buyButton.transform.Find("BuyFrame").Find("PriceText").GetComponent<TMP_Text>().text = clothingObject.Cost.ToString();
+
+        if (DataController.saveData.availableClothing.Contains(clothingObject))
+        {
+            bool equipped = false;
+            switch (type)
+            {
+                case ClothingObject.ClothingType.Hat:
+                    equipped = DataController.saveData.HatObject == clothingObject;
+                    break;
+                case ClothingObject.ClothingType.Shirt:
+                    equipped=  DataController.saveData.ShirtObject == clothingObject;
+                    break;
+                case ClothingObject.ClothingType.Bottom:
+                    equipped =DataController.saveData.PantsObject == clothingObject;
+                    break;
+                case ClothingObject.ClothingType.Shoe:
+                    equipped = DataController.saveData.ShoesObject == clothingObject;
+                    break;
+            }
+
+            if (equipped)
+            {
+                buyButton.color = BaseUtils.ColorFromHex("2653A2");
+                buyButton.transform.Find("EquipText").GetComponent<TMP_Text>().text = "Equipped";
+            }
+            else
+            {
+                buyButton.color = BaseUtils.ColorFromHex("007CCC");
+                buyButton.transform.Find("EquipText").GetComponent<TMP_Text>().text = "Equip";
+            }
+        }
+        else
+        {
+            buyButton.color = BaseUtils.ColorFromHex("00CC12");
+        }
+
+        _pieceChoiceFrame.Find("PieceName").GetComponent<TMP_Text>().text = clothingObject.Name;
+        
+        buyButton.GetComponent<Button>().onClick.AddListener((() =>
+        {
+            ChangeClothing(type,clothingObject);
+        }));
+    }
+    
+    public void OpenPartFrame(int t)
+    {
+        ClothingObject.ClothingType type = (ClothingObject.ClothingType)t;
+
+        var pieceContent = _pieceChoiceFrame.RecursiveFind("PieceContent");
+        pieceContent.RemoveAllChildrenExcept("PieceTemplate");
+
+        var template = pieceContent.Find("PieceTemplate");
+        template.gameObject.SetActive(false);
+        
+        foreach (var clothingObject in _clothingObjects)
+        {
+            if (clothingObject.Type == type)
+            {
+                var obj = Instantiate(template.gameObject, template.parent);
+                obj.gameObject.SetActive(true);
+
+                obj.transform.Find("Icon").GetComponent<Image>().sprite = clothingObject.Icon;
+                obj.GetComponent<Button>().onClick.AddListener((() => {PreviewPart(clothingObject,type);}));
+                PreviewPart(clothingObject,type);
+            }
+        }
+        
+        
+    }
+    
     public void UpdateIcons()
     {
         for (var i = 0; i < abilities.Count; i++)
@@ -300,13 +395,11 @@ public class HomeController : MonoBehaviour
             if (abilities[i])
             {
                 _homeAbilityIcons[i].sprite = abilities[i].Icon;
-                _playAbilityIcons[i].sprite = abilities[i].Icon;
                 
             }
             else
             {
                 _homeAbilityIcons[i].sprite = MissingSprite;
-                _playAbilityIcons[i].sprite = MissingSprite;
             }
         }
 
@@ -322,202 +415,75 @@ public class HomeController : MonoBehaviour
             }
         }
     }
-    
-    public void SetupUpgradeFrame()
-    {
-        UpdateIcons();
-        
-        _selectContent.RemoveAllChildrenExcept(_selectTemplate.name);
 
+    public void SetupRecycleFrame()
+    {
+        
+        _recycleEnemyContent.RemoveAllChildrenExcept(_recycleEnemyTemplate.name);
+        foreach (var enemy in DataController.saveData.enemyInventory)
         {
-            var upgradeFrame = Instantiate(_selectTemplate, _selectTemplate.parent);
-            upgradeFrame.Find("AbilityIcon").GetComponent<Image>().sprite = MissingSprite;
-            upgradeFrame.GetComponent<Button>().onClick.AddListener((() => ChangeAbilityInSlot(null,_selectedAbilitySlot)));
+            var enemyFrame = Instantiate(_recycleEnemyTemplate, _recycleEnemyTemplate.parent);
+            enemyFrame.Find("Icon").GetComponent<Image>().sprite = enemy.Icon;
+            enemyFrame.Find("EnemyName").GetComponent<TMP_Text>().text = enemy.DisplayName;
+            enemyFrame.GetComponent<Button>().onClick.AddListener((() => AddToTryContent(enemy, enemyFrame)));
             
-            upgradeFrame.gameObject.SetActive(true);
+            enemyFrame.gameObject.SetActive(true);
         }
         
-        foreach (var ability in DataController.saveData.availableAbilities)
+        _recyclePlasticCount.text = $"{DataController.saveData.PlasticCount:00}";
+        _recycleGlassCount.text = $"{DataController.saveData.GlassCount:00}";
+        _recycleMetalCount.text = $"{DataController.saveData.MetalCount:00}";
+         
+        _recyclePlasticBitCount.text = $"{DataController.saveData.PlasticBitCount:00}";
+        _recycleGlassBitCount.text = $"{DataController.saveData.GlassBitCount:00}";
+        _recycleMetalBitCount.text = $"{DataController.saveData.MetalBitCount:00}";
+        
+
+    }
+
+    public void UpdateAbilityButtons(RectTransform r)
+    {
+        for (int i = 0; i < r.childCount; i++)
         {
-            var upgradeFrame = Instantiate(_selectTemplate, _selectTemplate.parent);
-            upgradeFrame.Find("AbilityIcon").GetComponent<Image>().sprite = ability.Icon;
-            upgradeFrame.GetComponent<Button>().onClick.AddListener((() => ChangeAbilityInSlot(ability,_selectedAbilitySlot)));
-            
-            upgradeFrame.gameObject.SetActive(true);
+            var button = r.GetChild(i);
+            button.RecursiveFind("Icon").GetComponent<Image>().sprite = abilities[i]?.Icon ?? MissingSprite;
+            button.RecursiveFind("AbilityName").GetComponent<TMP_Text>().text = abilities[i]?.DisplayName ?? "No Ability in Slot";
+            button.RecursiveFind("AbilityDesc").GetComponent<TMP_Text>().text = upgrades[i]?.DisplayName ?? "No Upgrade";
         }
-
-        SetupAllyFrame();
-        
-        //ChangeSelectSection(0);
-    }
-
-    public void SetupAllyFrame()
-    {
-        UpdateIcons();
-        
-        _allyContent.RemoveAllChildrenExcept(_allyTemplate.name);
-
-        {
-            var upgradeFrame = Instantiate(_allyTemplate, _allyTemplate.parent);
-            upgradeFrame.Find("AllyIcon").GetComponent<Image>().sprite = MissingSprite;
-            upgradeFrame.GetComponent<Button>().onClick.AddListener((() => ChangeAllyInSlot(null,__selectedAllySlot)));
-            
-            upgradeFrame.gameObject.SetActive(true);
-        }
-        
-        for (var i = 0; i < DataController.saveData.availableAllies.Count; i++)
-        {
-            var ally = DataController.saveData.availableAllies[i];
-            if (ally != null && ally.ally)
-            {
-                var upgradeFrame = Instantiate(_allyTemplate, _allyTemplate.parent);
-                upgradeFrame.Find("AllyIcon").GetComponent<Image>().sprite = ally.ally.Icon;
-                var i1 = i;
-                upgradeFrame.GetComponent<Button>().onClick
-                    .AddListener((() => ChangeAllyInSlot(DataController.saveData.availableAllies[i1], __selectedAllySlot)));
-
-                upgradeFrame.gameObject.SetActive(true);
-            }
-        }
-
-    }
-
-    public void CloseSelectSection()
-    {
-        _upgradeFrame.gameObject.SetActive(false);
-        _homeFrame.gameObject.SetActive(true);
-    }
-
-    public void CloseAllySection()
-    {
-        _allyFrame.gameObject.SetActive(false);
-        _homeFrame.gameObject.SetActive(true);
-    }
-
-    public void ChangeAllySection(int allyIndex)
-    {
-        _allyFrame.gameObject.SetActive(true);
-        _homeFrame.gameObject.SetActive(false);
-
-        __selectedAllySlot = allyIndex;
-        ChangeAllyPreview(allies[allyIndex]);
-
-        var ally = allies[allyIndex];
-        
-        _allyFrame.Find("AllyButton").GetChild(0).GetComponent<Image>().sprite =
-            (ally != null && ally.ally) ? ally.ally.Icon : MissingSprite;
-        
     }
     
-    public void ChangeSelectSection(int abilityIndex)
+    public void UpdateAllyButtons(RectTransform r)
     {
-        _upgradeFrame.gameObject.SetActive(true);
-        _homeFrame.gameObject.SetActive(false);
-        
-        _selectedAbilitySlot = abilityIndex;
-        ChangeSelectPreview(abilities[abilityIndex]);
-
-        var ability = abilities[abilityIndex];
-        
-        _upgradeContent.RemoveAllChildrenExcept(_upgradeTemplate.name);
-
-        _upgradeFrame.Find("AbilityButton").GetChild(0).GetComponent<Image>().sprite =
-            ability != null ? ability.Icon : MissingSprite;
-
-        if (ability)
+        for (int i = 0; i < r.childCount; i++)
         {
-            foreach (var abilityUpgrade in ability.Upgrades)
-            {
-                var upgradeFrame = Instantiate(_upgradeTemplate, _upgradeTemplate.parent);
-                upgradeFrame.Find("UpgradeName").GetComponent<TMP_Text>().text = abilityUpgrade.Name;
-                //upgradeFrame.Find("UpgradeDesc").GetComponent<TMP_Text>().text = abilityUpgrade.Description;
-                upgradeFrame.Find("UpgradeIcon").GetComponent<Image>().sprite = abilityUpgrade.Icon;
-
-                upgradeFrame.RecursiveFind("CulletCost").GetComponent<TMP_Text>().text = abilityUpgrade.CulletPrice.ToString();
-                upgradeFrame.RecursiveFind("PelletCost").GetComponent<TMP_Text>().text = abilityUpgrade.PelletPrice.ToString();
-                upgradeFrame.RecursiveFind("MetalCost").GetComponent<TMP_Text>().text = abilityUpgrade.SheetPrice.ToString();
-
-                Color statusColor = BaseUtils.ColorFromHex("8E8E8E");
-                string statusString = "Unavailable";
-
-                if (upgrades[abilityIndex] == abilityUpgrade ) // upgrade is bought and active
-                {
-
-                    statusColor = BaseUtils.ColorFromHex("0BD149");
-                    statusString = "Active";
-                }
-                else // upgrade is inactive
-                {
-                    if (DataController.saveData.availableUpgrades.Contains(abilityUpgrade))  // upgrade is bought but inactive
-                    {
-                        statusColor = BaseUtils.ColorFromHex("E55858");
-                        statusString = "Inactive";
-                    } else  // upgrade is not bought
-                    {
-                        if (abilityUpgrade.CulletPrice <= DataController.saveData.GlassBitCount &&
-                            abilityUpgrade.PelletPrice <= DataController.saveData.PlasticBitCount &&
-                            abilityUpgrade.SheetPrice <= DataController.saveData.MetalBitCount)
-                        {
-                            // upgrade is available to buy
-                            statusColor = BaseUtils.ColorFromHex("ECB52C");
-                            statusString = "Available";
-                        }
-                        else
-                        {
-                            // upgrade is unavailable to buy
-                            statusColor = BaseUtils.ColorFromHex("8E8E8E");
-                            statusString = "Unavailable";
-                        }
-                    }
-                }
-
-                upgradeFrame.Find("StatusField").GetComponent<Image>().color = statusColor;
-                upgradeFrame.Find("StatusField").GetComponentInChildren<TMP_Text>().text = statusString;
-                
-                upgradeFrame.GetComponent<Button>().onClick.AddListener((() =>
-                {
-                    if (DataController.saveData.availableUpgrades.Contains(abilityUpgrade))
-                    {
-                        if (upgrades[abilityIndex] != abilityUpgrade)
-                        {
-                            upgrades[abilityIndex] = abilityUpgrade;
-                        }
-                        else
-                        {
-                            upgrades[abilityIndex] = null;
-                        }
-                    }
-                    else
-                    {
-                        // buying an upgrade
-
-                        if (abilityUpgrade.CulletPrice <= DataController.saveData.GlassBitCount &&
-                            abilityUpgrade.PelletPrice <= DataController.saveData.PlasticBitCount &&
-                            abilityUpgrade.SheetPrice <= DataController.saveData.MetalBitCount)
-                        {
-                            DataController.saveData.availableUpgrades.Add(abilityUpgrade);
-                            upgrades[abilityIndex] = abilityUpgrade;
-                            DataController.saveData.GlassBitCount -= abilityUpgrade.CulletPrice;
-                            DataController.saveData.PlasticBitCount -= abilityUpgrade.PelletPrice;
-                            DataController.saveData.MetalBitCount -= abilityUpgrade.SheetPrice;
-                        } 
-                    }
-
-                    ChangeSelectSection(abilityIndex);
-                }));
-
-                upgradeFrame.gameObject.SetActive(true);
-            }
+            var button = r.GetChild(i);
+            button.RecursiveFind("Icon").GetComponent<Image>().sprite = allies[i]?.ally?.Icon ?? MissingSprite;
+            button.RecursiveFind("AllyName").GetComponent<TMP_Text>().text = allies[i]?.ally?.Name ?? "No Ally in Slot";
+            button.RecursiveFind("AllyDesc").GetComponent<TMP_Text>().text = allies[i]?.ally?.Type.ToString();
         }
     }
 
-    public void ChangeAbilityInSlot(AbilityObject ability, int abilityIndex)
+    public void SetupAbilitySubFrame(RectTransform frame)
+    {
+        _openSelectFrame = frame;
+        var content = frame.RecursiveFind("AbilityContent") as RectTransform;
+        UpdateAbilityButtons(content);
+    }
+    public void SetupAllySubFrame(RectTransform frame)
+    {
+        _openSelectFrame = frame;
+        var content = frame.RecursiveFind("AllyContent") as RectTransform;
+        UpdateAllyButtons(content);
+    }
+    
+
+    public void ChangeAbility(int abilityIndex, AbilityObject ability)
     {
         if (ability)
         {
             foreach (var abilityObject in abilities)
             {
-                if (abilityObject == ability || abilityObject.Type == ability.Type)
+                if (abilityObject && (abilityObject == ability || abilityObject.Type == ability.Type))
                 {
                     return;
                 }
@@ -543,12 +509,12 @@ public class HomeController : MonoBehaviour
 
         abilities[abilityIndex] = ability;
         upgrades[abilityIndex] = null;
-        
-        UpdateIcons();
-        ChangeSelectSection(abilityIndex);
-    }
 
-    public void ChangeAllyInSlot(AllyObject.AllyInstance ally, int allyIndex)
+        UpdateAbilityButtons(_openSelectFrame.RecursiveFind("AbilityContent") as RectTransform);
+        OpenSelectMenu(_selectedSlotIndex);
+    }
+    
+    public void ChangeAlly(int allyIndex, AllyObject.AllyInstance ally)
     {
         if (ally != null && ally.ally != null)
         {
@@ -572,75 +538,288 @@ public class HomeController : MonoBehaviour
         }
 
         allies[allyIndex] = ally;
-
-        UpdateIcons();
-        ChangeAllySection(allyIndex);
+        
+        UpdateAllyButtons(_openSelectFrame.RecursiveFind("AllyContent") as RectTransform);
+        OpenSelectMenu(_selectedSlotIndex);
     }
 
-    public void ChangeSelectPreview(AbilityObject ability)
+    private void ChangeUpgrade(int index, AbilityObject.AbilityUpgrade abilityUpgrade)
     {
-        if (ability)
+        if (abilityUpgrade == null)
         {
-            _selectPreview.Find("AbilityName").GetComponent<TMP_Text>().text = ability.DisplayName;
-            _selectPreview.Find("AbilityDesc").GetComponent<TMP_Text>().text = ability.Description;
-            _selectPreview.RecursiveFind("AbilityIcon").GetComponent<Image>().sprite = ability.Icon;
+            upgrades[index] = null;
         }
         else
         {
-            _selectPreview.Find("AbilityName").GetComponent<TMP_Text>().text = "None";
-            _selectPreview.Find("AbilityDesc").GetComponent<TMP_Text>().text = "";
-            _selectPreview.RecursiveFind("AbilityIcon").GetComponent<Image>().sprite = MissingSprite;
+
+            if (DataController.saveData.availableUpgrades.Contains(abilityUpgrade))
+            {
+                upgrades[index] = abilityUpgrade;
+            }
+            else
+            {
+                // buying an upgrade
+
+                if (abilityUpgrade.CulletPrice <= DataController.saveData.GlassBitCount &&
+                    abilityUpgrade.PelletPrice <= DataController.saveData.PlasticBitCount &&
+                    abilityUpgrade.SheetPrice <= DataController.saveData.MetalBitCount)
+                {
+                    DataController.saveData.availableUpgrades.Add(abilityUpgrade);
+                    upgrades[index] = abilityUpgrade;
+                    DataController.saveData.GlassBitCount -= abilityUpgrade.CulletPrice;
+                    DataController.saveData.PlasticBitCount -= abilityUpgrade.PelletPrice;
+                    DataController.saveData.MetalBitCount -= abilityUpgrade.SheetPrice;
+                }
+            }
+        }
+
+        UpdateAbilityButtons(_openSelectFrame.RecursiveFind("AbilityContent") as RectTransform);
+        OpenSelectMenu(_selectedSlotIndex);
+    }
+
+    public void ToggleSelectMenu(int index)
+    {
+        var menu = _openSelectFrame.RecursiveFind("SelectMenu") as RectTransform;
+
+        if (menu.gameObject.activeSelf && _selectedSlotIndex == index)
+        {
+            menu.gameObject.SetActive(false);
+        }
+        else
+        {
+            OpenSelectMenu(index);
         }
     }
     
-    public void ChangeAllyPreview(AllyObject.AllyInstance ally)
+    public void OpenSelectMenu(int index)
     {
-        if (ally != null && ally.ally != null)
-        {
-            _allyPreview.Find("AllyName").GetComponent<TMP_Text>().text = ally.ally.Name;
-            _allyPreview.Find("AllyExp").GetComponent<TMP_Text>().text = $"Exp. {ally.level}";
-            _allyPreview.Find("AllyLevel").gameObject.SetActive(true);
-            _allyPreview.Find("AllyLevel").GetComponent<Slider>().value = ally.levelProgress;
-            _allyPreview.RecursiveFind("AllyIcon").GetComponent<Image>().sprite = ally.ally.Icon;
-        }
-        else
-        {
-            _allyPreview.Find("AllyName").GetComponent<TMP_Text>().text = "No Ally Selected";
-            _allyPreview.Find("AllyExp").GetComponent<TMP_Text>().text = $"";
-            _allyPreview.Find("AllyLevel").gameObject.SetActive(false);
-            _allyPreview.RecursiveFind("AllyIcon").GetComponent<Image>().sprite = MissingSprite;
-        }
-    }
+        _selectedSlotIndex = index;
+        var button = (_openSelectFrame.name == "AllySelectFrame" ? _openSelectFrame.RecursiveFind("AllyContent") : _openSelectFrame.RecursiveFind("AbilityContent")).GetChild(index) as RectTransform;
+        var menu = _openSelectFrame.RecursiveFind("SelectMenu") as RectTransform;
+        menu.gameObject.SetActiveFast(true);
+        
+        menu.RecursiveFind("SelectContent").RemoveAllChildrenExcept("SelectTemplate");
 
-    public void SetupRecycleFrame()
-    {
-        _recycleAllyFrame.gameObject.SetActive(false);
+        menu.anchoredPosition = menu.anchoredPosition.SetY(button.anchoredPosition.y-100);
         
-        _recycleEnemyContent.RemoveAllChildrenExcept(_recycleEnemyTemplate.name);
-        foreach (var enemy in DataController.saveData.enemyInventory)
-        {
-            var enemyFrame = Instantiate(_recycleEnemyTemplate, _recycleEnemyTemplate.parent);
-            enemyFrame.Find("Icon").GetComponent<Image>().sprite = enemy.Icon;
-            enemyFrame.Find("EnemyName").GetComponent<TMP_Text>().text = enemy.DisplayName;
-            enemyFrame.GetComponent<Button>().onClick.AddListener((() => AddToTryContent(enemy, enemyFrame)));
-            
-            enemyFrame.gameObject.SetActive(true);
-        }
+        var template = menu.RecursiveFind<RectTransform>("SelectTemplate");
+        template.gameObject.SetActive(false);
         
-        _recycleAllyContent.RemoveAllChildrenExcept(new List<string>{_recycleAllyTemplate.name, "TryButton"});
-        foreach (var ally in DataController.saveData.availableAllies)
+        if (_openSelectFrame.name == "AbilitySelectFrame")
         {
-            if (ally != null && ally.ally)
             {
-                var allyFrame = Instantiate(_recycleAllyTemplate, _recycleAllyTemplate.parent);
-                allyFrame.Find("Icon").GetComponent<Image>().sprite = ally.ally.Icon;
-                allyFrame.Find("AllyName").GetComponent<TMP_Text>().text = ally.ally.Name;
-                allyFrame.GetComponent<Button>().onClick.AddListener(
-                    (() => OpenRecycleMenu(DataController.saveData.availableAllies.IndexOf(ally))));
+                var frame = Instantiate(template, template.parent);
+                frame.Find("AbilityName").GetComponent<TMP_Text>().text = "None";
+                frame.Find("AbilityType").GetComponent<TMP_Text>().text = "";
+                frame.Find("Icon").GetComponent<Image>().sprite = MissingSprite;
+                
+                frame.GetComponent<Button>().onClick.AddListener((() =>
+                {
+                    ChangeAbility(index, null);
+                }));
+                
+                frame.gameObject.SetActive(true);
+            }
+            
+            foreach (var ability in DataController.saveData.availableAbilities)
+            {
+                if (abilities.Contains(ability))
+                    continue;
+                
+                var frame = Instantiate(template, template.parent);
+                frame.Find("AbilityName").GetComponent<TMP_Text>().text = ability.DisplayName;
 
-                allyFrame.gameObject.SetActive(true);
+                var typeName = ability.Type.ToString();
+                
+                switch (ability.Type)
+                {
+                    case AbilityObject.AbilityType.Shooter:
+                        typeName = "Projectile";
+                        break;
+                    case AbilityObject.AbilityType.Bomb:
+                        typeName = "Explosive";
+                        break;
+                    case AbilityObject.AbilityType.Effect:
+                        break;
+                    case AbilityObject.AbilityType.Melee:
+                        break;
+                    case AbilityObject.AbilityType.Trigger:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+                frame.Find("AbilityType").GetComponent<TMP_Text>().text = typeName;
+                frame.Find("Icon").GetComponent<Image>().sprite = ability.Icon;
+                
+                frame.GetComponent<Button>().onClick.AddListener((() =>
+                {
+                    ChangeAbility(index, ability);
+                }));
+                
+                frame.gameObject.SetActive(true);
             }
         }
+        else if (_openSelectFrame.name == "AbilityUpgradeFrame")
+        {
+            {
+                var frame = Instantiate(template, template.parent);
+                frame.Find("UpgradeName").GetComponent<TMP_Text>().text = "None";
+                frame.Find("UpgradeCost").gameObject.SetActive(false);
+                frame.Find("StatusField").gameObject.SetActive(false);
+                
+                frame.GetComponent<Button>().onClick.AddListener((() =>
+                {
+                    ChangeUpgrade(index, null);
+                }));
+                
+                frame.gameObject.SetActive(true);
+            }
+
+            if (abilities[index])
+            {
+                foreach (var abilityUpgrade in abilities[index].Upgrades)
+                {
+                    var frame = Instantiate(template, template.parent);
+                    frame.Find("UpgradeName").GetComponent<TMP_Text>().text = abilityUpgrade.DisplayName;
+
+                    frame.RecursiveFind("CulletCost").GetComponent<TMP_Text>().text =
+                        abilityUpgrade.CulletPrice.ToString();
+
+                    frame.RecursiveFind("PelletCost").GetComponent<TMP_Text>().text =
+                        abilityUpgrade.PelletPrice.ToString();
+
+                    frame.RecursiveFind("MetalCost").GetComponent<TMP_Text>().text =
+                        abilityUpgrade.SheetPrice.ToString();
+
+                    Color statusColor = BaseUtils.ColorFromHex("8E8E8E");
+                    string statusString = "Unavailable";
+
+                    if (upgrades[index] == abilityUpgrade) // upgrade is bought and active
+                    {
+
+                        statusColor = BaseUtils.ColorFromHex("0BD149");
+                        statusString = "Active";
+                    }
+                    else // upgrade is inactive
+                    {
+                        if (DataController.saveData.availableUpgrades
+                            .Contains(abilityUpgrade)) // upgrade is bought but inactive
+                        {
+                            statusColor = BaseUtils.ColorFromHex("E55858");
+                            statusString = "Inactive";
+                        }
+                        else // upgrade is not bought
+                        {
+                            if (abilityUpgrade.CulletPrice <= DataController.saveData.GlassBitCount &&
+                                abilityUpgrade.PelletPrice <= DataController.saveData.PlasticBitCount &&
+                                abilityUpgrade.SheetPrice <= DataController.saveData.MetalBitCount)
+                            {
+                                // upgrade is available to buy
+                                statusColor = BaseUtils.ColorFromHex("ECB52C");
+                                statusString = "Available";
+                            }
+                            else
+                            {
+                                // upgrade is unavailable to buy
+                                statusColor = BaseUtils.ColorFromHex("8E8E8E");
+                                statusString = "Unavailable";
+                            }
+                        }
+                    }
+
+                    frame.Find("StatusField").GetComponent<Image>().color = statusColor;
+                    frame.Find("StatusField").GetComponentInChildren<TMP_Text>().text = statusString;
+
+                    frame.GetComponent<Button>().onClick.AddListener((() => { ChangeUpgrade(index, abilityUpgrade); }));
+
+
+                    frame.gameObject.SetActive(true);
+                }
+            }
+        } else if (_openSelectFrame.name == "AllySelectFrame")
+        {
+            {
+                var frame = Instantiate(template, template.parent);
+                frame.Find("AllyName").GetComponent<TMP_Text>().text = "None";
+                frame.Find("AllyType").GetComponent<TMP_Text>().text = "";
+                frame.Find("Icon").GetComponent<Image>().sprite = MissingSprite;
+                
+                frame.GetComponent<Button>().onClick.AddListener((() =>
+                {
+                    ChangeAlly(index, null);
+                }));
+                
+                frame.gameObject.SetActive(true);
+            }
+            
+            foreach (var ally in DataController.saveData.availableAllies)
+            {
+                if (allies.Contains(ally))
+                    continue;
+                
+                var frame = Instantiate(template, template.parent);
+                frame.Find("AllyName").GetComponent<TMP_Text>().text = ally.ally.Name;
+
+                var typeName = ally.ally.Type.ToString(); 
+                frame.Find("AllyType").GetComponent<TMP_Text>().text = typeName;
+                frame.Find("Icon").GetComponent<Image>().sprite = ally.ally.Icon;
+                
+                frame.GetComponent<Button>().onClick.AddListener((() =>
+                {
+                    ChangeAlly(index, ally);
+                }));
+                
+                frame.gameObject.SetActive(true);
+            }
+        }
+    }
+     
+    public void SetupAbilityFrame()
+    {
+        UpdateIcons();
+    }
+
+    public float TrashChance => 100f / (( (_recycleEnemies.Count - 1) *0.25f)+1);
+    
+    public void CalculateChance()
+    {
+        _recycleChanceFrame.RemoveAllChildrenExcept(_recycleChanceTemplate.name);
+        
+        Dictionary<Sprite, float> chances = new Dictionary<Sprite, float>();
+        
+        chances.Add(TrashSprite,TrashChance);
+
+        if (TrashChance < 100)
+        {
+
+            var allyChance = 100 - TrashChance;
+            var chancePerEnemy = allyChance / _recycleEnemies.Count;
+
+
+            foreach (var recycleEnemy in _recycleEnemies)
+            {
+                foreach (var recycleEnemyPossibleAlly in recycleEnemy.PossibleAllies)
+                {
+                    chances.TryAdd(recycleEnemyPossibleAlly.Icon, 0);
+
+                    chances[recycleEnemyPossibleAlly.Icon] += chancePerEnemy;
+                }
+            }
+
+        }
+
+        foreach (var (sprite, value) in chances)
+        {
+            var chanceObj = Instantiate(_recycleChanceTemplate, _recycleChanceTemplate.parent);
+
+            chanceObj.Find("Icon").GetComponent<Image>().sprite = sprite;
+            chanceObj.Find("ChanceText").GetComponent<TMP_Text>().text = $"%{value.ToString("F2")}";
+            
+            chanceObj.gameObject.SetActive(true);
+        }
+
+        _recycleChanceFrame.gameObject.SetActiveFast(_recycleEnemies.Count > 0);
     }
 
     public void AddToTryContent(EnemyObject o, RectTransform rect)
@@ -655,43 +834,15 @@ public class HomeController : MonoBehaviour
             DataController.saveData.enemyInventory.Add(o);
             _recycleEnemies.Remove(o);
             SetupRecycleFrame();
-            _recycleAllyFrame.gameObject.SetActive(true);
+            CalculateChance();
             Destroy(rect.gameObject);
         }));
         
         SetupRecycleFrame();
-        _recycleAllyFrame.gameObject.SetActive(true);
-    }
-
-    public void OpenRecycleMenu(int index)
-    {
-        _selectedAllySlot = index;
-        foreach (Transform o in _recycleTryContent)
-        {
-            o.GetComponent<Button>().onClick.Invoke();
-        }
-        _recycleTryContent.RemoveAllChildren();
-        SetupRecycleFrame();
-
-        if (index < 0)
-        {
-            _recycleAllyInfo.Find("Icon").GetComponent<Image>().sprite = MissingSprite;
-            _recycleAllyInfo.Find("NameText").GetComponent<TMP_Text>().text = "Trying For a New Ally";
-            _recycleAllyInfo.Find("ExpText").GetComponent<TMP_Text>().text = "";
-            _recycleAllyInfo.Find("Slider").GetComponent<Slider>().gameObject.SetActive(false);
-        }
-        else
-        {
-            _recycleAllyInfo.Find("Icon").GetComponent<Image>().sprite = DataController.saveData.availableAllies[index].ally.Icon;
-            _recycleAllyInfo.Find("NameText").GetComponent<TMP_Text>().text = DataController.saveData.availableAllies[index].ally.Name;
-            _recycleAllyInfo.Find("ExpText").GetComponent<TMP_Text>().text = $"Exp. {DataController.saveData.availableAllies[index].level}";
-            _recycleAllyInfo.Find("Slider").GetComponent<Slider>().gameObject.SetActive(true);
-            _recycleAllyInfo.Find("Slider").GetComponent<Slider>().value =
-                DataController.saveData.availableAllies[index].levelProgress;
-        }
         
-        _recycleAllyFrame.gameObject.SetActive(true);
+        CalculateChance();
     }
+    
 
     public void RecycleEnemies()
     {
@@ -700,24 +851,22 @@ public class HomeController : MonoBehaviour
             IEnumerator recycleCoroutine()
             {
                 var recycleIcon = _recycleAllyInfo.Find("Icon") as RectTransform;
+
                 IEnumerator moveCoroutine(Image r)
                 {
                     yield return r.rectTransform.DOMove(recycleIcon.position, 0.25f).SetEase(Ease.InOutQuad);
-                    
+
                     yield return new WaitForSeconds(0.25f);
-                    
+
                     yield return r.DOFade(0, 0.125f).SetEase(Ease.InOutQuad);
 
                     recycleIcon.DOScale(1.25f, 0.1f).SetEase(Ease.InOutBack).OnKill(
-                        (() =>
-                        {
-                            recycleIcon.DOScale(1.0f, 0.1f).SetEase(Ease.InOutBack);
-                        }));
-                    
+                        (() => { recycleIcon.DOScale(1.0f, 0.1f).SetEase(Ease.InOutBack); }));
+
                     yield return new WaitForSeconds(0.25f);
 
 
-                    
+
                     Destroy(r.gameObject);
                 }
 
@@ -725,7 +874,8 @@ public class HomeController : MonoBehaviour
                 {
                     while (r.gameObject.activeSelf)
                     {
-                        r.eulerAngles += new Vector3(0, 0, Time.deltaTime*10f);
+                        r.eulerAngles += new Vector3(0, 0, Time.deltaTime * 10f);
+
                         yield return null;
                     }
                 }
@@ -736,7 +886,7 @@ public class HomeController : MonoBehaviour
                     var img = new GameObject().AddComponent<Image>();
                     img.rectTransform.SetParent(_recycleFrame);
                     img.rectTransform.sizeDelta = Vector2.one * 75f;
-                    
+
                     img.rectTransform.anchorMax = Vector2.one * 0.5f;
                     img.rectTransform.anchorMin = Vector2.one * 0.5f;
 
@@ -753,95 +903,144 @@ public class HomeController : MonoBehaviour
                 yield return new WaitForSeconds(1.0f);
 
                 // making new ally
-                if (_selectedAllySlot == -1)
+
+                bool newAlly = true;
+
+                var chosenAlly = _recycleEnemies.GetRandom().PossibleAllies.GetRandom();
+
+                // foreach (var saveDataAvailableAlly in DataController.saveData.availableAllies)
+                // {
+                //     if (saveDataAvailableAlly.ally == chosenAlly)
+                //     {
+                //         newAlly = false;
+                //
+                //         break;
+                //     }
+                // }
+
+                if (Random.Range(0, 100) <= TrashChance)
                 {
-                    AllyObject ally = _recycleEnemies.GetRandom().PossibleAllies.GetRandom();
+                    newAlly = false;
+                }
 
-                    _recycleResultFrame.Find("Icon").GetComponent<Image>().sprite = ally.Icon;
-                    _recycleResultFrame.Find("AllyName").GetComponent<TMP_Text>().text = ally.Name;
-
-                    var isNew = false;
-                    foreach (var saveDataAvailableAlly in DataController.saveData.availableAllies)
-                    {
-                        if (saveDataAvailableAlly.ally == ally)
-                        {
-                            isNew = true;
-
-                            break;
-                        }
-                    }
-                    
-                    foreach (var saveDataAvailableAlly in DataController.saveData.allies)
-                    {
-                        if (saveDataAvailableAlly != null && saveDataAvailableAlly.ally == ally)
-                        {
-                            isNew = true;
-
-                            break;
-                        }
-                    }
-                    
-                    _recycleResultFrame.Find("NewLabel").gameObject.SetActive(isNew);
-                        
-                    
-                    _recycleResultFrame.Find("Fade").GetComponent<Image>().color = Color.clear;
-                    _recycleResultFrame.Find("Fade").GetComponent<Image>().DOFade(0.8f, 0.5f).SetEase(Ease.InOutQuad);
-
-                    _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().localScale = Vector3.zero;
-                    _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().DOScale(1f, 0.5f)
-                        .SetEase(Ease.InOutBack);
-
-                    StartCoroutine(rotateCoroutine(_recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>()));
-
-                    yield return new WaitForSeconds(0.15f);
-                    
-                    _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().localScale = Vector3.zero;
-                    _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().DOScale(1f, 1.0f)
-                        .SetEase(Ease.InOutBack);
-
-                    yield return new WaitForSeconds(0.05f);
-                    
-                    _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().localScale = Vector3.zero;
-                    _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().DOScale(1f, 1.0f)
-                        .SetEase(Ease.InOutBack);
-                    
-                    yield return new WaitForSeconds(0.05f);
-                    
-                    _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().localScale = Vector3.zero;
-                    _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().DOScale(1f, 1.0f)
-                        .SetEase(Ease.InOutBack);
-
-                    _recycleResultFrame.gameObject.SetActive(true);
-                    
-                    yield return new WaitForSeconds(2.5f);
-                    
-                    _recycleResultFrame.Find("Fade").GetComponent<Image>().DOFade(0.0f, 0.5f).SetEase(Ease.InOutQuad);
-
-                    
-                    _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().DOScale(0f, 0.5f)
-                        .SetEase(Ease.InOutBack);
-                    
-                    _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().DOScale(0f, 1.0f)
-                        .SetEase(Ease.InOutBack);
-                    
-                    _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().DOScale(0f, 1.0f)
-                        .SetEase(Ease.InOutBack);
-                    
-                    _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().DOScale(0f, 1.0f)
-                        .SetEase(Ease.InOutBack);
-
-                    yield return new WaitForSeconds(1.5f);
-                    
-                    _recycleResultFrame.gameObject.SetActive(false);
-                    
-                    DataController.saveData.availableAllies.Add(new AllyObject.AllyInstance(ally));
-                    
-                    SetupRecycleFrame();
+                int trashPrice = _recycleEnemies.Count * 5;
+                
+                if (newAlly)
+                {
+                    _recycleResultFrame.Find("Icon").GetComponent<Image>().sprite = chosenAlly.Icon;
+                    _recycleResultFrame.Find("AllyName").GetComponent<TMP_Text>().text = chosenAlly.Name;
                 }
                 else
                 {
-                    
+                    _recycleResultFrame.Find("Icon").GetComponent<Image>().sprite = TrashSprite;
+                    _recycleResultFrame.Find("AllyName").GetComponent<TMP_Text>().text =
+                        $"{trashPrice} Pieces of Trash!";
                 }
+
+
+                var isNew = true;
+
+                if (newAlly)
+                {
+                    foreach (var saveDataAvailableAlly in DataController.saveData.availableAllies)
+                    {
+                        if (saveDataAvailableAlly.ally == chosenAlly)
+                        {
+                            isNew = false;
+
+                            break;
+                        }
+                    }
+
+                    foreach (var saveDataAvailableAlly in DataController.saveData.allies)
+                    {
+                        if (saveDataAvailableAlly != null && saveDataAvailableAlly.ally == chosenAlly)
+                        {
+                            isNew = false;
+
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    isNew = false;
+                }
+
+                _recycleResultFrame.Find("NewLabel").gameObject.SetActive(isNew);
+
+
+                _recycleResultFrame.Find("Fade").GetComponent<Image>().color = Color.clear;
+                _recycleResultFrame.Find("Fade").GetComponent<Image>().DOFade(0.8f, 0.5f).SetEase(Ease.InOutQuad);
+
+                _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().localScale = Vector3.zero;
+                _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().DOScale(1f, 0.5f)
+                    .SetEase(Ease.InOutBack);
+
+                StartCoroutine(rotateCoroutine(_recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>()));
+
+                yield return new WaitForSeconds(0.15f);
+
+                _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().localScale = Vector3.zero;
+                _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().DOScale(1f, 1.0f)
+                    .SetEase(Ease.InOutBack);
+
+                yield return new WaitForSeconds(0.05f);
+
+                _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().localScale = Vector3.zero;
+                _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().DOScale(1f, 1.0f)
+                    .SetEase(Ease.InOutBack);
+
+                yield return new WaitForSeconds(0.05f);
+
+                _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().localScale = Vector3.zero;
+                _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().DOScale(1f, 1.0f)
+                    .SetEase(Ease.InOutBack);
+
+                _recycleResultFrame.gameObject.SetActive(true);
+
+                yield return new WaitForSeconds(2.5f);
+
+                _recycleResultFrame.Find("Fade").GetComponent<Image>().DOFade(0.0f, 0.5f).SetEase(Ease.InOutQuad);
+
+
+                _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().DOScale(0f, 0.5f)
+                    .SetEase(Ease.InOutBack);
+
+                _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().DOScale(0f, 1.0f)
+                    .SetEase(Ease.InOutBack);
+
+                _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().DOScale(0f, 1.0f)
+                    .SetEase(Ease.InOutBack);
+
+                _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().DOScale(0f, 1.0f)
+                    .SetEase(Ease.InOutBack);
+
+                yield return new WaitForSeconds(1.5f);
+
+
+                _recycleResultFrame.gameObject.SetActive(false);
+
+
+                if (newAlly)
+                {
+                    DataController.saveData.availableAllies.Add(new AllyObject.AllyInstance(chosenAlly));
+                }
+                else
+                {
+                    calculateDistribution(trashPrice, out var _glass, out var _plastic, out int _metal);
+
+                    DataController.saveData.GlassCount += _glass;
+                    DataController.saveData.PlasticCount += _plastic;
+                    DataController.saveData.MetalCount += _metal;
+                }
+
+                _recycleEnemies.Clear();
+                
+                SetupRecycleFrame();
+                CalculateChance();
+                
+
 
             }
 
@@ -853,72 +1052,157 @@ public class HomeController : MonoBehaviour
     {
         var currency = (SubRecycleType)type;
 
+        int glassPrice = 10;
+        int metalPrice = 10;
+        int plasticPrice = 10;
+
+        var bought = false;
+        
         switch (currency)
         {
             case SubRecycleType.Glass:
-                if (DataController.saveData.GlassCount >= 10)
+                if (DataController.saveData.GlassCount >= glassPrice)
                 {
                     DataController.saveData.GlassBitCount++;
-                    DataController.saveData.GlassCount -= 10;
+                    DataController.saveData.GlassCount -= glassPrice;
+                    bought = true;
                 }
                 break;
             case SubRecycleType.Metal:
-                if (DataController.saveData.MetalCount >= 10)
+                if (DataController.saveData.MetalCount >= metalPrice)
                 {
                     DataController.saveData.MetalBitCount++;
-                    DataController.saveData.MetalCount -= 10;
+                    DataController.saveData.MetalCount -= metalPrice;
+                    bought = true;
                 }
                 break;
             case SubRecycleType.Plastic:
-                if (DataController.saveData.PlasticCount >= 10)
+                if (DataController.saveData.PlasticCount >= plasticPrice)
                 {
                     DataController.saveData.PlasticBitCount++;
-                    DataController.saveData.PlasticCount -= 10;
+                    DataController.saveData.PlasticCount -= plasticPrice;
+                    bought = true;
                 }
                 break;
         }
-    }
-
-    public void RunPostMatchSequence(MatchController.PostMatchData pmd)
-    {
-        void calculateDistribution(int count, out int glass, out int plastic, out int metal)
+        
+        IEnumerator pointCoroutine(TMP_Text target, Sprite sprite)
         {
-            var trashLeft = count;
+            var icon = new GameObject().AddComponent<Image>();
+            icon.transform.SetParent(_recycleFrame);
 
-            int glassCount = 0, metalCount = 0, plasticCount = 0;
-
-            int tl_itr = Random.Range(0,2);
-            while (trashLeft > 0)
-            {
-                var val = Random.Range(1, trashLeft);
-                switch (tl_itr)
-                {
-                    case 0: // glass
-                        glassCount += val;
-
-                        break;
-                    case 1: // metal
-                        metalCount += val;
-
-                        break;
-                    case 2: // plastic
-                        plasticCount += val;
-
-                        break;
-                }
-
-                tl_itr++;
-                if (tl_itr > 2)
-                    tl_itr = 0;
-
-                trashLeft -= val;
-            }
+            var trashCount = _recycleItemCounter.GetChild(type).GetComponentInChildren<TMP_Text>();
             
-            glass = glassCount;
-            metal = metalCount;
-            plastic = plasticCount;
+            var rectIcon = icon.transform as RectTransform;
+            rectIcon.position = trashCount.rectTransform.position;
+
+            rectIcon.anchorMin = Vector2.one * 0.5f;
+            rectIcon.anchorMax = Vector2.one * 0.5f;
+
+            rectIcon.sizeDelta = Vector2.one * 50f;
+            icon.sprite = sprite;
+
+            yield return rectIcon.DOMove(target.rectTransform.position, 0.25f).SetEase(Ease.InOutQuad);
+
+            yield return new WaitForSeconds(0.25f);
+                    
+            yield return icon.DOFade(0, 0.05f/2).SetEase(Ease.InOutQuad);
+
+            yield return new WaitForSeconds(0.075f/2);
+                    
+
+
+
+            var ct = int.Parse(trashCount.text);
+            ct--;
+            trashCount.text = ct.ToString();
+
+            trashCount.DOColor(Color.red, 0.1f).OnComplete((() => trashCount.DOColor(Color.white, 0.1f)));
+            
+            Destroy(icon.gameObject);
         }
 
+        IEnumerator c()
+        {
+            var count = 0;
+            switch (currency)
+            {
+                case SubRecycleType.Glass:
+                    count = glassPrice;
+                    break;
+                case SubRecycleType.Metal:
+                    count = metalPrice;
+                    break;
+                case SubRecycleType.Plastic:
+                    count = plasticPrice;
+                    break;
+            }
+
+            var textInfo = _recycleSubItemCounter.GetChild(type).GetComponentInChildren<TMP_Text>();
+            var _textInfo = _recycleItemCounter.GetChild(type).GetComponentInChildren<TMP_Text>();
+            for (int i = 0; i < count; i++)
+            {
+                StartCoroutine(pointCoroutine(textInfo, _textInfo.transform.parent.RecursiveFind("IconImage").GetComponent<Image>().sprite));
+
+                yield return new WaitForSeconds(0.125f/2);
+            }
+            
+            var ct = int.Parse(textInfo.text);
+            ct++;
+            textInfo.text = ct.ToString();
+            
+            
+            textInfo.DOColor(Color.green, 0.1f).OnComplete((() => textInfo.DOColor(Color.white, 0.1f)));
+        }
+
+        if (bought)
+            StartCoroutine(c());
+
+    }
+
+    void calculateDistribution(int count, out int glass, out int plastic, out int metal)
+    {
+        var trashLeft = count;
+
+        int glassCount = 0, metalCount = 0, plasticCount = 0;
+
+        int tl_itr = Random.Range(0,2);
+        while (trashLeft > 0)
+        {
+            var val = Random.Range(1, trashLeft);
+            switch (tl_itr)
+            {
+                case 0: // glass
+                    glassCount += val;
+
+                    break;
+                case 1: // metal
+                    metalCount += val;
+
+                    break;
+                case 2: // plastic
+                    plasticCount += val;
+
+                    break;
+            }
+
+            tl_itr++;
+            if (tl_itr > 2)
+                tl_itr = 0;
+
+            trashLeft -= val;
+        }
+            
+        glass = glassCount;
+        metal = metalCount;
+        plastic = plasticCount;
+    }
+    
+    public void RunPostMatchSequence(MatchController.PostMatchData pmd)
+    {
+
+        DataController.saveData.NextMap = Random.Range(0,100) >= 50 ? Resources.Load<MapObject>("Settings/Maps/TestMap00") : Resources.Load<MapObject>("Settings/Maps/StreetMap00");
+        
         IEnumerator pms()
         {
             _isPostInfoRunning = true;
@@ -929,12 +1213,16 @@ public class HomeController : MonoBehaviour
             {
                 _postTrashInfo.RecursiveFind<TMP_Text>("Count").text =
                     pmd.newCollectibles[CollectibleController.CollectibleType.GenericTrash].ToString();
+                
+                _postClothInfo.RecursiveFind<TMP_Text>("Count").text =
+                    pmd.newCollectibles[CollectibleController.CollectibleType.Clothing].ToString();
 
                 _postGlassInfo.RecursiveFind<TMP_Text>("Count").text = DataController.saveData.GlassCount.ToString();
                 _postPlasticInfo.RecursiveFind<TMP_Text>("Count").text =
                     DataController.saveData.PlasticCount.ToString();
 
                 _postMetalInfo.RecursiveFind<TMP_Text>("Count").text = DataController.saveData.MetalCount.ToString();
+                _postFinalClothInfo.RecursiveFind<TMP_Text>("Count").text = DataController.saveData.ClothingScrapCount.ToString();
 
                 var template = _postInfoFrame.RecursiveFind("EnemyTemplate");
                 
@@ -950,21 +1238,24 @@ public class HomeController : MonoBehaviour
 
             _postMatchFrame.gameObject.SetActive(true);
 
-            yield return _postMatchFrame.DOAnchorPosY(540, 0.5f).SetEase(Ease.InOutQuad);
+            yield return _postMatchFrame.DOAnchorPosY(0, 0.5f).SetEase(Ease.InOutQuad);
 
             if (pmd.won)
             {
                 yield return new WaitForSeconds(1.0f);
                 calculateDistribution(pmd.newCollectibles[CollectibleController.CollectibleType.GenericTrash], out var _glass, out var _plastic, out int _metal);
                 var trashCount = _postTrashInfo.Find("Count").GetComponent<TMP_Text>();
+                var clothCount = _postClothInfo.Find("Count").GetComponent<TMP_Text>();
                 
-                IEnumerator pointCoroutine(TMP_Text target, Sprite sprite)
+                IEnumerator pointCoroutine(TMP_Text target, Sprite sprite, bool isTrash=true)
                 {
+                    var cot = isTrash ? trashCount : clothCount;
+                    
                     var icon = new GameObject().AddComponent<Image>();
                     icon.transform.SetParent(_postMatchFrame);
 
                     var rectIcon = icon.transform as RectTransform;
-                    rectIcon.position = trashCount.rectTransform.position;
+                    rectIcon.position = cot.rectTransform.position;
 
                     rectIcon.anchorMin = Vector2.one * 0.5f;
                     rectIcon.anchorMax = Vector2.one * 0.5f;
@@ -980,17 +1271,20 @@ public class HomeController : MonoBehaviour
 
                     yield return new WaitForSeconds(0.075f/2);
                     
+                    Destroy(icon.gameObject);
 
                     var ct = int.Parse(target.text);
                     ct++;
                     target.text = ct.ToString();
 
-                    ct = int.Parse(trashCount.text);
+
+                    
+                    ct = int.Parse(cot.text);
                     ct--;
-                    trashCount.text = ct.ToString();
+                    cot.text = ct.ToString();
 
                     target.DOColor(Color.green, 0.1f).OnComplete((() => target.DOColor(Color.white, 0.1f)));
-                    trashCount.DOColor(Color.red, 0.1f).OnComplete((() => trashCount.DOColor(Color.white, 0.1f)));
+                    cot.DOColor(Color.red, 0.1f).OnComplete((() => cot.DOColor(Color.white, 0.1f)));
                 }
                 
 
@@ -1023,10 +1317,21 @@ public class HomeController : MonoBehaviour
                         yield return new WaitForSeconds(0.125f/2);
                     }
                 }
+                
+                {
+                    var textInfo = _postFinalClothInfo.Find("Count").GetComponent<TMP_Text>();
+                    for (int i = 0; i < pmd.newCollectibles[CollectibleController.CollectibleType.Clothing]; i++)
+                    {
+                        StartCoroutine(pointCoroutine(textInfo,textInfo.transform.parent.Find("Icon").GetComponent<Image>().sprite,false));
+
+                        yield return new WaitForSeconds(0.125f/2);
+                    }
+                }
 
                 DataController.saveData.GlassCount += _glass;
                 DataController.saveData.PlasticCount += _plastic;
                 DataController.saveData.MetalCount += _metal;
+                DataController.saveData.ClothingScrapCount += pmd.newCollectibles[CollectibleController.CollectibleType.Clothing];
                 DataController.saveData.enemyInventory.AddRange(pmd.CaughtEnemies);
 
             }

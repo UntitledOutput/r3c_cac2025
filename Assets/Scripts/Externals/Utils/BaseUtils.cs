@@ -635,15 +635,24 @@ namespace External
         
         public static void RemoveAllChildren(this Transform transform)
         {
-            // Iterate in reverse order to avoid issues when destroying elements
-            for (int i = transform.childCount - 1; i >= 0; i--)
+            if (transform.childCount > 0)
             {
-                // Get the child Transform
-                Transform child = transform.GetChild(i);
+                // Iterate in reverse order to avoid issues when destroying elements
+                for (int i = transform.childCount - 1; i >= 0; i--)
+                {
+                    // Get the child Transform
+                    Transform child = transform.GetChild(i);
 
-                // Destroy the GameObject associated with the child Transform
-                Object.Destroy(child.gameObject);
+                    // Destroy the GameObject associated with the child Transform
+                    Object.Destroy(child.gameObject);
+                }
             }
+        }
+
+        public static void SetActiveFast(this GameObject g, bool v)
+        {
+            if (g.activeSelf != v)
+                g.SetActive(v);
         }
 
         public static List<Transform> GetAllChildren(this Transform transform)

@@ -70,7 +70,7 @@ namespace ScriptableObj
         [Serializable]
         public class AbilityUpgrade
         {
-            public string Name;
+            public string DisplayName;
             public string Description;
             public Sprite Icon;
 

@@ -52,6 +52,8 @@ namespace Utils
         public static bool SubAttack_OneTime => Controls.Player.Subattack.WasPressedThisFrame() && !EventSystem.current.IsPointerOverGameObject();
         public static bool SideAttack_OneTime => Controls.Player.Sideattack.WasPressedThisFrame() && !EventSystem.current.IsPointerOverGameObject();
         public static bool Jump => Controls.Player.Jump.IsPressed();
+        public static bool Interact => Controls.Player.Interact.WasPressedThisFrame();
+        public static bool Close => Controls.Player.Close.WasPressedThisFrame();
         public static bool Crouch => Controls.Player.Crouch.IsPressed();
 
         public static Vector2 Scroll => Controls.Player.Scroll.ReadValue<Vector2>();

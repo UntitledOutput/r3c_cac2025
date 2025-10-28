@@ -268,7 +268,7 @@ public class EnemyController : ActorBehavior
                 Resources.Load<GameObject>("Prefabs/Particles/DeathParticle00"), transform.position, quaternion.identity);
 
             var collectible = Instantiate(
-                Resources.Load<GameObject>("Prefabs/Collectibles/ItemProjectile"),
+                Resources.Load<GameObject>($"Prefabs/Collectibles/{enemyObject.DropCollectible.GetRandom().ToString()}"),
                 transform.position + new Vector3(0, 1, 0), transform.rotation);
             Destroy(gameObject);
         }

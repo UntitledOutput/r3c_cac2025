@@ -8,6 +8,7 @@ public class CollectibleController : MonoBehaviour
     public enum CollectibleType
     {
         GenericTrash,
+        Clothing,
         End
     }
 
