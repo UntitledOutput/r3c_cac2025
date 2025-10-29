@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Controllers;
+using MyBox;
 using ScriptableObj;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -38,6 +39,7 @@ namespace DefaultNamespace
             public ClothingObject PantsObject;
             public ClothingObject ShoesObject;
             public Color SkinColor;
+            public Color HairColor;
             
             
             public List<ClothingObject> availableClothing;
@@ -56,6 +58,11 @@ namespace DefaultNamespace
             }
 
             public MapObject NextMap;
+
+            public void Save()
+            {
+                SaveDataMgr.Save();
+            }
         }
 
 
@@ -63,6 +70,12 @@ namespace DefaultNamespace
 
         [SerializeField] private GeneralSaveData _save;
 
+        [ButtonMethod]
+        public void Save()
+        {
+            saveData.Save();
+        }
+        
         private void Awake()
         {
             if (Instance && Instance != this)

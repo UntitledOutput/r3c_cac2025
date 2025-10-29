@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Users;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace Utils
 {
@@ -19,6 +20,7 @@ namespace Utils
             PlayStation,
             Switch,
             GenericGamepad,
+            Touch,
             Unknown
         }
 
@@ -26,7 +28,7 @@ namespace Utils
         {
             { typeof(Keyboard), DeviceType.KeyboardMouse },
             { typeof(Mouse), DeviceType.KeyboardMouse },
-            { typeof(Gamepad), DeviceType.GenericGamepad }
+            { typeof(Gamepad), DeviceType.GenericGamepad },
         };
 
         

@@ -5,8 +5,9 @@ using External;
 using MyBox;
 using ScriptableObj;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using Utils;
+using InputSystem = Utils.InputSystem;
 
 public class PlayerController : ActorBehavior
 {
@@ -84,9 +85,33 @@ public class PlayerController : ActorBehavior
         FindAnyObjectByType<GameUIController>().Fail();
     }
     
+    public enum InputMethod { Mouse, Touch }
+    public InputMethod currentInputMethod { get; private set; } = InputMethod.Mouse;
+
+    private float lastInputTime;
+    public float switchCooldown = 0.2f;
+
+    
     // Update is called once per frame
     void Update()
     {
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+        {
+            if (currentInputMethod != InputMethod.Touch && Time.time - lastInputTime > switchCooldown)
+            {
+                currentInputMethod = InputMethod.Touch;
+                lastInputTime = Time.time;
+            }
+        }
+
+        if ((Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) || (Keyboard.current != null && Keyboard.current.wasUpdatedThisFrame))
+        {
+            if (currentInputMethod != InputMethod.Mouse && Time.time - lastInputTime > switchCooldown)
+            {
+                currentInputMethod = InputMethod.Mouse;
+                lastInputTime = Time.time;
+            }
+        }
         
         if (_abilityController == null)
             _abilityController = GetComponent<AbilityController>();
@@ -104,9 +129,9 @@ public class PlayerController : ActorBehavior
             attacking = false;
         
         
-        _joystickController.transform.parent.gameObject.SetActiveFast(Input.touchSupported && !Input.mousePresent);
+        _joystickController.transform.parent.gameObject.SetActiveFast(currentInputMethod == InputMethod.Touch);
         
-        var move = Input.touchSupported && !Input.mousePresent ? (_joystickController.MoveDirection) : (InputSystem.Move);
+        var move = currentInputMethod == InputMethod.Touch ? (_joystickController.MoveDirection) : (InputSystem.Move);
         
         var moveDirection = CalculateMoveDirection(move);
         if ((moveDirection.magnitude > 0 && _timeSinceAttack > 1f) || attacking )
