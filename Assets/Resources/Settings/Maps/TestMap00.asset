@@ -16,3 +16,4 @@ MonoBehaviour:
   SectionCount: 2
   MapCover: {fileID: 21300000, guid: c530261c213b8f74c9692b11cbc76770, type: 3}
   MapName: Bright Streetside
+  TimeLimitInSeconds: 150

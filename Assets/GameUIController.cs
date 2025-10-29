@@ -5,6 +5,7 @@ using Controllers;
 using DG.Tweening;
 using External;
 using MyBox;
+using ScriptableObj;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,14 +23,15 @@ public class GameUIController : MonoBehaviour
         public Image Icon;
         public TMP_Text AmmoCount;
         public Image ReloadMeter;
+        public Image Back;
 
-        public void UpdateButton(AbilityController.AbilityInstance instance)
+        public void UpdateButton(AbilityController.AbilityInstance instance, bool isChosen)
         {
             if (instance.data)
             {
                 Icon.sprite = instance.data.Icon;
                 AmmoCount.text = $"{instance.ammo}/{instance.data.AmmoCount + (instance.upgrade?.AmmoChange ?? 0)}";
-                ReloadMeter.fillAmount = instance.reload;
+                ReloadMeter.fillAmount = instance.ammo < instance.data.AmmoCount ? instance.reload : 1;
             }
             else
             {
@@ -37,6 +39,8 @@ public class GameUIController : MonoBehaviour
                 AmmoCount.text = $"";
                 ReloadMeter.fillAmount = 0;
             }
+
+            Back.color = Back.color.SetAlpha(isChosen ? 1 : 0);
         }
     }
 
@@ -59,8 +63,28 @@ public class GameUIController : MonoBehaviour
             abilityButton.gameObject.SetActive(true);
             var uiButton = new AbilityUIButton();
             uiButton.Icon = abilityButton.Find("Icon").GetComponent<Image>();
+            uiButton.Back = abilityButton.GetComponent<Image>();
             uiButton.AmmoCount = abilityButton.RecursiveFind("AmmoCount").GetComponent<TMP_Text>();
             uiButton.ReloadMeter = abilityButton.RecursiveFind("ReloadMeter").GetComponent<Image>();
+            abilityButton.GetComponent<Button>().onClick.AddListener((() =>
+            {
+                if (MatchController._instance.PassedAbilities[(_playerController.AbilityController.ChosenAbility)]
+                        .Type == AbilityObject.AbilityType.Effect && _playerController.AbilityController.ChosenAbility ==
+                    MatchController._instance.PassedAbilities.IndexOf(passedAbility))
+                {
+                    var _shootPoint = _playerAbilityController.GetShootPoint();
+                    if (_playerAbilityController.TryShoot(_shootPoint))
+                    {
+                        foreach (var allyController in _playerController.Allies)
+                        {
+                            if (allyController)
+                                allyController.OnPlayerShot(_playerAbilityController.ChosenAbility,_shootPoint);
+                        }
+                    }
+                }
+                _playerController.AbilityController.ChosenAbility =
+                    MatchController._instance.PassedAbilities.IndexOf(passedAbility);
+            }));
             
             _abilityButtons.Add(uiButton);
         }
@@ -69,6 +93,8 @@ public class GameUIController : MonoBehaviour
 
         _playerController = FindAnyObjectByType<PlayerController>();
         _playerAbilityController = _playerController.GetComponent<AbilityController>();
+
+        _timerText = transform.RecursiveFind<TMP_Text>("TimerText");
     }
 
     // Update is called once per frame
@@ -76,10 +102,18 @@ public class GameUIController : MonoBehaviour
     {
         for (var i = 0; i < _abilityButtons.Count; i++)
         {
-            _abilityButtons[i].UpdateButton(_playerAbilityController.Abilities[i]);
+            _abilityButtons[i].UpdateButton(_playerAbilityController.Abilities[i],                 _playerController.AbilityController.ChosenAbility == i);
         }
 
         _healthSlider.value = Mathf.Lerp(_healthSlider.value, _playerController.Health, Time.deltaTime * 5f);
+
+        int seconds = (int)(MatchController._instance.timeLeft % 60f);
+        int minutes = (int)(MatchController._instance.timeLeft / 60f);
+
+        seconds = Mathf.Clamp(seconds, 0, int.MaxValue);
+        minutes = Mathf.Clamp(minutes, 0, int.MaxValue);
+
+        _timerText.text = $"{minutes:0}:{seconds:00}";
     }
 
     public void GoToNextStage()
@@ -207,22 +241,42 @@ public class GameUIController : MonoBehaviour
     
     public void Fail()
     {
+        FindFirstObjectByType<PlayerController>().BlockMovement = true;
+
+        var enemies = FindObjectsByType<EnemyController>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (var enemyController in enemies)
+        {
+            enemyController.gameObject.SetActive(false);
+        }
+        
         transform.Find("FailFrame").gameObject.SetActive(true);
 
-        
-        var failFrame = transform.Find("FailFrame").GetComponent<Image>();
-        failFrame.color = failFrame.color.SetAlpha(0);
-        failFrame.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+        IEnumerator fail()
+        {
 
-        var failText = failFrame.transform.Find("FailText").GetComponent<TMP_Text>();
-        failText.color = failText.color.SetAlpha(0);
-        failText.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+            var failFrame = transform.Find("FailFrame").GetComponent<Image>();
+            failFrame.color = failFrame.color.SetAlpha(0);
+
+
+            var failText = failFrame.transform.Find("FailText").GetComponent<TMP_Text>();
+            failText.color = failText.color.SetAlpha(0);
+
+
+            var failButton = failFrame.transform.Find("FailButton").GetComponent<Button>();
+            failButton.onClick.RemoveAllListeners();
+            
+            failFrame.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+            failText.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+
+            yield return new WaitForSeconds(0.75f);
+            failButton.onClick.AddListener((() => MatchController._instance.ReturnToHome(true)));
+
+            failButton.image.color = failButton.image.color.SetAlpha(0);
+            failButton.image.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+            failButton.onClick.AddListener((() => MatchController._instance.ReturnToHome(true)));
+        }
         
-        var failButton = failFrame.transform.Find("FailButton").GetComponent<Button>();
-        failButton.onClick.AddListener((() => MatchController._instance.ReturnToHome()));
-        
-        failButton.image.color = failButton.image.color.SetAlpha(0);
-        failButton.image.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+        StartCoroutine(fail());
 
     }
 }

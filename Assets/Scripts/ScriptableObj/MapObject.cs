@@ -10,6 +10,7 @@ namespace ScriptableObj
         public int SectionCount;
         public Sprite MapCover;
         public string MapName;
+        public float TimeLimitInSeconds;
 
     }
 }

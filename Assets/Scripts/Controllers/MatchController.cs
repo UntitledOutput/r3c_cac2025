@@ -17,7 +17,12 @@ namespace Controllers
         public static MatchController _instance;
 
         [SerializeField] private int _enemiesAlive = 0;
+        public float timeCount { get; private set; }
+        
+        public bool IsPlaying { get; private set; }
 
+        public float timeLeft => CurrentMap.TimeLimitInSeconds - timeCount;
+        
         private Dictionary<CollectibleController.CollectibleType, int> collectibleCount =
             new Dictionary<CollectibleController.CollectibleType, int>();
 
@@ -107,6 +112,7 @@ namespace Controllers
         public MapObject CurrentMap;
  
         [ReadOnly] public int RoundProgress { get; private set; }
+        private int RoundsFullyCompleted;
 
         public void RegisterEnemy(EnemyController _enemy)
         {
@@ -146,11 +152,15 @@ namespace Controllers
         {
             public int roundCount;
             public int roundProgress;
-            public bool won => roundProgress >= roundCount;
+            public bool won => roundProgress >= roundCount && !Failed;
             
             public Dictionary<CollectibleController.CollectibleType, int> newCollectibles = new Dictionary<CollectibleController.CollectibleType, int>();
             public List<EnemyObject> CaughtEnemies;
+            public bool Failed = false;
+            
         }
+
+        private bool _Failed = false;
 
         public PostMatchData CreatePostMatchData()
         {
@@ -161,6 +171,7 @@ namespace Controllers
             
             data.newCollectibles = collectibleCount;
             data.CaughtEnemies = caughtEnemies;
+            data.Failed = _Failed;
             
             return data;
         }
@@ -206,7 +217,9 @@ namespace Controllers
                 _currentRound.Setup();
             
             FindAnyObjectByType<MapController>().SetupMap(_currentRound);
-            
+
+            IsPlaying = true;
+            timeCount = 0;
             _enemiesAlive = 0;
             _gateControllers = FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
             
@@ -228,10 +241,13 @@ namespace Controllers
                 _collectibleTexts.Insert(i,text);
             }
             
+            LoadingScreenController.LoadingScreen.CloseLoadingScreen();
+            
         }
 
         public void NextStage()
         {
+            IsPlaying = false;
             RoundProgress++;
             if (RoundProgress > RoundAmount)
             {
@@ -242,15 +258,27 @@ namespace Controllers
                 var chosenGate = GateController.ChosenGateIndex;
                 GateController.ChosenGateIndex = -1;
                 _currentRound = _currentRound.NextRounds[chosenGate];
+                timeCount = 0;
+
                 
-                SceneManager.LoadScene("GameScene");
+                LoadingScreenController.LoadingScreen.OpenLoadingScreen((() =>
+                {
+                    SceneManager.LoadScene("GameScene");
+                }));
+                
+
             }
         }
 
-        public void ReturnToHome()
+        public void ReturnToHome(bool fail = false)
         {
-            
-            SceneManager.LoadScene("HomeScene");
+            if (fail)
+                _Failed = true;
+            LoadingScreenController.LoadingScreen.OpenLoadingScreen((() =>
+            {
+                SceneManager.LoadScene("HomeScene");
+            }));
+
         }
 
         private void Update()
@@ -263,6 +291,17 @@ namespace Controllers
 
             if (!_instance)
                 _instance = this;
+
+            if (IsPlaying)
+            {
+                timeCount += Time.deltaTime;
+
+                if (timeCount >= CurrentMap.TimeLimitInSeconds)
+                {
+                    IsPlaying = false;
+                    FindAnyObjectByType<GameUIController>().Fail();
+                }
+            }
         }
 
         private void LateUpdate()

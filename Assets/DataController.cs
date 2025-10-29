@@ -32,17 +32,21 @@ namespace DefaultNamespace
             public List<AbilityObject> abilities;
             [DoNotSerialize, HideInInspector] public List<AbilityObject.AbilityUpgrade> upgrades;
 
+            public ClothingObject HairObject;
             public ClothingObject HatObject;
             public ClothingObject ShirtObject;
             public ClothingObject PantsObject;
             public ClothingObject ShoesObject;
-
+            public Color SkinColor;
+            
+            
             public List<ClothingObject> availableClothing;
 
             public List<ClothingObject> BuildListOfClothing()
             {
                 List<ClothingObject> clothing = new List<ClothingObject>();
 
+                clothing.Add(HairObject);
                 clothing.Add(HatObject);
                 clothing.Add(ShirtObject);
                 clothing.Add(PantsObject);

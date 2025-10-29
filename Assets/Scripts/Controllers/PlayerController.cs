@@ -19,6 +19,7 @@ public class PlayerController : ActorBehavior
     private float _timeSinceAttack = 0;
     private List<AllyController> _allies = new List<AllyController>();
     private Animator _animator;
+    private JoystickController _joystickController;
     
     private Vector3 _shootPoint;
 
@@ -45,6 +46,7 @@ public class PlayerController : ActorBehavior
         rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponentInChildren<Animator>();
         Team = ActorTeam.Player;
+        _joystickController = FindAnyObjectByType<JoystickController>();
         
         // loading allies
         if (_matchController )
@@ -81,7 +83,7 @@ public class PlayerController : ActorBehavior
         
         FindAnyObjectByType<GameUIController>().Fail();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -101,7 +103,12 @@ public class PlayerController : ActorBehavior
         if (!_matchController)
             attacking = false;
         
-        var moveDirection = CalculateMoveDirection(InputSystem.Move);
+        
+        _joystickController.transform.parent.gameObject.SetActiveFast(Input.touchSupported && !Input.mousePresent);
+        
+        var move = Input.touchSupported && !Input.mousePresent ? (_joystickController.MoveDirection) : (InputSystem.Move);
+        
+        var moveDirection = CalculateMoveDirection(move);
         if ((moveDirection.magnitude > 0 && _timeSinceAttack > 1f) || attacking )
         {
             var fwd = moveDirection;
@@ -120,9 +127,9 @@ public class PlayerController : ActorBehavior
 
         var lerpSpeed = Time.deltaTime * 10f;
         _animator.SetBool("Shooting", attacking || _timeSinceAttack <= 1f );
-        _animator.LerpFloat(Velocity1,InputSystem.Move.magnitude,lerpSpeed);
-        _animator.LerpFloat(MoveX,InputSystem.Move.x,lerpSpeed);
-        _animator.LerpFloat(MoveY,InputSystem.Move.y,lerpSpeed);
+        _animator.LerpFloat(Velocity1,move.magnitude,lerpSpeed);
+        _animator.LerpFloat(MoveX,move.x,lerpSpeed);
+        _animator.LerpFloat(MoveY,move.y,lerpSpeed);
 
         moveDirection *= MoveSpeed;
 
@@ -169,6 +176,11 @@ public class PlayerController : ActorBehavior
         
 
         
+    }
+
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
     }
 
     public override void ChangeHealth(float diff, ActorBehavior source)

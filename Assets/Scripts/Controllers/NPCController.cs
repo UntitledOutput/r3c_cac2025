@@ -58,13 +58,12 @@ public class NPCController : ActorBehavior
 
     public virtual void OnInteract()
     {
-
-
+        FindAnyObjectByType<PlayerController>().BlockMovement = true;
     }
 
     public virtual void CloseMenu()
     {
-
+        FindAnyObjectByType<PlayerController>().BlockMovement = false;
     }
     
     

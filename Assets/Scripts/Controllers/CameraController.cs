@@ -86,9 +86,13 @@ namespace Controllers
             }
             else
             {
+                currentFOV = Mathf.Lerp(currentFOV, TargetFieldOfView, Time.deltaTime * 3.0f);
+                
                 transform.position = Vector3.Lerp(
                     transform.position, FocusPoint.position + PositionOffset, Time.deltaTime * 3.0f);
                 transform.LookAt(FocusPoint.position+FocusOffset);
+                
+                _camera.fieldOfView = currentFOV;
             }
         }
     }

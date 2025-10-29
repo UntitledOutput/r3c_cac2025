@@ -117,6 +117,8 @@ public class HomeController : MonoBehaviour
             var postMatchData = matchCtrl.CreatePostMatchData();
 
             DestroyImmediate(matchCtrl.gameObject);
+
+            LoadingScreenController.LoadingScreen.CloseLoadingScreen();
             
             RunPostMatchSequence(postMatchData);
         }
@@ -168,7 +170,10 @@ public class HomeController : MonoBehaviour
         matchController.RoundAmount = RoundCount;
 #endif
         
-        SceneManager.LoadScene("GameScene");
+        LoadingScreenController.LoadingScreen.OpenLoadingScreen((() =>
+        {
+            SceneManager.LoadScene("GameScene");
+        }));
     }
     
     // ui section
@@ -308,7 +313,7 @@ public class HomeController : MonoBehaviour
         PreviewPart(clothing,type);
         SetupChangeFrame();
 
-        FindAnyObjectByType<ClothingController>().ChangeClothing(DataController.saveData.BuildListOfClothing());
+        FindAnyObjectByType<PlayerController>().GetComponentInChildren<ClothingController>().ChangeClothing(DataController.saveData.BuildListOfClothing());
     }
     
     public void PreviewPart(ClothingObject clothingObject, ClothingObject.ClothingType type)
@@ -356,6 +361,7 @@ public class HomeController : MonoBehaviour
 
         _pieceChoiceFrame.Find("PieceName").GetComponent<TMP_Text>().text = clothingObject.Name;
         
+        buyButton.GetComponent<Button>().onClick.RemoveAllListeners();
         buyButton.GetComponent<Button>().onClick.AddListener((() =>
         {
             ChangeClothing(type,clothingObject);
@@ -1201,14 +1207,17 @@ public class HomeController : MonoBehaviour
     public void RunPostMatchSequence(MatchController.PostMatchData pmd)
     {
 
-        DataController.saveData.NextMap = Random.Range(0,100) >= 50 ? Resources.Load<MapObject>("Settings/Maps/TestMap00") : Resources.Load<MapObject>("Settings/Maps/StreetMap00");
-        
+
         IEnumerator pms()
         {
+
             _isPostInfoRunning = true;
             _postInfoFrame.gameObject.SetActive(pmd.won);
             _postFailFrame.gameObject.SetActive(!pmd.won);
+            FindFirstObjectByType<PlayerController>().BlockMovement = true;
 
+            yield return new WaitForSeconds(5.0f);
+            
             if (pmd.won)
             {
                 _postTrashInfo.RecursiveFind<TMP_Text>("Count").text =
@@ -1242,6 +1251,7 @@ public class HomeController : MonoBehaviour
 
             if (pmd.won)
             {
+                DataController.saveData.NextMap = Random.Range(0,100) >= 50 ? Resources.Load<MapObject>("Settings/Maps/TestMap00") : Resources.Load<MapObject>("Settings/Maps/StreetMap00");
                 yield return new WaitForSeconds(1.0f);
                 calculateDistribution(pmd.newCollectibles[CollectibleController.CollectibleType.GenericTrash], out var _glass, out var _plastic, out int _metal);
                 var trashCount = _postTrashInfo.Find("Count").GetComponent<TMP_Text>();
@@ -1346,6 +1356,7 @@ public class HomeController : MonoBehaviour
             _isPostInfoRunning = false;
             
             _postInfoFrame.RecursiveFind("EnemyTemplate").RemoveAllChildrenExcept(new List<string>(){"EnemyTemplate", "TrashInfo"});
+            FindFirstObjectByType<PlayerController>().BlockMovement = false;
             
             yield break;
         }

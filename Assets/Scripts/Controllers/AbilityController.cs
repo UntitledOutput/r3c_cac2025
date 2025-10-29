@@ -97,19 +97,26 @@ namespace Controllers
 
         public Vector3 GetDirection()
         {
-            if (Input.mousePresent)
-            {
-                var pos = GetShootPoint() - transform.position;
+            var pos = GetShootPoint() - transform.position;
 
-                return pos;
-            }
+            return pos;
 
             return transform.forward;
         }
 
         public Vector3 GetShootPoint()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector2 point = Vector2.zero;
+            if (Input.mousePresent)
+            {
+                point = Input.mousePosition;
+            }
+            else
+            {
+                point = Input.GetTouch(0).position;
+            }
+            
+            Ray ray = Camera.main.ScreenPointToRay(point);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask:LayerMask.GetMask("Map")))

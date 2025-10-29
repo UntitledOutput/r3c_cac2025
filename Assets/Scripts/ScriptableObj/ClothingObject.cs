@@ -10,7 +10,8 @@ namespace ScriptableObj
             Hat,
             Shirt,
             Bottom,
-            Shoe
+            Shoe,
+            Hair
         }
 
         public string Name;

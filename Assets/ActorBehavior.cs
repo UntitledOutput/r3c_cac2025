@@ -132,9 +132,6 @@ public class ActorBehavior : MonoBehaviour
             _camera = Camera.main;
             _matchController = FindAnyObjectByType<MatchController>();
             
-            if (SceneManager.GetActiveScene().buildIndex != 1)
-                _matchController = null;
-            
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponentInChildren<Animator>();
@@ -177,6 +174,12 @@ public class ActorBehavior : MonoBehaviour
             }
 
             _renderers.RemoveAll(x => x == null);
+            
+            if (!_matchController)
+                _matchController = FindAnyObjectByType<MatchController>();
+            else
+                if (!_matchController.IsPlaying)
+                    _matchController = null;
         }
 
         public void RecaptureRenderers()
