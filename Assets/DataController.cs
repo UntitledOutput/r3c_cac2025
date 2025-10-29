@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Controllers;
 using MyBox;
@@ -63,6 +63,7 @@ namespace DefaultNamespace
             {
                 SaveDataMgr.Save();
             }
+>>>>>>> eee811e845533ea6db18ee82fa36164370d2ce2b
         }
 
 

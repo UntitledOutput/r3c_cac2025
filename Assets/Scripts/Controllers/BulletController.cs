@@ -29,7 +29,7 @@ namespace Controllers
             
             Speed = a.Speed + (upgrade?.SpeedChange ?? 0);
             Lifetime = a.Lifetime + (upgrade?.LifetimeChange ?? 0);
-            Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy  && enemy.IsMegaEnemy ? enemy.enemyObject.MegaDamageMultiplier : 1);;
+            Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy ? enemy.enemyObject.GetDamageMultiplier());
             LifetimeLossOnHit = a.LifetimeLossOnHit + (upgrade?.LifetimeChange ?? 0); 
             Target = a.Target;
         }

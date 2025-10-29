@@ -7,10 +7,10 @@ namespace ScriptableObj
     public class MapObject : ScriptableObject
     {
         public MatchSectionObject StartSection;
-        public int SectionCount;
-        public Sprite MapCover;
-        public string MapName;
         public float TimeLimitInSeconds;
+
+        public BaseUtils.WeightedList<EnemyObject> SmallEnemies;
+        public BaseUtils.WeightedList<EnemyObject> BigEnemies;
 
     }
 }

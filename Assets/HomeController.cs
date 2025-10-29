@@ -164,11 +164,8 @@ public class HomeController : MonoBehaviour
         matchController.PassedAllies = allies;
 
 
-        matchController.CurrentMap = DataController.saveData.NextMap;
-        
-#if UNITY_EDITOR
-        matchController.RoundAmount = RoundCount;
-#endif
+        matchController.CurrentMap = DataController.saveData.NextMap.Start;
+        matchController.RoundAmount = DataController.saveData.NextMap.RoundCount;
         
         LoadingScreenController.LoadingScreen.OpenLoadingScreen((() =>
         {
@@ -1251,7 +1248,7 @@ public class HomeController : MonoBehaviour
 
             if (pmd.won)
             {
-                DataController.saveData.NextMap = Random.Range(0,100) >= 50 ? Resources.Load<MapObject>("Settings/Maps/TestMap00") : Resources.Load<MapObject>("Settings/Maps/StreetMap00");
+                DataController.saveData.NextMap = Random.Range(0,100) >= 50 ? Resources.Load<RoundPreset>("Settings/RoundPresets/EasyBase00") : Resources.Load<RoundPreset>("Settings/RoundPresets/MediumBase00");
                 yield return new WaitForSeconds(1.0f);
                 calculateDistribution(pmd.newCollectibles[CollectibleController.CollectibleType.GenericTrash], out var _glass, out var _plastic, out int _metal);
                 var trashCount = _postTrashInfo.Find("Count").GetComponent<TMP_Text>();

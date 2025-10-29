@@ -16,6 +16,9 @@ namespace Controllers
     {
         public static MatchController _instance;
 
+        public static int MaxSeverityLevel = 10;
+        public int SeverityLevel;
+
         [SerializeField] private int _enemiesAlive = 0;
         public float timeCount { get; private set; }
         
