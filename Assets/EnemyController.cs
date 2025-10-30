@@ -82,7 +82,7 @@ public class EnemyController : ActorBehavior
     [SerializeField] private List<EnemyAbilityInstance> abilities = new List<EnemyAbilityInstance>();
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public virtual void Start()
     {
         if (enemyObject == null)
         {
@@ -122,7 +122,8 @@ public class EnemyController : ActorBehavior
 
         _health = enemyObject.GetMaxHealth(IsMegaEnemy);
         
-        _matchController.RegisterEnemy(this);
+        if (_matchController)
+            _matchController.RegisterEnemy(this);
         Team = ActorTeam.Enemy;
         
         _abilityController = gameObject.AddComponent<AbilityController>();
@@ -256,11 +257,12 @@ public class EnemyController : ActorBehavior
     }
 
 
-    public void OnDeath()
+    public virtual void OnDeath()
     {
         _enemyState = EnemyState.Stunned;
         _isAlive = false;
-        _matchController.DeregisterEnemy(this);
+        if (_matchController)
+            _matchController.DeregisterEnemy(this);
 
         if (!IsMegaEnemy)
         {
