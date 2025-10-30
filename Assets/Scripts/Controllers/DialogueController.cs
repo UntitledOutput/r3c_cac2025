@@ -49,6 +49,14 @@ public class DialogueController : MonoBehaviour
         _dialogueFrame.GetComponent<Button>().enabled = false;
         _dialogueFrame.localScale = Vector3.zero;
         _nameText.text = name;
+        _nameText.color = Color.white;
+
+        if (name == "Maddie")
+            _nameText.color = BaseUtils.ColorFromHex("#823cab");
+        else if (name == "Gwin")
+            _nameText.color = BaseUtils.ColorFromHex("#3cab86")
+        else if (name == "???")
+            _nameText.color = BaseUtils.ColorFromHex("#f89f19ff")
 
         _speechText.text = "";
      
