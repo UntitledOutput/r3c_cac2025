@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 180f32c47ed74523b0c7f70248f62925, type: 3}
   m_Name: FwEgg00
   m_EditorClassIdentifier: 
-  DisplayName: test enemy large
+  DisplayName: Spoila
   Prefab: {fileID: 4522416930639070406, guid: a94214f941c71a14ca827ff14471a92e, type: 3}
   Icon: {fileID: 21300000, guid: 89548c8376dbe9449a8e83f11701946d, type: 3}
   DetectionRadius: 3.5

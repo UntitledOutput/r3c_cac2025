@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
   m_Name: PlayerBomb00
   m_EditorClassIdentifier: 
-  DisplayName: Test Bomb
+  DisplayName: Wasteflare
   Description: 'its a bomb
 
 '
@@ -50,3 +50,36 @@ MonoBehaviour:
     CulletPrice: 3
     PelletPrice: 1
     SheetPrice: 2
+  - DisplayName: More Damage
+    Description: Description
+    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
+    AmmoChange: -1
+    DamageChange: 0.5
+    ReloadChange: 1
+    BlastChange: -0.5
+    LaunchYChange: 0
+    SpeedChange: 0
+    LifetimeChange: 0
+    LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
+    CulletPrice: 5
+    PelletPrice: 3
+    SheetPrice: 6
+  - DisplayName: Bigger Blast
+    Description: Description
+    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
+    AmmoChange: 0
+    DamageChange: 0
+    ReloadChange: 0
+    BlastChange: 2
+    LaunchYChange: 0
+    SpeedChange: 0
+    LifetimeChange: 0
+    LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
+    CulletPrice: 5
+    PelletPrice: 3
+    SheetPrice: 6
+

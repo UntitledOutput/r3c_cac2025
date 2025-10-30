@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 180f32c47ed74523b0c7f70248f62925, type: 3}
   m_Name: ElecSnake00
   m_EditorClassIdentifier: 
-  DisplayName: test enemy small
+  DisplayName: Voltra
   Prefab: {fileID: 3894466861749004057, guid: b5245df3ad4246542afadc94c9ff9b48, type: 3}
   Icon: {fileID: 21300000, guid: 19c4f2842e092044e96a830aac408772, type: 3}
   DetectionRadius: 3.5

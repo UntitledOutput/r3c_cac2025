@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
   m_Name: PlayerProjectile00
   m_EditorClassIdentifier: 
-  DisplayName: Test Projectile
+  DisplayName: Scrapshot
   Description: 'shoot
 
 '
@@ -23,7 +23,7 @@ MonoBehaviour:
   Sound: {fileID: 8300000, guid: 91088d490febd5344a68af5bdc6ae741, type: 3}
   AmmoCount: 12
   Damage: 0.15
-  ReloadTime: 1
+  ReloadTime: 3
   BlastRadius: 0
   LaunchY: 0
   Speed: 11
@@ -34,19 +34,51 @@ MonoBehaviour:
   Trigger: 
   Prefab: {fileID: 12657403502098571, guid: 0c7cd95df1563934cbe8479177c9ae7b, type: 3}
   Upgrades:
-  - DisplayName: Supercharged!
+  - DisplayName: Faster Shots
     Description: Description
     Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
-    AmmoChange: 3
-    DamageChange: 0.15
-    ReloadChange: -0.5
+    AmmoChange: 0
+    DamageChange: -0.05
+    ReloadChange: 0
     BlastChange: 0
     LaunchYChange: 0
-    SpeedChange: 0
+    SpeedChange: 3
     LifetimeChange: 0
     LossChange: 0
     DistanceChange: 0
     TargetCountChange: 1
-    CulletPrice: 0
-    PelletPrice: 0
-    SheetPrice: 0
+    CulletPrice: 3
+    PelletPrice: 5
+    SheetPrice: 6
+  - DisplayName: More Damage
+    Description: Description
+    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
+    AmmoChange: 0
+    DamageChange: 0.25
+    ReloadChange: 2
+    BlastChange: 0
+    LaunchYChange: 0
+    SpeedChange: 1
+    LifetimeChange: 0
+    LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
+    CulletPrice: 7
+    PelletPrice: 8
+    SheetPrice: 9
+  - DisplayName: Faster Reload
+    Description: Description
+    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
+    AmmoChange: 0
+    DamageChange: 0
+    ReloadChange: -2
+    BlastChange: 0
+    LaunchYChange: 0
+    SpeedChange: 1
+    LifetimeChange: 0
+    LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
+    CulletPrice: 4
+    PelletPrice: 7
+    SheetPrice: 8

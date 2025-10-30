@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd098137f68424697a871ca35e24019, type: 3}
   m_Name: PlayerHeal00
   m_EditorClassIdentifier: 
-  DisplayName: Test Heal
+  DisplayName: Ecoveil
   Description: heal urself
   Icon: {fileID: 21300000, guid: c85ba607ea44d1c4ea0bebe7f0adced7, type: 3}
   Type: 2
@@ -64,3 +64,19 @@ MonoBehaviour:
     CulletPrice: 4
     PelletPrice: 3
     SheetPrice: 2
+  - DisplayName: Faster Reload
+    Description: Description
+    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
+    AmmoChange: 0
+    DamageChange: 0.025
+    ReloadChange: -2
+    BlastChange: 0
+    LaunchYChange: 0
+    SpeedChange: 0
+    LifetimeChange: 0
+    LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
+    CulletPrice: 5
+    PelletPrice: 6
+    SheetPrice: 7

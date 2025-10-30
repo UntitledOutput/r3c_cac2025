@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5052e9e187f440c883ea16e34179b7e4, type: 3}
   m_Name: HealBot00Ally
   m_EditorClassIdentifier: 
-  Name: Test Ally
+  Name: Medivolt
   Prefab: {fileID: 650237115694665637, guid: b07c041e7f7fa79458f63f89b53ee575, type: 3}
   Icon: {fileID: 21300000, guid: ceab239a790ae3a49819d02d423bb328, type: 3}
   Type: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 180f32c47ed74523b0c7f70248f62925, type: 3}
   m_Name: GnTrash00
   m_EditorClassIdentifier: 
-  DisplayName: test enemy small
+  DisplayName: Grubbag
   Prefab: {fileID: 5329931309326265461, guid: 9947e36a69bb23e4580c94c173224cd7, type: 3}
   Icon: {fileID: 21300000, guid: 432ab5407fe316b4b94bff9ec1243e52, type: 3}
   DetectionRadius: 3.5

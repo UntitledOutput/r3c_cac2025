@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5052e9e187f440c883ea16e34179b7e4, type: 3}
   m_Name: CrushBot00Ally
   m_EditorClassIdentifier: 
-  Name: Crush Bot
+  Name: Pounce-Bot
   Prefab: {fileID: 6055102498870648034, guid: 3778475347fbd614890f8a7939c4bd15, type: 3}
   Icon: {fileID: 21300000, guid: 1839b58cf4c75ac49b1a921a64913b58, type: 3}
   Type: 1
