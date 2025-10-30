@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class HostNPC : NPCController
 {
+
     public override void OnInteract()
     {
         base.OnInteract();

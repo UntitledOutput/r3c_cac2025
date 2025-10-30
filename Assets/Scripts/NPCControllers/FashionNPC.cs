@@ -10,27 +10,19 @@ public class FashionNPC : NPCController
     
     IEnumerator MeetingSequence()
     {
-        yield return DialogueController.Instance.ShowDialogue("Oh, hey! You must be the new recruit!", "???");
-        yield return DialogueController.Instance.ShowDialogue("I'm Maddie. I'm the recycling specialist here at GreenShift. You give me the trash you collect, and I turn it into gold! \\sWell.. not actual gold..\\", "Maddie");
-        yield return DialogueController.Instance.ShowDialogue("Here. let me show you!", "Maddie");
-        
-        _homeController.AlignUISection(2);
+        yield return DialogueController.Instance.ShowDialogue("Uh.. hello..?", "???");
+        yield return DialogueController.Instance.ShowDialogue("Oh wait, new recruit! I'm Gwin.", "Gwin");
+        yield return DialogueController.Instance.ShowDialogue("Maddie won't let me design on her.. But this is great for me!", "Gwin");
+        yield return DialogueController.Instance.ShowDialogue("Anyways.. I'll need some clothing scraps to design.", "Gwin");
 
-        yield return DialogueController.Instance.ShowDialogue("Here is the recycling menu! You can recycle anything you collect on your recycle runs, from trash, to enemies you capture.", "Maddie");
-        yield return DialogueController.Instance.ShowDialogue("Don't you think thats a little harmful, Maddie?", "Gwin");
-        yield return DialogueController.Instance.ShowDialogue("Gwin.. We've been over this time and time again.. The enemies are like jellyfish. They don't even know they exist.", "Maddie");
-        yield return DialogueController.Instance.ShowDialogue("Okay..", "Gwin");
-        
-        if (DataController.saveData.Flags.Contains("MetFashi")) 
-            yield return DialogueController.Instance.ShowDialogue("I'm assuming you've already met Gwin.. Our fashion specialist.", "Maddie");
-        else
-            yield return DialogueController.Instance.ShowDialogue("Gwin over there, our fashion specialist is a little crazy sometimes.", "Maddie");
-        
+        _homeController.AlignUISection(1);
+
         // add ui highlights
-        
-        yield return DialogueController.Instance.ShowDialogue("Anyways, that was a brief overview of what I do here! Come back at the end of every run to see what I could do for you!", "Maddie");
 
-        DataController.saveData.Flags.Add("MetScien");
+        yield return DialogueController.Instance.ShowDialogue("I'll design hats, shirts, pants, and shoes for you! Just bring back some clothing scraps.", "Gwin");
+        
+
+        DataController.saveData.Flags.Add("MetFashi");
     }
 
     
@@ -41,27 +33,9 @@ public class FashionNPC : NPCController
         
         IEnumerator interact()
         {
-            if (DataController.saveData.Flags.Contains("MetScien"))
-                _homeController.AlignUISection(2);
+            if (DataController.saveData.Flags.Contains("MetFashi"))
+                _homeController.AlignUISection(1);
             
-            _cameraController.FocusOnPlayer = false;
-                
-            _cameraController.FocusPoint = transform;
-            _cameraController.PositionOffset = (transform.forward * (Size*9f)) + (Vector3.up*(Height/2.0f)) ;
-            _cameraController.FocusOffset = (Vector3.up*Height/2.0f) + (transform.right * (Size*2f));
-            _cameraController.TargetFieldOfView = 45;
-            
-            _IsMenuOpen = true;
-            InteractionCanvas.gameObject.SetActiveFast(false);
-            
-            if (!DataController.saveData.Flags.Contains("MetScien"))
-                yield return MeetingSequence();
-
-        }
-
-        StartCoroutine(interact());
-        
-        _homeController.AlignUISection(1);
 
         if (!FashionRoom)
         {
@@ -83,6 +57,14 @@ public class FashionNPC : NPCController
 
         _IsMenuOpen = true;
         InteractionCanvas.gameObject.SetActiveFast(false);
+            
+            if (!DataController.saveData.Flags.Contains("MetFashi"))
+                yield return MeetingSequence();
+
+        }
+
+        StartCoroutine(interact());
+
     }
 
     public override void CloseMenu()
