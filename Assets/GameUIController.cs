@@ -128,6 +128,8 @@ public class GameUIController : MonoBehaviour
         _catchProgress += 0.05f;
     }
     
+    public Shader CatchShader;
+
     public void StartCatchProcess(EnemyController enemy)
     {
         IEnumerator catchProcess()
@@ -166,6 +168,18 @@ public class GameUIController : MonoBehaviour
             catchFrame.gameObject.SetActive(true);
 
             _catchProgress = 0.5f;
+
+            Vector3 orgPos = enemy.transform.position;
+            Renderer[] enemyRenderers = enemy.GetComponentsInChildren<Renderer>();
+
+            foreach (Renderer renderer in enemyRenderers) {
+                foreach (Material material in renderer.materials) {
+                    if (material.shader.name != "OutlineShader") {
+                        material.shader = CatchShader;
+                    }
+                }
+            }
+
             
             while (_catchProgress > 0 && _catchProgress < 1)
             {
@@ -174,7 +188,18 @@ public class GameUIController : MonoBehaviour
 
                 progressCircle.fillAmount = Mathf.Lerp(progressCircle.fillAmount, _catchProgress, Time.deltaTime*10f);
                 progressCircle.color = Color.Lerp(Color.red, Color.green, _catchProgress);
-                
+
+                var scale = Vector3.Lerp(Vector3.one, Vector3.zero, _catchProgress);
+                var pos = Vector3.Lerp(orgPos, orgPos+new Vector3(0,3,0),_catchProgress);
+
+                enemy.transform.localScale = Vector3.Lerp(enemy.transform.localScale, scale, Time.deltaTime * 10f);
+                enemy.transform.position = Vector3.Lerp(enemy.transform.position, pos,Time.deltaTime*10f);
+                foreach (Renderer renderer in enemyRenderers) {
+                    foreach (Material material in renderer.materials) {
+                        material.SetFloat("_CatchProcess", _catchProgress)
+                    }
+                }
+
                 yield return null;
             }
 
@@ -191,7 +216,7 @@ public class GameUIController : MonoBehaviour
             {
                 var captureText = catchFrame.Find("CaptureText") as RectTransform;
 
-                captureText.position = captureText.position.SetY(400);
+                captureText.anchorPosition = captureText.anchorPosition.SetY(400);
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
@@ -211,7 +236,7 @@ public class GameUIController : MonoBehaviour
             {
                 var captureText = catchFrame.Find("FailCaptureText") as RectTransform;
 
-                captureText.position = captureText.position.SetY(400);
+                captureText.anchorPosition = captureText.anchorPosition.SetY(400);
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
