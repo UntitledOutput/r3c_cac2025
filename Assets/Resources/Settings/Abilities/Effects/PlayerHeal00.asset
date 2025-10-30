@@ -18,6 +18,7 @@ MonoBehaviour:
   Type: 2
   Reload: 1
   Target: 0
+  Sound: {fileID: 8300000, guid: 5a23be8abb2a6034eac252e47e8b0d12, type: 3}
   AmmoCount: 1
   Damage: -0.1
   ReloadTime: 10
@@ -31,19 +32,35 @@ MonoBehaviour:
   Trigger: 
   Prefab: {fileID: 5706137304252803328, guid: 89ec8cf8b49e15f4bb106310034879ae, type: 3}
   Upgrades:
-  - DisplayName: Upgrade0
+  - DisplayName: Longer Lasting
     Description: Description
     Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
     AmmoChange: 0
     DamageChange: 0
-    ReloadChange: 0
+    ReloadChange: 2
     BlastChange: 0
     LaunchYChange: 0
     SpeedChange: 0
-    LifetimeChange: 0
+    LifetimeChange: 10
     LossChange: 0
     DistanceChange: 0
     TargetCountChange: 1
-    CulletPrice: 0
-    PelletPrice: 0
-    SheetPrice: 0
+    CulletPrice: 8
+    PelletPrice: 6
+    SheetPrice: 4
+  - DisplayName: Faster Healing
+    Description: Description
+    Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
+    AmmoChange: 0
+    DamageChange: -0.125
+    ReloadChange: 1
+    BlastChange: 0
+    LaunchYChange: 0
+    SpeedChange: 0
+    LifetimeChange: -2
+    LossChange: 0
+    DistanceChange: 0
+    TargetCountChange: 1
+    CulletPrice: 4
+    PelletPrice: 3
+    SheetPrice: 2

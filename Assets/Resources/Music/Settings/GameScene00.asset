@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cf723127c6040979c0d704380f8ff5d, type: 3}
+  m_Name: GameScene00
+  m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.MusicObject
+  Title: 
+  Clip: {fileID: 8300000, guid: 099f68da14e38a145909c61f4ac5b897, type: 3}
+  Volume: 0.5
+  LoopStart: 0
+  LoopEnd: 2.1818182

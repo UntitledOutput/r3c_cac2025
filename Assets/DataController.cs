@@ -25,13 +25,13 @@ namespace DefaultNamespace
 
             public List<AbilityObject.AbilityUpgrade> availableUpgrades = new List<AbilityObject.AbilityUpgrade>();
             public List<AbilityObject> availableAbilities = new List<AbilityObject>();
-            public List<AllyObject.AllyInstance> availableAllies;
+            public List<AllyObject.AllyInstance> availableAllies= new List<AllyObject.AllyInstance>();
                 
             public List<EnemyObject> enemyInventory;
 
             public List<AllyObject.AllyInstance> allies;
             public List<AbilityObject> abilities;
-            [DoNotSerialize, HideInInspector] public List<AbilityObject.AbilityUpgrade> upgrades;
+            [DoNotSerialize, HideInInspector] public List<AbilityObject.AbilityUpgrade> upgrades = new List<AbilityObject.AbilityUpgrade>();
 
             public ClothingObject HairObject;
             public ClothingObject HatObject;
@@ -57,13 +57,13 @@ namespace DefaultNamespace
                 return clothing;
             }
 
-            public MapObject NextMap;
+            public RoundPreset NextMap;
 
             public void Save()
             {
                 SaveDataMgr.Save();
             }
->>>>>>> eee811e845533ea6db18ee82fa36164370d2ce2b
+
         }
 
 
@@ -76,7 +76,7 @@ namespace DefaultNamespace
         {
             saveData.Save();
         }
-        
+
         private void Awake()
         {
             if (Instance && Instance != this)
@@ -89,7 +89,12 @@ namespace DefaultNamespace
             Instance = this;
             DontDestroyOnLoad(gameObject);
 
-        }
+            if (PlayerPrefs.HasKey("cac_sd"))
+            {
+                SaveDataMgr.Load(PlayerPrefs.GetString("cac_sd"));
+            }
+
+    }
 
         private void Update()
         {

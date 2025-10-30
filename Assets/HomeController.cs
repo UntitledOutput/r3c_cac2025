@@ -137,9 +137,13 @@ public class HomeController : MonoBehaviour
         SetupPlayFrame();
         SetupRecycleFrame();
         
+        SoundManager.Instance.SetMusic(Music);
+        
 
         
     }
+
+    public MusicObject Music;
 
     private void Update()
     {
@@ -166,6 +170,7 @@ public class HomeController : MonoBehaviour
 
         matchController.CurrentMap = DataController.saveData.NextMap.Start;
         matchController.RoundAmount = DataController.saveData.NextMap.RoundCount;
+        matchController.SeverityLevel = DataController.saveData.NextMap.SeverityLevel;
         
         LoadingScreenController.LoadingScreen.OpenLoadingScreen((() =>
         {
@@ -315,6 +320,8 @@ public class HomeController : MonoBehaviour
     
     public void PreviewPart(ClothingObject clothingObject, ClothingObject.ClothingType type)
     {
+        FindAnyObjectByType<PlayerController>().GetComponentInChildren<ClothingController>().FitClothing(clothingObject);
+
         var buyButton = _pieceChoiceFrame.RecursiveFind("BuyButton").GetComponent<Image>();
 
         buyButton.transform.Find("EquipText").gameObject.SetActive(DataController.saveData.availableClothing.Contains(clothingObject));
@@ -363,6 +370,12 @@ public class HomeController : MonoBehaviour
         {
             ChangeClothing(type,clothingObject);
         }));
+    }
+
+    public void ClearPreview()
+    {
+        FindAnyObjectByType<PlayerController>().GetComponentInChildren<ClothingController>().ChangeClothing(DataController.saveData.BuildListOfClothing());
+
     }
     
     public void OpenPartFrame(int t)
@@ -636,7 +649,7 @@ public class HomeController : MonoBehaviour
                 
                 switch (ability.Type)
                 {
-                    case AbilityObject.AbilityType.Shooter:
+                    case AbilityObject.AbilityType.Projectile:
                         typeName = "Projectile";
                         break;
                     case AbilityObject.AbilityType.Bomb:
@@ -1055,9 +1068,9 @@ public class HomeController : MonoBehaviour
     {
         var currency = (SubRecycleType)type;
 
-        int glassPrice = 10;
-        int metalPrice = 10;
-        int plasticPrice = 10;
+        int glassPrice = 5;
+        int metalPrice = 5;
+        int plasticPrice = 5;
 
         var bought = false;
         
@@ -1248,7 +1261,7 @@ public class HomeController : MonoBehaviour
 
             if (pmd.won)
             {
-                DataController.saveData.NextMap = Random.Range(0,100) >= 50 ? Resources.Load<RoundPreset>("Settings/RoundPresets/EasyBase00") : Resources.Load<RoundPreset>("Settings/RoundPresets/MediumBase00");
+                DataController.saveData.NextMap = DataController.saveData.NextMap.PossibleNextRounds.GetRandom();
                 yield return new WaitForSeconds(1.0f);
                 calculateDistribution(pmd.newCollectibles[CollectibleController.CollectibleType.GenericTrash], out var _glass, out var _plastic, out int _metal);
                 var trashCount = _postTrashInfo.Find("Count").GetComponent<TMP_Text>();

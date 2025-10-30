@@ -48,7 +48,11 @@ public class CollectibleController : MonoBehaviour
     {
         if (other.gameObject == _player.gameObject)
         {
-            MatchController._instance.IncrementCollectible(Type);
+            float c = ((float)MatchController._instance.SeverityLevel / MatchController.MaxSeverityLevel);
+            
+            int count = (int)Mathf.Floor((float)(1 + Math.Pow(0.5f * Mathf.Floor(MatchController._instance.SeverityLevel) * 1, 2)));
+            
+            MatchController._instance.IncrementCollectible(Type, count);
             Destroy(gameObject);
         }
     }

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecaaa261326f4e2289cf7b48a7724993, type: 3}
   m_Name: Hair03
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
-  Name: Extra Helmet
+  Name: Hair
   Type: 4
   Cost: 0
-  Icon: {fileID: 21300000, guid: 8bdb16190732c014b8988fbb45b542e3, type: 3}
+  Icon: {fileID: 21300000, guid: ec3e5f9a51e84c542aaa82f6f7b5fb24, type: 3}
+  Color: {r: 0.29245278, g: 0.22386804, b: 0.17430183, a: 1}
   Prefab: {fileID: 919132149155446097, guid: 35e7a52d119709e4db75994612e8d6a6, type: 3}

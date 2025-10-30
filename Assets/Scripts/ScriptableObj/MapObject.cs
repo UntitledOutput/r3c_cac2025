@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using External;
 using UnityEngine;
 
 namespace ScriptableObj
@@ -9,8 +10,6 @@ namespace ScriptableObj
         public MatchSectionObject StartSection;
         public float TimeLimitInSeconds;
 
-        public BaseUtils.WeightedList<EnemyObject> SmallEnemies;
-        public BaseUtils.WeightedList<EnemyObject> BigEnemies;
 
     }
 }

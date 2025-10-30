@@ -1,4 +1,5 @@
 using Controllers;
+using External;
 using UnityEngine;
 
 namespace ScriptableObj
@@ -10,9 +11,15 @@ namespace ScriptableObj
         public int SectionCount;
         public Sprite MapCover;
         public string MapName;
-        public int SeverityLevel;
+        [Range(0,8)] public int SeverityLevel;
 
+        public BaseUtils.WeightedList<EnemyObject> SmallEnemies;
+        public BaseUtils.WeightedList<EnemyObject> BigEnemies;
+
+        
         public MapObject Start;
+
+        public BaseUtils.WeightedList<RoundPreset> PossibleNextRounds;
 
     }
 }

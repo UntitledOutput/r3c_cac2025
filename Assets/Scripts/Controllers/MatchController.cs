@@ -16,7 +16,7 @@ namespace Controllers
     {
         public static MatchController _instance;
 
-        public static int MaxSeverityLevel = 10;
+        public static int MaxSeverityLevel = 8;
         public int SeverityLevel;
 
         [SerializeField] private int _enemiesAlive = 0;
@@ -70,7 +70,7 @@ namespace Controllers
             public void Setup()
             {
                 var sectionCt = 0;
-                root = new MapSection(_instance.CurrentMap.StartSection, ref sectionCt, _instance.CurrentMap.SectionCount);
+                root = new MapSection(_instance.CurrentMap.StartSection, ref sectionCt, DataController.saveData.NextMap.SectionCount);
                 GenerateNextRounds();
                 IsSetup = true;
             }
@@ -110,8 +110,7 @@ namespace Controllers
         public List<AbilityObject.AbilityUpgrade> PassedUpgrades;
         public List<AllyObject.AllyInstance> PassedAllies;
 
-        public List<EnemyObject> SmallEnemies;
-        public List<EnemyObject> LargeEnemies;
+        
         public MapObject CurrentMap;
  
         [ReadOnly] public int RoundProgress { get; private set; }
@@ -127,14 +126,14 @@ namespace Controllers
             _enemiesAlive--;
         }
 
-        public void IncrementCollectible(CollectibleController.CollectibleType collectibleType)
+        public void IncrementCollectible(CollectibleController.CollectibleType collectibleType, int count =1 )
         {
             if (!collectibleCount.ContainsKey(collectibleType))
             {
                 collectibleCount[collectibleType] = 0;
             }
 
-            collectibleCount[collectibleType]++;
+            collectibleCount[collectibleType] += count;
 
             _collectibleTexts[(int)collectibleType].DOKill();
             
@@ -233,6 +232,8 @@ namespace Controllers
             FindAnyObjectByType<PlayerController>().GetComponent<AbilityController>().SetupAbilities(PassedAbilities,PassedUpgrades);
             
             _collectibleTexts.Clear();
+            
+            SoundManager.Instance.SetMusic(Resources.Load<MusicObject>("Music/Settings/GameScene00"));
 
             var scores = BaseUtils.RecursiveFind("ScoreCounters");
             for (int i = 0; i <  (int)CollectibleController.CollectibleType.End; i++)

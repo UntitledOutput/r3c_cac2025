@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers;
+using DefaultNamespace;
 using External;
 using MyBox;
 using NUnit.Framework;
@@ -86,8 +87,8 @@ public class EnemyController : ActorBehavior
         if (enemyObject == null)
         {
             enemyObject = IsMegaEnemy
-                ? _matchController.LargeEnemies.GetRandom()
-                : _matchController.SmallEnemies.GetRandom();
+                ? DataController.saveData.NextMap.BigEnemies.GetRandom()
+                : DataController.saveData.NextMap.SmallEnemies.GetRandom();
         }
         
         var model = transform.Find("Model");
@@ -119,7 +120,7 @@ public class EnemyController : ActorBehavior
         _slider.GetComponentInParent<LookAtConstraint>().constraintActive = true;
         _slider.GetComponentInParent<Canvas>().worldCamera = Camera.main;
 
-        _health = enemyObject.GetMaxHealth();
+        _health = enemyObject.GetMaxHealth(IsMegaEnemy);
         
         _matchController.RegisterEnemy(this);
         Team = ActorTeam.Enemy;
@@ -180,9 +181,9 @@ public class EnemyController : ActorBehavior
         {
 
                     
-            _slider.value = Mathf.Lerp(_slider.value, (_health / (enemyObject.GetMaxHealth())), Time.deltaTime * 10f);
+            _slider.value = Mathf.Lerp(_slider.value, (_health / (enemyObject.GetMaxHealth(IsMegaEnemy))), Time.deltaTime * 10f);
 
-            if ((_health / (enemyObject.GetMaxHealth() ) ) < 1 || _enemyState == EnemyState.Attacking)
+            if ((_health / (enemyObject.GetMaxHealth(IsMegaEnemy) ) ) < 1 || _enemyState == EnemyState.Attacking)
             {
                 if (!_slider.gameObject.activeSelf)
                     _slider.gameObject.SetActive(true);
@@ -193,7 +194,7 @@ public class EnemyController : ActorBehavior
                     _slider.gameObject.SetActive(false); 
             }
             
-            foreach (var collider in Physics.OverlapSphere(transform.position, enemyObject.GetDetectionRadius(), LayerMask.GetMask("Player")))
+            foreach (var collider in Physics.OverlapSphere(transform.position, enemyObject.GetDetectionRadius(IsMegaEnemy), LayerMask.GetMask("Player")))
             {
                 var enemy = collider.GetComponent<ActorBehavior>();
 
@@ -216,7 +217,7 @@ public class EnemyController : ActorBehavior
 
                 _abilityController._targetActor = target;
                 
-                if (distance > enemyObject.GetStoppingDistance())
+                if (distance > enemyObject.GetStoppingDistance(IsMegaEnemy))
                 {
                     _agent.SetDestination(target.transform.position);
                     TriggerAbilityOnCondition(target.transform.position, EnemyObject.EnemyAbilityType.OnChase);
@@ -232,7 +233,7 @@ public class EnemyController : ActorBehavior
                     TriggerAbilityOnCondition(target.transform.position, EnemyObject.EnemyAbilityType.OnStop);
                 }
 
-                if (distance > (enemyObject.GetDetectionRadius())
+                if (distance > (enemyObject.GetDetectionRadius(IsMegaEnemy)))
                     _enemyState = EnemyState.Idle;
             }
             else
@@ -291,13 +292,13 @@ public class EnemyController : ActorBehavior
             Gizmos.DrawLine(transform.position,target.transform.position);
             
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, enemyObject.GetStoppingDistance());
+            Gizmos.DrawWireSphere(transform.position, enemyObject.GetStoppingDistance(IsMegaEnemy));
             
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, (enemyObjec.GetDetectionRadius()));
+            Gizmos.DrawWireSphere(transform.position, (enemyObject.GetDetectionRadius(IsMegaEnemy)));
             
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, enemyObject.GetDetectionRadius());
+            Gizmos.DrawWireSphere(transform.position, enemyObject.GetDetectionRadius(IsMegaEnemy));
 
             
         }

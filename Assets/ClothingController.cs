@@ -12,23 +12,26 @@ public class ClothingController : MonoBehaviour
     private static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
     [SerializeField]
-    private List<ClothingObject> clothing = new List<ClothingObject>();
+    public List<ClothingObject> clothing = new List<ClothingObject>();
 
     private List<Renderer> baseRenderers;
     public Color SkinColor;
+    public Color HairColor;
     
     public class ClothingPiece
     {
-        private GameObject root;
+        public GameObject root;
         private List<Transform> bones;
-        public ClothingObject.ClothingType type;
-
-        public ClothingPiece(GameObject r, ClothingObject.ClothingType type)
+        public ClothingObject obj;
+        public Renderer[] renderers;
+ 
+        public ClothingPiece(GameObject r, ClothingObject obj)
         {
             root = r;
             bones = r.transform.Find("Armature").RecursiveGetAllChildren();
             bones.Add(r.transform.Find("Armature"));
-            this.type = type;
+            renderers = root.GetComponentsInChildren<Renderer>();
+            this.obj = obj;
         }
 
         public void Destroy()
@@ -66,52 +69,43 @@ public class ClothingController : MonoBehaviour
 
     public void ChangeClothing(List<ClothingObject> newC)
     {
-        var new_elements = newC.Except(clothing);
-        
-        foreach (var newElement in new_elements)
-        {
-            FitClothing(newElement);
-        }
-
         clothing = newC;
+        FitClothing();
     }
 
     public void FitClothing(ClothingObject clothingObject)
     {
-        if (clothingObject && clothingObject.Prefab)
+        foreach (var clothingPiece in Pieces)
         {
-            var pre_remove = DateTime.UtcNow;
-            foreach (var clothingPiece in Pieces)
+            if (clothingPiece.obj.Type == clothingObject.Type)
             {
-                if (clothingPiece.type == clothingObject.Type)
-                {
-                    clothingPiece.Destroy();
-                    Pieces.Remove(clothingPiece);
-                    break;
-                }
-
+                clothingPiece.Destroy();
+                Pieces.Remove(clothingPiece);
+                clothing.Remove(clothingPiece.obj);
+                break;
             }
 
-            var pre_instantiate = DateTime.UtcNow;
-            
-            Debug.Log($"removed in {(pre_instantiate - pre_remove).TotalSeconds}");
-            
+        }
+        if (clothingObject && clothingObject.Prefab)
+        {
+
+
             var o = Instantiate(clothingObject.Prefab, transform);
+            var renderers = o.GetComponentsInChildren<Renderer>();
+            foreach (var componentsInChild in renderers)
+            {
+                foreach (var material in componentsInChild.materials)
+                {
+                    material.SetColor(BaseColor,clothingObject.Color);
+                }
+            }
+            var piece = new ClothingPiece(o,clothingObject);
 
-            var pre_piece = DateTime.UtcNow;
-            Debug.Log($"instantiated in {(pre_piece - pre_instantiate).TotalSeconds}");
-
-            var piece = new ClothingPiece(o,clothingObject.Type);
-            
-            var pre_align = DateTime.UtcNow;
-            Debug.Log($"pieced in {(pre_align - pre_piece).TotalSeconds}");
-            
             AlignBones(o);
             
-            var pre_add = DateTime.UtcNow;
-            Debug.Log($"aligned in {(pre_add - pre_align).TotalSeconds}");
-            
             Pieces.Add(piece);
+            if (clothingObject)
+                clothing.Add(clothingObject);
             
             _needsToRecalculate = true;
         }
@@ -132,8 +126,18 @@ public class ClothingController : MonoBehaviour
             if (clothingObject && clothingObject.Prefab)
             {
                 var o = Instantiate(clothingObject.Prefab, transform);
+                var renderers = o.GetComponentsInChildren<Renderer>();
+                foreach (var componentsInChild in renderers)
+                {
+                    foreach (var material in componentsInChild.materials)
+                    {
+                        material.SetColor(BaseColor,clothingObject.Color);
+                    }
+                }
+                var piece = new ClothingPiece(o, clothingObject);
+
                 AlignBones(o);
-                var piece = new ClothingPiece(o,clothingObject.Type);
+
                 Pieces.Add(piece);
             }
         }
@@ -156,6 +160,7 @@ public class ClothingController : MonoBehaviour
         {
             clothing = DataController.saveData.BuildListOfClothing();
             SkinColor = DataController.saveData.SkinColor;
+            HairColor = DataController.saveData.HairColor;
         }
 
         FitClothing();
@@ -179,7 +184,8 @@ public class ClothingController : MonoBehaviour
     {
         if (_needsToRecalculate)
         {
-            GetComponentInParent<ActorBehavior>().RecaptureRenderers();
+            if (GetComponentInParent<ActorBehavior>()) 
+                GetComponentInParent<ActorBehavior>().RecaptureRenderers();
             _needsToRecalculate = false;
         }
 
@@ -188,6 +194,20 @@ public class ClothingController : MonoBehaviour
             foreach (var baseRendererMaterial in baseRenderer.materials)
             {
                 baseRendererMaterial.SetColor(BaseColor, SkinColor);
+            }
+        }
+        
+        foreach (var clothingPiece in Pieces)
+        {
+            if (clothingPiece.obj.Type == ClothingObject.ClothingType.Hair)
+            {
+                foreach (var clothingPieceRenderer in clothingPiece.renderers)
+                {
+                    foreach (var material in clothingPieceRenderer.materials)
+                    {
+                        material.SetColor(BaseColor, HairColor);
+                    }
+                }
             }
         }
     }

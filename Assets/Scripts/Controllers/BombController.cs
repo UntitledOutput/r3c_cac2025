@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DefaultNamespace;
 using MyBox;
 using ScriptableObj;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Controllers
         
         public GameObject ObjectToSpawnOnDestroy;
         private List<ParticleSystem> _particleSystems;
+        private AudioClip clip;
          
         public void Derive(AbilityObject a, AbilityObject.AbilityUpgrade upgrade, ActorBehavior actor)
         {
@@ -26,11 +28,12 @@ namespace Controllers
             this.actor = actor;
             
             Lifetime = a.Lifetime + (upgrade?.LifetimeChange ?? 0);
-            Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy ? enemy.enemyObject.GetDamageMultiplier());
+            Damage = (a.Damage + (upgrade?.DamageChange ?? 0)) * (enemy ? enemy.enemyObject.GetDamageMultiplier(enemy.IsMegaEnemy) : 1);
             Speed = a.Speed + (upgrade?.SpeedChange ?? 0);
             BlastRadius = a.BlastRadius + (upgrade?.BlastChange ?? 0);
             yMax = a.LaunchY + (upgrade?.LaunchYChange ?? 0);
             Target = a.Target;
+            clip = a.Sound;
         } 
         
         public bool CanBounce = true;
@@ -77,6 +80,7 @@ namespace Controllers
 
         public void OnExplode()
         {
+            SoundManager.Instance.PlaySound(clip);
             foreach (var collider in Physics.OverlapSphere(transform.position, BlastRadius))
             {
                 var enemy = collider.GetComponent<ActorBehavior>();

@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using DefaultNamespace;
 using DG.Tweening;
 using External;
 using MyBox;
@@ -50,6 +52,20 @@ public class LoadingScreenController : MonoBehaviour
         IEnumerator o()
         {
 
+            var tips = new List<string>()
+            {
+                "Recycling is a solid choice for being environmentally friendly.",
+                "Although you may have a recycling bin, unfortunately most waste that goes \"recycled\" is placed in the same place as trash",
+                "In Japan, 50% of their waste is processed into energy.",
+                "Glass is recycled by being melted down, then formed into small pieces named cullet.",
+                "Almost half of all aluminum cans are recycled.",
+                "You can cut back on your waste deposit by getting a compost bin."
+            };
+
+            TipText.text = tips.GetRandom();
+            
+            SoundManager.Instance.StopMusic();
+            
             Top.anchoredPosition = Top.anchoredPosition.SetY(300);
             Bottom.anchoredPosition = Bottom.anchoredPosition.SetY(-300);
             Icon.localScale = Vector3.zero;

@@ -1,5 +1,7 @@
+using System.Collections;
 using System.IO;
 using MyBox;
+using ScriptableObj;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
@@ -7,6 +9,7 @@ using UnityEngine.Experimental.Rendering;
 
 public class CameraIconTaker : MonoBehaviour
 {
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +25,72 @@ public class CameraIconTaker : MonoBehaviour
     public string ExportPath = "Sprites/camera_screenshot.png";
 
 #if UNITY_EDITOR
+
+    [ButtonMethod]
+    public void TakeAll()
+    {
+        var clothing = Resources.LoadAll<ClothingObject>("Settings/Clothing");
+
+        var head_mannequin = GameObject.Find("Model").transform.Find("head_mannequin");
+        var full_mannequin = GameObject.Find("Model").transform.Find("full_mannequin");
+
+        IEnumerator cycle()
+        {
+            foreach (var clothingObject in clothing)
+            {
+                ClothingController c;
+                if (clothingObject.Type == ClothingObject.ClothingType.Hair ||
+                    clothingObject.Type == ClothingObject.ClothingType.Hat)
+                {
+                    head_mannequin.gameObject.SetActive(true);
+                    full_mannequin.gameObject.SetActive(false);
+                    c = head_mannequin.GetComponentInChildren<ClothingController>();
+                }
+                else
+                {
+                    full_mannequin.gameObject.SetActive(true);
+                    head_mannequin.gameObject.SetActive(false);
+                    c = full_mannequin.GetComponentInChildren<ClothingController>();
+                }
+                
+
+                c.clothing.Clear();
+                c.clothing.Add(clothingObject);
+                c.FitClothing();
+
+                for (int i = 0; i < 3; i++)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+                
+                ExportPath = $"Sprites/Clothing/{clothingObject.name}.png";
+                
+                Take();
+
+
+                for (int i = 0; i < 3; i++)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
+                //clothingObject.Color = clothingObject.Prefab.GetComponentInChildren<Renderer>().sharedMaterial.GetColor("_BaseColor");
+                clothingObject.Icon = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/"+ExportPath);
+                
+                EditorUtility.SetDirty(clothingObject);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                
+                for (int i = 0; i < 3; i++)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
+            }
+        }
+
+        StartCoroutine(cycle());
+    }
+    
     [ButtonMethod]
     public void Take()
     {

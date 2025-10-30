@@ -150,7 +150,7 @@ public class ActorBehavior : MonoBehaviour
             _cachedPosition = transform.position;
 
             var distanceFromCamera = Vector3.Distance(transform.position, _camera.transform.position);
-            if (distanceFromCamera > 40f || distanceFromCamera < 3f)
+            if (distanceFromCamera > 40f || distanceFromCamera < 2.5f)
             {
                 foreach (var renderer in _renderers)
                 {

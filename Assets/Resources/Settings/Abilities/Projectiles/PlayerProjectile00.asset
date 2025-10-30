@@ -20,6 +20,7 @@ MonoBehaviour:
   Type: 0
   Reload: 1
   Target: 1
+  Sound: {fileID: 8300000, guid: 91088d490febd5344a68af5bdc6ae741, type: 3}
   AmmoCount: 12
   Damage: 0.15
   ReloadTime: 1

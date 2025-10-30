@@ -26,7 +26,7 @@ public class TestLauncher : MonoBehaviour
             bullet.transform.position += transform.forward;
                 
         bullet.transform.eulerAngles = transform.eulerAngles;
-        if (ability.Type == AbilityObject.AbilityType.Shooter)
+        if (ability.Type == AbilityObject.AbilityType.Projectile)
             bullet.GetComponent<BulletController>().Derive(ability, null, null);
         else
         {

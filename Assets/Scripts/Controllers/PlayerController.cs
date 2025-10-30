@@ -50,7 +50,7 @@ public class PlayerController : ActorBehavior
         _joystickController = FindAnyObjectByType<JoystickController>();
         
         // loading allies
-        if (_matchController )
+        if (_matchController && _matchController.IsPlaying)
         {
             foreach (var matchControllerPassedAlly in _matchController.PassedAllies)
             {

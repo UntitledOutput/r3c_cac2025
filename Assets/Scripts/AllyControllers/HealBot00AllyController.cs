@@ -140,7 +140,7 @@ public class HealBot00AllyController : AllyController
         if (State == AllyState.Idle)
         {
             // when shooting at another enemy, it will go and target that enemy
-            if (ability.data.Type == AbilityObject.AbilityType.Shooter)
+            if (ability.data.Type == AbilityObject.AbilityType.Projectile)
             {
                 foreach (var collider in Physics.OverlapSphere(shootPoint, GetDetectionRadius()))
                 {

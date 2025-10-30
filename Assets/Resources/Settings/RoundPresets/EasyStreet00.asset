@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c68a5f3ce1e98f846b25c6ff350b35ed, type: 3}
+  m_Name: EasyStreet00
+  m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.RoundPreset
+  RoundCount: 1
+  SectionCount: 2
+  MapCover: {fileID: 21300000, guid: c530261c213b8f74c9692b11cbc76770, type: 3}
+  MapName: Bright Streetside
+  SeverityLevel: 0
+  SmallEnemies:
+    list:
+    - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
+      weight: 1
+  BigEnemies:
+    list:
+    - value: {fileID: 11400000, guid: 8edaef90e5986824291e991f74052d9c, type: 2}
+      weight: 1
+  Start: {fileID: 11400000, guid: f88787dded7c8f640b611dc11f076425, type: 2}
+  PossibleNextRounds:
+    list:
+    - value: {fileID: 11400000}
+      weight: 0.9
+    - value: {fileID: 11400000, guid: 1cc6971359978cd46878a0a3b11edd3d, type: 2}
+      weight: 0.1

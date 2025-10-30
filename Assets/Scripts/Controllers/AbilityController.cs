@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using MyBox;
 using ScriptableObj;
 using Unity.VisualScripting;
@@ -169,10 +170,11 @@ namespace Controllers
                     {
                         bullet.transform.position = bullet.transform.position.SetY(shootPoint.y + (_targetActor.Height/2));
                     }
+                    SoundManager.Instance.PlaySound(_ability.data.Sound);
                 }
 
                 bullet.transform.eulerAngles = transform.eulerAngles;
-                if (_ability.data.Type == AbilityObject.AbilityType.Shooter)
+                if (_ability.data.Type == AbilityObject.AbilityType.Projectile)
                     bullet.GetComponent<BulletController>().Derive(_ability.data, _ability.upgrade, _actor);
                 else
                 {
@@ -191,6 +193,7 @@ namespace Controllers
 
                 effect.GetComponent<AbilityEffectController>().ability = _ability.data;
                 effect.GetComponent<AbilityEffectController>().actor = _actor;
+                SoundManager.Instance.PlaySound(_ability.data.Sound);
             } else if (_ability.data.Type == AbilityObject.AbilityType.Melee)
             {
                 // speed poses as a distance value
@@ -218,6 +221,7 @@ namespace Controllers
                         actor.ChangeHealth(-(_ability.data.Damage + ((_ability.upgrade?.DamageChange) ?? 0)),actor);
                     }
                 }
+                SoundManager.Instance.PlaySound(_ability.data.Sound);
             } else if (_ability.data.Type == AbilityObject.AbilityType.Trigger)
             {
                 _actor.SendMessage(_ability.data.Trigger,shootPoint, SendMessageOptions.RequireReceiver);

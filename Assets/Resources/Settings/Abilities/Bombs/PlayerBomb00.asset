@@ -20,6 +20,7 @@ MonoBehaviour:
   Type: 1
   Reload: 1
   Target: 1
+  Sound: {fileID: 8300000, guid: a6973118b4b9fbc40aa8bb6679eb10fc, type: 3}
   AmmoCount: 3
   Damage: 1
   ReloadTime: 1
@@ -33,19 +34,19 @@ MonoBehaviour:
   Trigger: 
   Prefab: {fileID: 12657403502098571, guid: 41c3acd580a5cf949bc044ae10458e12, type: 3}
   Upgrades:
-  - DisplayName: Upgrade0
+  - DisplayName: Bigger Capacity
     Description: Description
     Icon: {fileID: 21300000, guid: 16560cd74f2b45a4da039757a7a5122b, type: 3}
     AmmoChange: 2
     DamageChange: 0
-    ReloadChange: 3
-    BlastChange: 1
-    LaunchYChange: -0.5
-    SpeedChange: 1.5
-    LifetimeChange: 1
+    ReloadChange: 0
+    BlastChange: 0
+    LaunchYChange: 0
+    SpeedChange: 0
+    LifetimeChange: 0
     LossChange: 0
     DistanceChange: 0
     TargetCountChange: 1
-    CulletPrice: 0
-    PelletPrice: 2
-    SheetPrice: 0
+    CulletPrice: 3
+    PelletPrice: 1
+    SheetPrice: 2

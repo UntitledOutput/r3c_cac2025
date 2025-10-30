@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Controllers;
 using External;
 using MyBox;
 using UnityEngine;
@@ -32,49 +33,51 @@ namespace ScriptableObj
         public float SvStoppingOffset = 0;
         public float SvHealthOffset = 0;
         public float SvDamageMultiplier = 1f;
-        public AnimationCurve SeverityCurve = AnimationCurve.Constant(0,MatchController.MaxSeverityLevel,1);
+        public AnimationCurve SeverityCurve = AnimationCurve.Linear(0,1,1,1);
 
-        public float GetDetectionRadius(bool isMega, int severity) {
+        public float GetDetectionRadius(bool isMega) {
+            
+            
             float rad = DetectionRadius;
 
             if (isMega)
                 rad += MegaDetectionOffset;
             
-            rad += SeverityCurve.Evaluate(severity) * SvDetectionOffset;
+            rad += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) * SvDetectionOffset;
 
             return rad;
         }
 
 
-        public float GetStoppingDistance(bool isMega, int severity) {
+        public float GetStoppingDistance(bool isMega) {
             float dist = StoppingDistance;
 
             if (isMega)
                 dist += MegaStoppingOffset;
             
-            dist += SeverityCurve.Evaluate(severity) * SvStoppingOffset;
+            dist += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) * SvStoppingOffset;
 
-            return rad;
+            return dist;
         }
 
-        public float GetMaxHealth(bool isMega, int severity) {
+        public float GetMaxHealth(bool isMega) {
             float health = HealthMax;
 
             if (isMega)
                 health += MegaHealthOffset;
             
-            health += SeverityCurve.Evaluate(severity) *SvHealthOffset;
+            health += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) *SvHealthOffset;
 
             return health;
         }
 
-        public float GetDamageMultiplier(bool isMega, int severity) {
+        public float GetDamageMultiplier(bool isMega) {
             float mul = 1;
 
             if (isMega)
-                mul += MegaDamageMultiplier;
+                mul *= MegaDamageMultiplier;
 
-            mul += SeverityCurve.Evaluate(severity)* SvDamageMultiplier;
+            mul *= SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel)* SvDamageMultiplier;
 
             return mul;
         }

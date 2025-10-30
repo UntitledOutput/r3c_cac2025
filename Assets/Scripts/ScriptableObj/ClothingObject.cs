@@ -19,6 +19,7 @@ namespace ScriptableObj
         public int Cost;
 
         public Sprite Icon;
+        public Color Color;
         
         public GameObject Prefab;
     }

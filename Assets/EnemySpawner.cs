@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Controllers;
+using DefaultNamespace;
 using External;
 using ScriptableObj;
 using Unity.VisualScripting;
@@ -11,7 +13,7 @@ public class EnemySpawner : MonoBehaviour
     public float SpawnRadius;
     
     public int SeverityCountIncrease = 0;
-    public AnimationCurve SeverityCurve = AnimationCurve.Constant(0,MatchController.MaxSeverityLevel,1);
+    public AnimationCurve SeverityCurve = AnimationCurve.Linear(0,1,1,1);
 
 
     public bool OnlyRunIfEnd;
@@ -33,7 +35,9 @@ public class EnemySpawner : MonoBehaviour
             (OnlyRunIfNotMatchEnd && !IsMatchEnd) ||
             (!OnlyRunIfNotEnd && !OnlyRunIfNotEnd && !OnlyRunIfMatchEnd && !OnlyRunIfNotMatchEnd))
         {
-            int count = SpawnCount + (SeverityCurve.Evaluate(MatchController._instance.SeverityLevel) * SeverityCountIncrease)
+            int count = (int)(SpawnCount +
+                              (SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) *
+                               SeverityCountIncrease));
             var deg = (360.0f / count) * Mathf.Deg2Rad;
             for (int i = 0; i < count; i++)
             {
@@ -43,7 +47,9 @@ public class EnemySpawner : MonoBehaviour
                     MakeMega ? Resources.Load<GameObject>("Prefabs/LargeEnemy") : Resources.Load<GameObject>("Prefabs/SmallEnemy"), transform.position + pos + new Vector3(0, 0.1f, 0),
                     Quaternion.Euler(0,180,0));
 
-                var list = MakeMega ? MatchController._instance.CurrentMap.LargeEnemies :MatchController._instance.CurrentMap.SmallEnemies
+                var list = MakeMega
+                    ? DataController.saveData.NextMap.BigEnemies
+                    : DataController.saveData.NextMap.SmallEnemies;
 
                 enemy.GetComponent<EnemyController>().enemyObject = list.GetRandom();
                 
@@ -66,7 +72,8 @@ public class EnemySpawner : MonoBehaviour
         Gizmos.matrix = Matrix4x4.Scale(new Vector3(1,0,1));
         Gizmos.DrawWireSphere(transform.position,SpawnRadius);
 
-        int count = SpawnCount + (SeverityCurve.Evaluate(MatchController._instance.SeverityLevel) * SeverityCountIncrease)
+        int count = (int)(SpawnCount +
+                          (SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) * SeverityCountIncrease));
 
 
         var deg = (360.0f / count) * Mathf.Deg2Rad;

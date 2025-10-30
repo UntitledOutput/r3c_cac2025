@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecaaa261326f4e2289cf7b48a7724993, type: 3}
   m_Name: Hat00
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
-  Name: Extra Helmet
+  Name: Hard Hat
   Type: 0
   Cost: 0
-  Icon: {fileID: 21300000, guid: 8bdb16190732c014b8988fbb45b542e3, type: 3}
-  Prefab: {fileID: 0}
+  Icon: {fileID: 21300000, guid: a44e3b721f294a34ba3b31f15eab4ed3, type: 3}
+  Color: {r: 1, g: 0.7466958, b: 0, a: 1}
+  Prefab: {fileID: 919132149155446097, guid: e28e688e64aa54d4f89a18529df54622, type: 3}

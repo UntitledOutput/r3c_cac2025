@@ -15,5 +15,6 @@ MonoBehaviour:
   Name: Old Overalls
   Type: 2
   Cost: 0
-  Icon: {fileID: 21300000, guid: 8bdb16190732c014b8988fbb45b542e3, type: 3}
+  Icon: {fileID: 21300000, guid: 09f64ae1600d9e24995268aa39786904, type: 3}
+  Color: {r: 0, g: 0.3678949, b: 0.8867924, a: 1}
   Prefab: {fileID: 919132149155446097, guid: 37c01325792df2a4eb966105eb89f8ab, type: 3}

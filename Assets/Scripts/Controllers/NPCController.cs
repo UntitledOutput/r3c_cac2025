@@ -1,4 +1,5 @@
 using Controllers;
+using DefaultNamespace;
 using External;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -59,11 +60,13 @@ public class NPCController : ActorBehavior
     public virtual void OnInteract()
     {
         FindAnyObjectByType<PlayerController>().BlockMovement = true;
+        SoundManager.Instance.PlaySound("maximize_008");
     }
 
     public virtual void CloseMenu()
     {
         FindAnyObjectByType<PlayerController>().BlockMovement = false;
+        SoundManager.Instance.PlaySound("minimize_003");
     }
     
     

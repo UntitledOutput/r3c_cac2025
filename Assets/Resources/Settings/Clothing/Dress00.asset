@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecaaa261326f4e2289cf7b48a7724993, type: 3}
   m_Name: Dress00
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
-  Name: Old Overalls
+  Name: Scientist Dress
   Type: 2
   Cost: 0
-  Icon: {fileID: 21300000, guid: 8bdb16190732c014b8988fbb45b542e3, type: 3}
+  Icon: {fileID: 21300000, guid: 12f11eff4ceb7ba4db4b48c3796f8672, type: 3}
+  Color: {r: 0.24528295, g: 0.24528295, b: 0.24528295, a: 1}
   Prefab: {fileID: 919132149155446097, guid: fc3e394db9803b744b12f93ef9a5bccb, type: 3}

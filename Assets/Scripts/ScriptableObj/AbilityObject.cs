@@ -17,7 +17,7 @@ namespace ScriptableObj
         
         public enum AbilityType
         {
-            Shooter,
+            Projectile,
             Bomb,
             Effect,
             Melee,
@@ -34,6 +34,8 @@ namespace ScriptableObj
         public AbilityType Type;
         public ReloadType Reload;
         public ActorBehavior.ActorTeam Target;
+        public AudioClip Sound;
+        
         
         public int AmmoCount;
         public float Damage;
@@ -58,7 +60,7 @@ namespace ScriptableObj
 
         public float Lifetime;
         
-        [ConditionalField("Type", false,AbilityType.Shooter)]
+        [ConditionalField("Type", false,AbilityType.Projectile)]
         public float LifetimeLossOnHit;
         
         [ConditionalField("Type", false,AbilityType.Trigger)]

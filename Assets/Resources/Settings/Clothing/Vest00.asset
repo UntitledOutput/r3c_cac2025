@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecaaa261326f4e2289cf7b48a7724993, type: 3}
+  m_Name: Vest00
+  m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
+  Name: Vest
+  Type: 1
+  Cost: 0
+  Icon: {fileID: 21300000, guid: c5cefcfcedb00a649aa9b3c363bddbc1, type: 3}
+  Color: {r: 1, g: 0.4577372, b: 0, a: 1}
+  Prefab: {fileID: 919132149155446097, guid: e19914b4401498748b95df15c83a5ada, type: 3}
