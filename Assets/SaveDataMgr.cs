@@ -171,6 +171,14 @@ namespace DefaultNamespace
                 w.Write((sbyte)enmRefs.IndexOf(enemyObject.name));
             }
             
+            w.Write(Encoding.UTF8.GetBytes(DataController.saveData.NextMap.name));
+            
+            w.Write((sbyte)DataController.saveData.Flags.Count);
+            foreach (var saveDataFlag in DataController.saveData.Flags)
+            {
+                w.Write(Encoding.UTF8.GetBytes(saveDataFlag.PadRight(8, '\0')));
+            }
+            
             var path = Application.dataPath + "/data.cacs";
             File.WriteAllBytes(path, mem.ToArray());
             
@@ -251,8 +259,11 @@ namespace DefaultNamespace
 
             DataController.saveData.enemyInventory =
                 reader.Data.Enemies.Select((arg => arg > -1 ? enemies[arg] : null)).ToList();
-            
-            
+
+            DataController.saveData.NextMap =
+                Resources.Load<RoundPreset>($"Settings/RoundPresets/{reader.Data.NextMap}");
+
+            DataController.saveData.Flags = reader.Data.Flags;
 
         }
         

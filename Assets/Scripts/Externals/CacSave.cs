@@ -55,11 +55,18 @@ namespace Kaitai
                 _shirt = m_io.ReadS1();
                 _pants = m_io.ReadS1();
                 _shoes = m_io.ReadS1();
-                _enemyCount = m_io.ReadU2le();
+                _enemyCount = m_io.ReadS2le();
                 _enemies = new List<sbyte>();
                 for (var i = 0; i < EnemyCount; i++)
                 {
                     _enemies.Add(m_io.ReadS1());
+                }
+                _nextMap = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(16));
+                _flagCount = m_io.ReadU1();
+                _flags = new List<string>();
+                for (var i = 0; i < FlagCount; i++)
+                {
+                    _flags.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytes(8)));
                 }
             }
             private List<sbyte> _allies;
@@ -69,8 +76,11 @@ namespace Kaitai
             private sbyte _shirt;
             private sbyte _pants;
             private sbyte _shoes;
-            private ushort _enemyCount;
+            private short _enemyCount;
             private List<sbyte> _enemies;
+            private string _nextMap;
+            private byte _flagCount;
+            private List<string> _flags;
             private CacSave m_root;
             private CacSave m_parent;
             public List<sbyte> Allies { get { return _allies; } }
@@ -80,8 +90,11 @@ namespace Kaitai
             public sbyte Shirt { get { return _shirt; } }
             public sbyte Pants { get { return _pants; } }
             public sbyte Shoes { get { return _shoes; } }
-            public ushort EnemyCount { get { return _enemyCount; } }
+            public short EnemyCount { get { return _enemyCount; } }
             public List<sbyte> Enemies { get { return _enemies; } }
+            public string NextMap { get { return _nextMap; } }
+            public byte FlagCount { get { return _flagCount; } }
+            public List<string> Flags { get { return _flags; } }
             public CacSave M_Root { get { return m_root; } }
             public CacSave M_Parent { get { return m_parent; } }
         }

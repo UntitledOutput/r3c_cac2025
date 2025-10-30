@@ -98,12 +98,23 @@ types:
     - id: shoes
       type: s1
     - id: enemy_count
-      type: u2
+      type: s2
     - id: enemies
       type: s1
       repeat: expr
       repeat-expr: enemy_count
-      
+    - id: next_map
+      type: str
+      size: 16
+      encoding: UTF-8
+    - id: flag_count
+      type: u1
+    - id: flags
+      type: str
+      size: 8
+      encoding: UTF-8
+      repeat: expr
+      repeat-expr: flag_count
   ability:
     seq:
     - id: ability_index

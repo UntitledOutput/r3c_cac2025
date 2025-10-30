@@ -35,7 +35,6 @@ namespace External
                 if (audioSource.timeSamples >= loopEndSamples)
                 {
                     audioSource.timeSamples -= loopLengthSamples;
-                    OnLoop.Invoke();
                 }
             }
         }

@@ -59,6 +59,8 @@ namespace DefaultNamespace
 
             public RoundPreset NextMap;
 
+            public List<string> Flags;
+
             public void Save()
             {
                 SaveDataMgr.Save();

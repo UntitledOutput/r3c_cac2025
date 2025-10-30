@@ -722,7 +722,7 @@ public class HomeController : MonoBehaviour
                         if (DataController.saveData.availableUpgrades
                             .Contains(abilityUpgrade)) // upgrade is bought but inactive
                         {
-                            statusColor = BaseUtils.ColorFromHex("E55858");
+                            statusColor = BaseUtils.ColorFromHex("fecb00");
                             statusString = "Inactive";
                         }
                         else // upgrade is not bought
@@ -738,8 +738,8 @@ public class HomeController : MonoBehaviour
                             else
                             {
                                 // upgrade is unavailable to buy
-                                statusColor = BaseUtils.ColorFromHex("8E8E8E");
-                                statusString = "Unavailable";
+                                statusColor = BaseUtils.ColorFromHex("E55858");
+                                statusString = "Not Enough";
                             }
                         }
                     }
@@ -876,8 +876,8 @@ public class HomeController : MonoBehaviour
 
                     yield return r.DOFade(0, 0.125f).SetEase(Ease.InOutQuad);
 
-                    recycleIcon.DOScale(1.25f, 0.1f).SetEase(Ease.InOutBack).OnKill(
-                        (() => { recycleIcon.DOScale(1.0f, 0.1f).SetEase(Ease.InOutBack); }));
+                    recycleIcon.DOScale(1.25f, 0.1f).SetEase(Ease.OutBack).OnKill(
+                        (() => { recycleIcon.DOScale(1.0f, 0.1f).SetEase(Ease.OutBack); }));
 
                     yield return new WaitForSeconds(0.25f);
 
@@ -991,7 +991,7 @@ public class HomeController : MonoBehaviour
 
                 _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().localScale = Vector3.zero;
                 _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().DOScale(1f, 0.5f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.OutBack);
 
                 StartCoroutine(rotateCoroutine(_recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>()));
 
@@ -999,19 +999,19 @@ public class HomeController : MonoBehaviour
 
                 _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().localScale = Vector3.zero;
                 _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().DOScale(1f, 1.0f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.OutBack);
 
                 yield return new WaitForSeconds(0.05f);
 
                 _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().localScale = Vector3.zero;
                 _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().DOScale(1f, 1.0f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.OutBack);
 
                 yield return new WaitForSeconds(0.05f);
 
                 _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().localScale = Vector3.zero;
                 _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().DOScale(1f, 1.0f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.OutBack);
 
                 _recycleResultFrame.gameObject.SetActive(true);
 
@@ -1021,16 +1021,16 @@ public class HomeController : MonoBehaviour
 
 
                 _recycleResultFrame.Find("BgEffect").GetComponent<RectTransform>().DOScale(0f, 0.5f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.InBack);
 
                 _recycleResultFrame.Find("Icon").GetComponent<RectTransform>().DOScale(0f, 1.0f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.InBack);
 
                 _recycleResultFrame.Find("AllyName").GetComponent<RectTransform>().DOScale(0f, 1.0f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.InBack);
 
                 _recycleResultFrame.Find("NewLabel").GetComponent<RectTransform>().DOScale(0f, 1.0f)
-                    .SetEase(Ease.InOutBack);
+                    .SetEase(Ease.InBack);
 
                 yield return new WaitForSeconds(1.5f);
 
