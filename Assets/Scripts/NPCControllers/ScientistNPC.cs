@@ -28,6 +28,8 @@ public class ScientistNPC : NPCController
         yield return DialogueController.Instance.ShowDialogue("Anyways, that was a brief overview of what I do here! Come back at the end of every run to see what I could do for you!", "Maddie");
 
         DataController.saveData.Flags.Add("MetScien");
+        DataController.saveData.Save();
+
     }
     
     public override void OnInteract()

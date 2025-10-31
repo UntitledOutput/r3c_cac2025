@@ -92,11 +92,17 @@ public class ClothingController : MonoBehaviour
 
             var o = Instantiate(clothingObject.Prefab, transform);
             var renderers = o.GetComponentsInChildren<Renderer>();
+            int ct = 0;
             foreach (var componentsInChild in renderers)
             {
-                foreach (var material in componentsInChild.materials)
+                for (var i = 0; i < componentsInChild.materials.Length; i++)
                 {
-                    material.SetColor(BaseColor,clothingObject.Color);
+                    var material = componentsInChild.materials[i];
+                    if (material.HasColor(BaseColor))
+                    {
+                        material.SetColor(BaseColor,clothingObject.Colors[ct]);
+                        ct++;
+                    }
                 }
             }
             var piece = new ClothingPiece(o,clothingObject);
@@ -127,11 +133,17 @@ public class ClothingController : MonoBehaviour
             {
                 var o = Instantiate(clothingObject.Prefab, transform);
                 var renderers = o.GetComponentsInChildren<Renderer>();
+                int ct = 0;
                 foreach (var componentsInChild in renderers)
                 {
-                    foreach (var material in componentsInChild.materials)
+                    for (var i = 0; i < componentsInChild.materials.Length; i++)
                     {
-                        material.SetColor(BaseColor,clothingObject.Color);
+                        var material = componentsInChild.materials[i];
+                        if (material.HasColor(BaseColor))
+                        {
+                            material.SetColor(BaseColor,clothingObject.Colors[ct]);
+                            ct++;
+                        }
                     }
                 }
                 var piece = new ClothingPiece(o, clothingObject);
@@ -145,6 +157,8 @@ public class ClothingController : MonoBehaviour
         _needsToRecalculate = true;
     }
 
+    private bool _hasPlayer = false;
+    
 // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -156,7 +170,8 @@ public class ClothingController : MonoBehaviour
         }
         baseRenderers = GetComponentsInChildren<Renderer>().ToList();
 
-        if (GetComponentInParent<PlayerController>())
+        _hasPlayer = GetComponentInParent<PlayerController>();
+        if (_hasPlayer)
         {
             clothing = DataController.saveData.BuildListOfClothing();
             SkinColor = DataController.saveData.SkinColor;
@@ -189,6 +204,12 @@ public class ClothingController : MonoBehaviour
             _needsToRecalculate = false;
         }
 
+        if (_hasPlayer)
+        {
+            SkinColor = DataController.saveData.SkinColor;
+            HairColor = DataController.saveData.HairColor;
+        }
+        
         foreach (var baseRenderer in baseRenderers)
         {
             foreach (var baseRendererMaterial in baseRenderer.materials)

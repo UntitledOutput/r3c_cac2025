@@ -21,8 +21,8 @@ namespace Controllers
 
         [SerializeField] private int _enemiesAlive = 0;
         public float timeCount { get; private set; }
-        
-        public bool IsPlaying { get; private set; }
+
+        public bool IsPlaying { get; private set; } = true;
 
         public float timeLeft => CurrentMap.TimeLimitInSeconds - timeCount;
         
@@ -210,6 +210,9 @@ namespace Controllers
             if (arg0.name == "HomeScene")
                 return;
 
+            
+            IsPlaying = true;
+            
             if (_currentRound == null)
             {
                 _currentRound = new MatchRound();
@@ -220,7 +223,6 @@ namespace Controllers
             
             FindAnyObjectByType<MapController>().SetupMap(_currentRound);
 
-            IsPlaying = true;
             timeCount = 0;
             _enemiesAlive = 0;
             _gateControllers = FindObjectsByType<GateController>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
@@ -255,6 +257,7 @@ namespace Controllers
             RoundProgress++;
             if (RoundProgress > RoundAmount)
             {
+
                 ReturnToHome();
             }
             else
@@ -263,7 +266,7 @@ namespace Controllers
                 GateController.ChosenGateIndex = -1;
                 _currentRound = _currentRound.NextRounds[chosenGate];
                 timeCount = 0;
-
+                IsPlaying = true;
                 
                 LoadingScreenController.LoadingScreen.OpenLoadingScreen((() =>
                 {
@@ -303,7 +306,7 @@ namespace Controllers
                 if (timeCount >= CurrentMap.TimeLimitInSeconds)
                 {
                     IsPlaying = false;
-                    FindAnyObjectByType<GameUIController>().Fail();
+                    FindAnyObjectByType<GameUIController>().Fail("You ran out of time.");
                 }
             }
         }

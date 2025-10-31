@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Sweater
   Type: 1
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: 88e6e987f5980eb4c935975e4d7fa551, type: 3}
-  Color: {r: 0.47659308, g: 0.8490566, b: 0.7827955, a: 1}
+  Colors:
+  - {r: 0.47659308, g: 0.8490566, b: 0.7827955, a: 1}
   Prefab: {fileID: 919132149155446097, guid: 19eb8142df4588d45ad63a92635e5c32, type: 3}

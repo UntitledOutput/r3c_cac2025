@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.MusicObject
   Title: 
   Clip: {fileID: 8300000, guid: c3a9abc22621b8e4cb4c4f77da530032, type: 3}
-  Volume: 0.5
+  Volume: 0.25
   LoopStart: 0
   LoopEnd: 2.285715

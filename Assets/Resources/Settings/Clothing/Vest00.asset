@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Vest
   Type: 1
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: c5cefcfcedb00a649aa9b3c363bddbc1, type: 3}
-  Color: {r: 1, g: 0.4577372, b: 0, a: 1}
+  Colors:
+  - {r: 1, g: 0.4577372, b: 0, a: 1}
+  - {r: 0, g: 0.1501061, b: 0.90641004, a: 1}
   Prefab: {fileID: 919132149155446097, guid: e19914b4401498748b95df15c83a5ada, type: 3}

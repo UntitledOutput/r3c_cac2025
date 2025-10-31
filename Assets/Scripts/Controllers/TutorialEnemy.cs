@@ -1,7 +1,14 @@
 
-public TutorialEnemy : EnemyController {
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-    private TutorialController _tutorialController
+public class TutorialEnemy : EnemyController
+{
+
+    private TutorialController _tutorialController;
+
+    public bool IsActive = false;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -11,7 +18,15 @@ public TutorialEnemy : EnemyController {
     {
         base.Start();
         _tutorialController = FindAnyObjectByType<TutorialController>();
-        StartCoroutine(OpeningSequence())
+        StartCoroutine(OpeningSequence());
+    }
+
+    public override void Update()
+    {
+        if (IsActive)
+        {
+            base.Update();
+        }
     }
 
     IEnumerator OpeningSequence() {
@@ -29,13 +44,18 @@ public TutorialEnemy : EnemyController {
             }
 
             v += Time.deltaTime * 0.5f;
+
+            yield return null;
         }
     }
 
     public override void OnDeath() {
-        base.OnDeath();
-
-        _tutorialController.targetHit = true;
+        _tutorialController._targetHit = true;
+                    
+        var deathParticles = Instantiate(
+            Resources.Load<GameObject>("Prefabs/Particles/DeathParticle00"), transform.position, Quaternion.identity);
+        
+        Destroy(gameObject);
     }
 
 }

@@ -76,6 +76,8 @@ namespace DefaultNamespace
             ConvertButtons();
 
             _source = gameObject.AddComponent<AudioSource>();
+            _source.volume = 0.5f;
+            
             _musicSource = new GameObject("MusicLooper").AddComponent<AudioLooper>();
             _musicSource.transform.parent = transform;
         }

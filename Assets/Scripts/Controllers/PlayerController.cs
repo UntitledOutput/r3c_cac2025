@@ -21,6 +21,7 @@ public class PlayerController : ActorBehavior
     private List<AllyController> _allies = new List<AllyController>();
     private Animator _animator;
     private JoystickController _joystickController;
+    public static PlayerController Instance;
     
     private Vector3 _shootPoint;
 
@@ -48,6 +49,8 @@ public class PlayerController : ActorBehavior
         _animator = GetComponentInChildren<Animator>();
         Team = ActorTeam.Player;
         _joystickController = FindAnyObjectByType<JoystickController>();
+
+        _tutorialController = FindAnyObjectByType<TutorialController>();
         
         // loading allies
         if (_matchController && _matchController.IsPlaying)
@@ -70,6 +73,8 @@ public class PlayerController : ActorBehavior
         {
             _allies.Add(null);
         }
+
+        Instance = this;
     }
 
     public void OnDeath()
@@ -82,19 +87,25 @@ public class PlayerController : ActorBehavior
                 allyController.OnDeath();
         }
         
-        FindAnyObjectByType<GameUIController>().Fail();
+        
+        FindAnyObjectByType<GameUIController>().Fail("You ran out of health");
     }
     
     public enum InputMethod { Mouse, Touch }
     public InputMethod currentInputMethod { get; private set; } = InputMethod.Mouse;
 
+    public bool IsMobile => currentInputMethod == InputMethod.Touch;
+    public bool IsKeyboard => currentInputMethod == InputMethod.Mouse;
+    
     private float lastInputTime;
     public float switchCooldown = 0.2f;
+    private TutorialController _tutorialController;
 
-    
+
     // Update is called once per frame
     void Update()
     {
+        Instance = this;
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
         {
             if (currentInputMethod != InputMethod.Touch && Time.time - lastInputTime > switchCooldown)
@@ -121,11 +132,21 @@ public class PlayerController : ActorBehavior
             return;
         }
 
-        if (_health <= 0.01f && !_IsDead)
+        if (_health <= 0.01f && !_IsDead && _matchController)
             OnDeath();
 
         var attacking = InputSystem.Attack || InputSystem.SubAttack || InputSystem.SideAttack_OneTime;
-        if (!_matchController)
+        if (!_matchController && !_tutorialController)
+            attacking = false;
+
+        int nullAbilityCount = 0;
+        foreach (var abilityControllerAbility in AbilityController.Abilities)
+        {
+            if (abilityControllerAbility == null)
+                nullAbilityCount++;
+        }
+
+        if (nullAbilityCount == AbilityController.Abilities.Count)
             attacking = false;
         
         
@@ -162,7 +183,8 @@ public class PlayerController : ActorBehavior
         {
             rigidbody.linearVelocity = new Vector3(moveDirection.x, rigidbody.linearVelocity.y, moveDirection.z);
 
-            if ((InputSystem.Attack_OneTime || InputSystem.SubAttack_OneTime || InputSystem.SideAttack_OneTime) && _abilityController && _matchController)
+            if ((InputSystem.Attack_OneTime || InputSystem.SubAttack_OneTime || InputSystem.SideAttack_OneTime) && _abilityController &&
+                (_matchController || _tutorialController))
             {
                 if (InputSystem.Attack_OneTime)
                     _abilityController.ChosenAbility = 0;

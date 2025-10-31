@@ -70,8 +70,11 @@ namespace Controllers
             }
             var actor = other.gameObject.GetComponent<ActorBehavior>();
             if (actor && actor.Team == Target)
-                actor.ChangeHealth(-Damage,this.actor);
-            
+            {
+                Debug.Log(actor);
+                actor.ChangeHealth(-Damage, this.actor);
+            }
+
             _age += (Lifetime * LifetimeLossOnHit);
         }
     }

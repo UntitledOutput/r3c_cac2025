@@ -7,8 +7,8 @@ namespace Controllers
 {
     public class CameraController : MonoBehaviour
     {
-        public float PlrRadius = 3;
-        public float PlrY;
+        public float PlrRadius = 4;
+        public float PlrY = 1;
         public float TargetFieldOfView = 75;
 
         public bool CollideWithMap = true;
@@ -18,6 +18,7 @@ namespace Controllers
         private float _plrOffsetY = 2.5f;
 
         public bool FocusOnPlayer = true;
+        public bool LerpFocus = false;
 
         public Transform FocusPoint;
         public Vector3 FocusOffset;
@@ -78,19 +79,25 @@ namespace Controllers
                     Mathf.Sin(_plrRotateAngle) * currentDistance, PlrY + _plrOffsetY, Mathf.Cos(_plrRotateAngle) * currentDistance);
                 
                 transform.position = Vector3.Lerp(
-                    transform.position, targetPosition, Time.deltaTime * 3.0f);
+                    transform.position, targetPosition, Time.deltaTime * 5.0f);
 
                 transform.position = transform.position.ClampZ(-105, Mathf.Infinity);
-            
+
+                var rot = transform.rotation;
                 transform.LookAt(_plrCtrl.transform.position + new Vector3(0,1.5f,0));
+
+                transform.rotation = Quaternion.Slerp(rot, transform.rotation, Time.deltaTime * 5f);
             }
             else
             {
                 currentFOV = Mathf.Lerp(currentFOV, TargetFieldOfView, Time.deltaTime * 3.0f);
                 
                 transform.position = Vector3.Lerp(
-                    transform.position, FocusPoint.position + PositionOffset, Time.deltaTime * 3.0f);
+                    transform.position, FocusPoint.position + PositionOffset, Time.deltaTime * 5.0f);
+                var rot = transform.rotation;
                 transform.LookAt(FocusPoint.position+FocusOffset);
+                transform.rotation = Quaternion.Slerp(rot, transform.rotation, Time.deltaTime * 5f);
+
                 
                 _camera.fieldOfView = currentFOV;
             }

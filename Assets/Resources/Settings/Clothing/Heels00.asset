@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Heels
   Type: 3
-  Cost: 0
+  Cost: 25
   Icon: {fileID: 21300000, guid: 7ceb0f9db01a1684093229241ec23926, type: 3}
-  Color: {r: 0, g: 0, b: 0, a: 1}
+  Colors:
+  - {r: 0, g: 0, b: 0, a: 1}
   Prefab: {fileID: 919132149155446097, guid: 87234c28ecbf4704087a91c7226c71ff, type: 3}

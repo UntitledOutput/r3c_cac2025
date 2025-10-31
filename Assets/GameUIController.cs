@@ -8,12 +8,14 @@ using MyBox;
 using ScriptableObj;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class GameUIController : MonoBehaviour
 {
     public static Sprite MissingSprite;
-    
+    private static readonly int CatchProgress = Shader.PropertyToID("_CatchProgress");
+
     private TMP_Text _timerText;
     private Slider _healthSlider;
 
@@ -27,7 +29,7 @@ public class GameUIController : MonoBehaviour
 
         public void UpdateButton(AbilityController.AbilityInstance instance, bool isChosen)
         {
-            if (instance.data)
+            if (instance != null && instance.data)
             {
                 Icon.sprite = instance.data.Icon;
                 AmmoCount.text = $"{instance.ammo}/{instance.data.AmmoCount + (instance.upgrade?.AmmoChange ?? 0)}";
@@ -129,6 +131,7 @@ public class GameUIController : MonoBehaviour
     }
     
     public Shader CatchShader;
+    public Shader CatchEyeShader;
 
     public void StartCatchProcess(EnemyController enemy)
     {
@@ -143,7 +146,8 @@ public class GameUIController : MonoBehaviour
                 allyController.Model.gameObject.SetActive(false);
             }
 
-            
+            var capture_bot = Instantiate(Resources.Load<GameObject>("Prefabs/OnboardBot")).transform;
+            capture_bot.transform.position = enemy.transform.position + (enemy.transform.right * 10f);
             
             var cam = Camera.main.GetComponent<CameraController>();
             cam.FocusOnPlayer = false;
@@ -151,8 +155,17 @@ public class GameUIController : MonoBehaviour
             cam.FocusPoint = enemy.transform;
             cam.PositionOffset = (enemy.transform.forward * (enemy.Size*5.0f)) + (Vector3.up*enemy.Height/2.5f);
             cam.FocusOffset = (Vector3.up*enemy.Height/2.5f);
-            
-            
+
+            while (Vector3.Distance(capture_bot.position, enemy.transform.position+new Vector3(0,4,0)) > 0.1f)
+            {
+                capture_bot.position = Vector3.Lerp(
+                    capture_bot.position, enemy.transform.position + new Vector3(0, 4, 0), Time.deltaTime * 5f);
+
+                capture_bot.rotation = Quaternion.Lerp(
+                    capture_bot.rotation, enemy.transform.rotation, Time.deltaTime * 5f);
+
+                yield return null;
+            }
             
             var catchFrame = transform.Find("CatchFrame");
             var captureButtonFrame = catchFrame.Find("CaptureFrame") as RectTransform;
@@ -168,14 +181,21 @@ public class GameUIController : MonoBehaviour
             catchFrame.gameObject.SetActive(true);
 
             _catchProgress = 0.5f;
-
+            
             Vector3 orgPos = enemy.transform.position;
             Renderer[] enemyRenderers = enemy.GetComponentsInChildren<Renderer>();
 
             foreach (Renderer renderer in enemyRenderers) {
                 foreach (Material material in renderer.materials) {
-                    if (material.shader.name != "OutlineShader") {
-                        material.shader = CatchShader;
+                    if (!material.shader.name.Contains("OutlineShader")) {
+                        if (material.shader.name.Contains("EyeShader"))
+                        {
+                            material.shader = CatchEyeShader;
+                        }
+                        else
+                        {
+                            material.shader = CatchShader;
+                        }
                     }
                 }
             }
@@ -192,11 +212,17 @@ public class GameUIController : MonoBehaviour
                 var scale = Vector3.Lerp(Vector3.one, Vector3.zero, _catchProgress);
                 var pos = Vector3.Lerp(orgPos, orgPos+new Vector3(0,3,0),_catchProgress);
 
+                var offset = Vector3.Lerp(Vector3.zero, Vector3.down * 3f, _catchProgress);
+                
+                cam.PositionOffset = (enemy.transform.forward * (enemy.Size*5.0f)) + (Vector3.up*enemy.Height/2.5f) + offset;
+                cam.FocusOffset = (Vector3.up*enemy.Height/2.5f) + offset;
+
                 enemy.transform.localScale = Vector3.Lerp(enemy.transform.localScale, scale, Time.deltaTime * 10f);
                 enemy.transform.position = Vector3.Lerp(enemy.transform.position, pos,Time.deltaTime*10f);
                 foreach (Renderer renderer in enemyRenderers) {
-                    foreach (Material material in renderer.materials) {
-                        material.SetFloat("_CatchProcess", _catchProgress)
+                    foreach (Material material in renderer.materials)
+                    {
+                        material.SetFloat(CatchProgress, _catchProgress);
                     }
                 }
 
@@ -216,7 +242,7 @@ public class GameUIController : MonoBehaviour
             {
                 var captureText = catchFrame.Find("CaptureText") as RectTransform;
 
-                captureText.anchorPosition = captureText.anchorPosition.SetY(400);
+                captureText.anchoredPosition = captureText.anchoredPosition.SetY(400);
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
@@ -236,7 +262,7 @@ public class GameUIController : MonoBehaviour
             {
                 var captureText = catchFrame.Find("FailCaptureText") as RectTransform;
 
-                captureText.anchorPosition = captureText.anchorPosition.SetY(400);
+                captureText.anchoredPosition = captureText.anchoredPosition.SetY(400);
                 captureText.eulerAngles = captureText.eulerAngles.SetZ(0f);
                 captureText.gameObject.SetActive(true);
                 
@@ -264,7 +290,7 @@ public class GameUIController : MonoBehaviour
         StartCoroutine(catchProcess());
     }
     
-    public void Fail()
+    public void Fail(string reason)
     {
         FindFirstObjectByType<PlayerController>().BlockMovement = true;
 
@@ -285,6 +311,10 @@ public class GameUIController : MonoBehaviour
 
             var failText = failFrame.transform.Find("FailText").GetComponent<TMP_Text>();
             failText.color = failText.color.SetAlpha(0);
+            
+            var failReason = failFrame.transform.Find("FailReason").GetComponent<TMP_Text>();
+            failReason.text = reason;
+            failReason.color = failReason.color.SetAlpha(0);
 
 
             var failButton = failFrame.transform.Find("FailButton").GetComponent<Button>();
@@ -292,6 +322,7 @@ public class GameUIController : MonoBehaviour
             
             failFrame.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
             failText.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
+            failReason.DOFade(1, 1.0f).SetEase(Ease.InOutExpo);
 
             yield return new WaitForSeconds(0.75f);
             failButton.onClick.AddListener((() => MatchController._instance.ReturnToHome(true)));

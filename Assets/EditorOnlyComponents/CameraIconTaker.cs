@@ -72,8 +72,17 @@ public class CameraIconTaker : MonoBehaviour
                 {
                     yield return new WaitForEndOfFrame();
                 }
-
-                //clothingObject.Color = clothingObject.Prefab.GetComponentInChildren<Renderer>().sharedMaterial.GetColor("_BaseColor");
+                // clothingObject.Colors.Clear();
+                // var renderers = clothingObject.Prefab.GetComponentsInChildren<Renderer>();
+                // foreach (var renderer1 in renderers)
+                // {
+                //     foreach (var renderer1SharedMaterial in renderer1.sharedMaterials)
+                //     {
+                //         if (renderer1SharedMaterial.HasColor("_BaseColor"))
+                //             clothingObject.Colors.Add(renderer1SharedMaterial.GetColor("_BaseColor"));
+                //     }
+                // }
+                
                 clothingObject.Icon = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/"+ExportPath);
                 
                 EditorUtility.SetDirty(clothingObject);

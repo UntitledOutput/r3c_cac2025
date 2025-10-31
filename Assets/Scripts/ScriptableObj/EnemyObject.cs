@@ -42,7 +42,7 @@ namespace ScriptableObj
 
             if (isMega)
                 rad += MegaDetectionOffset;
-            
+            if (MatchController._instance)
             rad += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) * SvDetectionOffset;
 
             return rad;
@@ -55,6 +55,7 @@ namespace ScriptableObj
             if (isMega)
                 dist += MegaStoppingOffset;
             
+            if (MatchController._instance)
             dist += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) * SvStoppingOffset;
 
             return dist;
@@ -66,7 +67,8 @@ namespace ScriptableObj
             if (isMega)
                 health += MegaHealthOffset;
             
-            health += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) *SvHealthOffset;
+            if (MatchController._instance)
+                health += SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel) *SvHealthOffset;
 
             return health;
         }
@@ -76,9 +78,11 @@ namespace ScriptableObj
 
             if (isMega)
                 mul *= MegaDamageMultiplier;
+            if (MatchController._instance)
+            mul *= (SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel))* SvDamageMultiplier;
 
-            mul *= SeverityCurve.Evaluate((float)MatchController._instance.SeverityLevel/MatchController.MaxSeverityLevel)* SvDamageMultiplier;
-
+            mul = Mathf.Max(mul, 1);
+            
             return mul;
         }
 

@@ -16,13 +16,27 @@ public class FashionNPC : NPCController
         yield return DialogueController.Instance.ShowDialogue("Anyways.. I'll need some clothing scraps to design.", "Gwin");
 
         _homeController.AlignUISection(1);
-
+                
+        _cameraController.FocusOnPlayer = false;
+        
+        var playerPoint = FashionRoom.transform.Find("PlayerSpawn");    
+        _cameraController.FocusPoint = playerPoint;
+        _cameraController.PositionOffset = new Vector3(0, 1.5f, 6.5f);
+        _cameraController.FocusOffset = new Vector3(1, _cameraController.PositionOffset.y, 1.0f);
+        _cameraController.TargetFieldOfView = 45;
+        
         // add ui highlights
 
         yield return DialogueController.Instance.ShowDialogue("I'll design hats, shirts, pants, and shoes for you! Just bring back some clothing scraps.", "Gwin");
         
 
         DataController.saveData.Flags.Add("MetFashi");
+        DataController.saveData.Save();
+        
+
+        
+
+
     }
 
     
@@ -43,13 +57,25 @@ public class FashionNPC : NPCController
         }
 
         var playerPoint = FashionRoom.transform.Find("PlayerSpawn");
-        
-        _cameraController.FocusOnPlayer = false;
+
+        if (!DataController.saveData.Flags.Contains("MetFashi"))
+        {
+            _cameraController.FocusOnPlayer = false;
             
-        _cameraController.FocusPoint = playerPoint;
-        _cameraController.PositionOffset = new Vector3(0, 1.5f, 6.5f);
-        _cameraController.FocusOffset = new Vector3(1, _cameraController.PositionOffset.y, 1.0f);
-        _cameraController.TargetFieldOfView = 45;
+            _cameraController.FocusPoint = transform;
+            _cameraController.PositionOffset = (transform.forward * (Size*9f)) + (Vector3.up*(Height/2.0f)) ;
+            _cameraController.FocusOffset = (Vector3.up*Height/2.0f) + (transform.right * (Size*2f));
+            _cameraController.TargetFieldOfView = 45;
+        }
+        else
+        {
+            _cameraController.FocusOnPlayer = false;
+            
+            _cameraController.FocusPoint = playerPoint;
+            _cameraController.PositionOffset = new Vector3(0, 1.5f, 6.5f);
+            _cameraController.FocusOffset = new Vector3(1, _cameraController.PositionOffset.y, 1.0f);
+            _cameraController.TargetFieldOfView = 45;
+        }
 
         _pos = FindAnyObjectByType<PlayerController>().transform.position;
         FindAnyObjectByType<PlayerController>().transform.position = playerPoint.position;

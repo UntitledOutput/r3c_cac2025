@@ -69,7 +69,11 @@ public class EnemyController : ActorBehavior
         {
             cooldownTimer -= Time.deltaTime;
             if (abilityIndex == -1)
-                abilityIndex = _controller.Abilities.Select((instance => instance.data)).ToList().IndexOf(Ability.ability);
+            {
+                
+                abilityIndex = _controller.Abilities.Select((instance => instance.data)).ToList()
+                    .IndexOf(Ability.ability);
+            }
         }
         
         public EnemyAbilityInstance(EnemyObject.EnemyAbility ability, AbilityController controller)
@@ -163,7 +167,7 @@ public class EnemyController : ActorBehavior
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
         if (_health <= 0 && _isAlive)
         {
@@ -244,9 +248,10 @@ public class EnemyController : ActorBehavior
 
         }
 
-        if (_enemyState == EnemyState.Stunned)
+        if (_enemyState == EnemyState.Stunned )
         {
-            _agent.isStopped = true;
+            if (_agent.enabled)
+                _agent.isStopped = true;
             _slider.gameObject.SetActive(false);
         }
 
@@ -263,6 +268,8 @@ public class EnemyController : ActorBehavior
         _isAlive = false;
         if (_matchController)
             _matchController.DeregisterEnemy(this);
+
+        _agent.enabled = false;
 
         if (!IsMegaEnemy)
         {

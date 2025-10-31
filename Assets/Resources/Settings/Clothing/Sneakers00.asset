@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Sneakers
   Type: 3
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: ec8b238239c16204688ba5a06ebacd45, type: 3}
-  Color: {r: 0.5293338, g: 0.01668743, b: 0.7075471, a: 1}
+  Colors:
+  - {r: 0.5293338, g: 0.01668743, b: 0.7075471, a: 1}
+  - {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
   Prefab: {fileID: 919132149155446097, guid: 99678f9d4920da04588830f4443c507f, type: 3}

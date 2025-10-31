@@ -37,33 +37,51 @@ namespace Controllers
                 if (ChosenAbility < 0)
                     return null;
 
+                if (Abilities.Count <= ChosenAbility)
+                    return null;
+
                 return Abilities[ChosenAbility];
 
             }
         }
 
+        public void SetAbility(int index, AbilityObject abilityObject, AbilityObject.AbilityUpgrade upgrade)
+        {
+            var ability = new AbilityInstance();
+            if (abilityObject)
+            {
+                ability.data = abilityObject;
+                if (upgrade != null)
+                {
+                    ability.upgrade = upgrade;
+                    ability.ammo +=  (ability.upgrade?.AmmoChange ?? 0);
+                }
+
+                ability.ammo += abilityObject.AmmoCount;
+                ability.reload = 1;
+            }
+
+            if (Abilities.Count <= index)
+            {
+                var count = (index - Abilities.Count)+1;
+                for (int i = 0; i < count; i++)
+                {
+                    Abilities.Add(null);
+                }
+            }
+            Abilities[index] = ability;
+        }
+
         public void SetupAbilities(List<AbilityObject> abilityObjects, List<AbilityObject.AbilityUpgrade> upgrades)
         {
             Abilities.Clear();
+            for (int i = 0; i < abilityObjects.Count; i++)
+            {
+                Abilities.Add(null);
+            }
             for (var i = 0; i < abilityObjects.Count; i++)
             {
-                var abilityObject = abilityObjects[i];
-                
-                var ability = new AbilityInstance();
-                if (abilityObject)
-                {
-                    ability.data = abilityObject;
-                    if (upgrades != null)
-                    {
-                        ability.upgrade = upgrades[i];
-                        ability.ammo +=  (ability.upgrade?.AmmoChange ?? 0);
-                    }
-
-                    ability.ammo += abilityObject.AmmoCount;
-                    ability.reload = 1;
-                }
-                
-                Abilities.Add(ability);
+                SetAbility(i, abilityObjects[i], upgrades?[i]);
             }
         }
         
@@ -75,6 +93,8 @@ namespace Controllers
             _actor = GetComponent<ActorBehavior>();
 
             _baseEnemy = GetComponent<EnemyController>();
+
+            var count = 3 - Abilities.Count;
         }
 
         private void Update()
@@ -82,7 +102,7 @@ namespace Controllers
 
             foreach (var abilityInstance in Abilities)
             {
-                if (!abilityInstance.data)
+                if (abilityInstance == null || !abilityInstance.data)
                     continue;
                 if ((abilityInstance.ammo <= 0))
                 {
@@ -131,6 +151,8 @@ namespace Controllers
 
         public bool TryShoot(Vector3 shootPoint)
         {
+            if (_ability == null)
+                return false;
             if (_ability.ammo <= 0)
                 return false;
             _ability.ammo -= 1;

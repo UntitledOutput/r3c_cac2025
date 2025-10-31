@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Hair
   Type: 4
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: 96b5956c6a71c3d45a29aeeac44493c7, type: 3}
-  Color: {r: 0.16981128, g: 0.16981128, b: 0.16981128, a: 1}
+  Colors:
+  - {r: 0.16981128, g: 0.16981128, b: 0.16981128, a: 1}
+  - {r: 0.16981128, g: 0.16981128, b: 0.16981128, a: 1}
   Prefab: {fileID: 919132149155446097, guid: c94ca33b6d11cc446a898cfc5973aa51, type: 3}

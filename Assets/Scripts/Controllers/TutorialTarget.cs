@@ -1,10 +1,19 @@
 
-public TutorialTarget : MonoBehaviour {
+using System;
+using MyBox;
+using UnityEngine;
+using UnityEngine.Animations;
+
+public class TutorialTarget : MonoBehaviour {
 
     private TutorialController _tutorialController;
     public Collider Collider;
 
     public bool Active = false;
+    public bool HideSprite = true;
+    public Type Limit;
+
+    private SpriteRenderer _sprite;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -14,7 +23,13 @@ public TutorialTarget : MonoBehaviour {
     {
         _tutorialController = FindAnyObjectByType<TutorialController>();
         Collider = gameObject.GetOrAddComponent<SphereCollider>();
-        Collider.radius = 1;
+        _sprite = GetComponentInChildren<SpriteRenderer>();
+        
+        var source = new ConstraintSource();
+        source.sourceTransform = Camera.main.transform;
+        source.weight = 1;
+        _sprite.GetComponent<LookAtConstraint>().SetSource(0,source);
+        _sprite.GetComponent<LookAtConstraint>().constraintActive = true;
     }
 
     /// <summary>
@@ -23,6 +38,7 @@ public TutorialTarget : MonoBehaviour {
     void Update()
     {
         Collider.enabled = Active;
+        _sprite.enabled = !HideSprite;
     }
 
     /// <summary>
@@ -32,10 +48,29 @@ public TutorialTarget : MonoBehaviour {
     /// <param name="other">The Collision data associated with this collision.</param>
     void OnCollisionEnter(Collision other)
     {
-        if (Active) {
-            _tutorialController.targetHit = true;
-            Active = false;
+        if (Limit != null)
+        {
+            if (other.gameObject.GetComponent(Limit))
+            {
+                if (Active)
+                {
+                    _tutorialController._targetHit = true;
+                    Active = false;
+                }
+            }
+        }
+        else
+        {
+            if (Active)
+            {
+                _tutorialController._targetHit = true;
+                Active = false;
+            }
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position,1f);
+    }
 }

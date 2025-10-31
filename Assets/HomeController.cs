@@ -138,9 +138,11 @@ public class HomeController : MonoBehaviour
         SetupRecycleFrame();
         
         SoundManager.Instance.SetMusic(Music);
-        
+        LoadingScreenController.LoadingScreen.CloseLoadingScreen();
+        ;
 
-        
+
+
     }
 
     public MusicObject Music;
@@ -258,6 +260,7 @@ public class HomeController : MonoBehaviour
     
     public void SetupPlayFrame()
     {
+        
         _playFrame.RecursiveFind("CoverPhoto").GetComponent<Image>().sprite = DataController.saveData.NextMap.MapCover;
         _playFrame.RecursiveFind("NextMapText").GetComponent<TMP_Text>().text =
             $"Next Map:\n<b>{DataController.saveData.NextMap.MapName}</b>";

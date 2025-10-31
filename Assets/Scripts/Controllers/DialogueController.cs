@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DefaultNamespace;
 using DG.Tweening;
 using External;
 using TMPro;
@@ -45,18 +46,23 @@ public class DialogueController : MonoBehaviour
     private bool _dialogueComplete;
     public IEnumerator ShowDialogue(string text, string name)
     {
+        text = text.Replace("{name}", DataController.saveData.Name);
+        
+        PlayerController.Instance.BlockMovement = true;
         _dialogueComplete = false;
         _dialogueFrame.GetComponent<Button>().enabled = false;
         _dialogueFrame.localScale = Vector3.zero;
         _nameText.text = name;
-        _nameText.color = Color.white;
+        _nameText.color = Color.black;
 
         if (name == "Maddie")
             _nameText.color = BaseUtils.ColorFromHex("#823cab");
         else if (name == "Gwin")
-            _nameText.color = BaseUtils.ColorFromHex("#3cab86")
+            _nameText.color = BaseUtils.ColorFromHex("#3cab86");
+        else if (name == "Bruce")
+            _nameText.color = BaseUtils.ColorFromHex("#4f6cc4");
         else if (name == "???")
-            _nameText.color = BaseUtils.ColorFromHex("#f89f19ff")
+            _nameText.color = BaseUtils.ColorFromHex("#f89f19ff");
 
         _speechText.text = "";
      
@@ -70,7 +76,7 @@ public class DialogueController : MonoBehaviour
         {
             _speechText.text += c;
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 1; i++)
             {
                 yield return null;
             }
@@ -86,6 +92,8 @@ public class DialogueController : MonoBehaviour
         yield return new WaitForSeconds(0.125f);
              
         _dialogueFrame.gameObject.SetActive(false);
+        PlayerController.Instance.BlockMovement = false;
+
     }
 
     public void OnComplete()

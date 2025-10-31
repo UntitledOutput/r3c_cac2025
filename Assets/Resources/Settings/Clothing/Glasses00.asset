@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Glasses
   Type: 0
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: 80ebd9ada948a0a4d8765dd03f909de0, type: 3}
-  Color: {r: 0.33018863, g: 0.33018863, b: 0.33018863, a: 1}
+  Colors:
+  - {r: 0.33018863, g: 0.33018863, b: 0.33018863, a: 1}
+  - {r: 0, g: 0.623761, b: 0.8584906, a: 0.48235294}
   Prefab: {fileID: 919132149155446097, guid: 3989764c59cc73b4db559387082cdb92, type: 3}

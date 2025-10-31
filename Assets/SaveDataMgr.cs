@@ -78,6 +78,14 @@ namespace DefaultNamespace
                 w.Write(Encoding.UTF8.GetBytes(allyRef.PadRight(32, '\0')));
             }
             
+            DataController.saveData.availableClothing.Add(DataController.saveData.HairObject);
+            DataController.saveData.availableClothing.Add(DataController.saveData.HatObject);
+            DataController.saveData.availableClothing.Add(DataController.saveData.ShirtObject);
+            DataController.saveData.availableClothing.Add(DataController.saveData.PantsObject);
+            DataController.saveData.availableClothing.Add(DataController.saveData.ShoesObject);
+
+            DataController.saveData.availableClothing = DataController.saveData.availableClothing.RemoveDuplicates();
+            
             List<string> clothRefs = new List<string>();
             foreach (var saveDataAlly in DataController.saveData.availableClothing)
             {
@@ -171,21 +179,22 @@ namespace DefaultNamespace
                 w.Write((sbyte)enmRefs.IndexOf(enemyObject.name));
             }
             
-            w.Write(Encoding.UTF8.GetBytes(DataController.saveData.NextMap.name));
+            w.Write(Encoding.UTF8.GetBytes(DataController.saveData.NextMap.name.PadRight(16,'\0')));
             
             w.Write((sbyte)DataController.saveData.Flags.Count);
             foreach (var saveDataFlag in DataController.saveData.Flags)
             {
                 w.Write(Encoding.UTF8.GetBytes(saveDataFlag.PadRight(8, '\0')));
             }
-            
+
+#if UNITY_EDITOR
             var path = Application.dataPath + "/data.cacs";
-            File.WriteAllBytes(path, mem.ToArray());
+            File.WriteAllBytes(path, mem.ToArray());  
+#endif
+
             
             PlayerPrefs.SetString("cac_sd",Convert.ToBase64String(mem.ToArray()));
             PlayerPrefs.Save();
-            
-            Debug.Log(path);
         }
 
         public static void Load(string value)
@@ -264,6 +273,8 @@ namespace DefaultNamespace
                 Resources.Load<RoundPreset>($"Settings/RoundPresets/{reader.Data.NextMap}");
 
             DataController.saveData.Flags = reader.Data.Flags;
+
+            DataController.saveData.IsLoaded = true;
 
         }
         

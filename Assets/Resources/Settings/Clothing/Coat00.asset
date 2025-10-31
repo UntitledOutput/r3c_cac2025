@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Lab Coat
   Type: 1
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: 8a92d28d7b6636e48916cb283f414925, type: 3}
-  Color: {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
+  Colors:
+  - {r: 0.9063317, g: 0.9063317, b: 0.9063317, a: 1}
   Prefab: {fileID: 919132149155446097, guid: 91195c82e6c295f4eb09adb945d95cdb, type: 3}

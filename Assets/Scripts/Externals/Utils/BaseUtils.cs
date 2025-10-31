@@ -69,7 +69,9 @@ namespace External
             {
                 var weights = list.Select((element => element.weight)).ToList();
 
-                return list[BaseUtils.WeightedRandom(weights)].value;
+                var i = BaseUtils.WeightedRandom(weights);
+
+                return list[i].value;
             }
 
             [SerializeField] private List<WeightedElement<T>> list;
@@ -239,29 +241,38 @@ namespace External
             return color;
         }
 
+        
+        public static List<T> RemoveDuplicates<T>(this List<T> list)
+        {
+            var duplic = new List<T>();
+
+            foreach (var x1 in list)
+            {
+                if (!duplic.Contains(x1))
+                    duplic.Add(x1);
+            }
+
+            return duplic;
+        }
+        
         public static int WeightedRandom(List<float> chancesList)
         {
             int total = 0;
         
             foreach (float chance in chancesList) {
-                total += (int)(chance * 10000);
+                total += (int)(chance * 10000f);
             }
-        
-            List<float> sortedList = chancesList.OrderBy(o=> o ).ToList();
 
-            System.Random random = new System.Random();
-            float x = ((float)random.Next(0, total))/10000;
-		
-            //Debug.Log(x);
+
+            float x = (Random.Range(0,total))/10000f;
 		
             int j = 0;
             float chances = 0;
 		
             //Debug.Log(x);
 		
-            foreach (float chance in sortedList) {
+            foreach (float chance in chancesList) {
                 chances += chance;
-                //Debug.Log(chances);
                 if (x < chances) {
                     break;
                 }

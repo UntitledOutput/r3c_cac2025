@@ -61,6 +61,8 @@ namespace DefaultNamespace
 
             public List<string> Flags;
 
+            public bool IsLoaded = false;
+            
             public void Save()
             {
                 SaveDataMgr.Save();
@@ -96,7 +98,7 @@ namespace DefaultNamespace
                 SaveDataMgr.Load(PlayerPrefs.GetString("cac_sd"));
             }
 
-    }
+        }
 
         private void Update()
         {

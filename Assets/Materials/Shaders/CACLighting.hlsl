@@ -37,6 +37,7 @@ void CustomLightHandling(CustomLightingData d, Light light, out float3 diffuse, 
     float s  = pow(specularDot, GetSmoothnessPower(d.specular)) * _d;
 
     diffuse += radiance * _d;
+    specular += s;
 }
 
 #endif

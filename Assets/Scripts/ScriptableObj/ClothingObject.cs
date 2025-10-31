@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace ScriptableObj
 {
@@ -19,7 +20,7 @@ namespace ScriptableObj
         public int Cost;
 
         public Sprite Icon;
-        public Color Color;
+        public List<Color> Colors;
         
         public GameObject Prefab;
     }

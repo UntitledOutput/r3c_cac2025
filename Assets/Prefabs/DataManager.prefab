@@ -49,18 +49,16 @@ MonoBehaviour:
     GlassCount: 0
     PlasticCount: 0
     MetalCount: 0
-    GlassBitCount: 10
-    PlasticBitCount: 10
-    MetalBitCount: 10
+    GlassBitCount: 0
+    PlasticBitCount: 0
+    MetalBitCount: 0
+    ClothingScrapCount: 0
     availableUpgrades: []
     availableAbilities:
     - {fileID: 11400000, guid: d8709b4dbbf37d4459f2a780b3d2c5d2, type: 2}
     - {fileID: 11400000, guid: 3b5e673909ca7f044afa5f7ab21eec6c, type: 2}
     - {fileID: 11400000, guid: d4395983d2dd65b47b60b6a15be56d56, type: 2}
-    availableAllies:
-    - ally: {fileID: 11400000, guid: 04ef2d16b1524d04ab4f844464c35e15, type: 2}
-      level: 0
-      levelProgress: 0
+    availableAllies: []
     enemyInventory: []
     allies: []
     abilities:
@@ -68,3 +66,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3b5e673909ca7f044afa5f7ab21eec6c, type: 2}
     - {fileID: 11400000, guid: d4395983d2dd65b47b60b6a15be56d56, type: 2}
     upgrades: []
+    HairObject: {fileID: 11400000, guid: c3c14852205960c4b95652b4cca278d4, type: 2}
+    HatObject: {fileID: 11400000, guid: ad06fc9fa666fb44bb70fb7b756412ec, type: 2}
+    ShirtObject: {fileID: 11400000, guid: 8595bfa32ea613741844fa4b10ee7fef, type: 2}
+    PantsObject: {fileID: 11400000, guid: a5661b0eb09f8024b9faf6560a85d23b, type: 2}
+    ShoesObject: {fileID: 11400000, guid: 7b8e3f7a780424d43aff2d2f2c9a0fbb, type: 2}
+    SkinColor: {r: 1, g: 1, b: 1, a: 0}
+    HairColor: {r: 0, g: 0, b: 0, a: 0}
+    availableClothing: []
+    NextMap: {fileID: 11400000, guid: 14e86a1adefd6db4ca8f07668c5d5ebd, type: 2}
+    Flags: []

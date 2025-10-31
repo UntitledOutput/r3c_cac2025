@@ -1,4 +1,8 @@
 
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
 public class TaskController : MonoBehaviour {
 
     public class TaskReward {
@@ -13,7 +17,7 @@ public class TaskController : MonoBehaviour {
 
         public Sprite icon;
 
-        public List<TaskReward> Rewards;
+        public List<TaskReward> Rewards = new List<TaskReward>();
 
         public void Complete() {
 
@@ -25,12 +29,12 @@ public class TaskController : MonoBehaviour {
         }
     }
 
-    public List<Task> Tasks;
+    public List<Task> Tasks = new List<Task>();
 
     public static TaskController Instance;
 
     public void AddNewTask(Task t) {
-        Tasks.add(t);
+        Tasks.Add(t);
     }  
 
     

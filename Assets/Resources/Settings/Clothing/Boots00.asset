@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.ClothingObject
   Name: Generic Boots
   Type: 3
-  Cost: 0
+  Cost: 10
   Icon: {fileID: 21300000, guid: e079caa8428013841a7e6065da1bd1e9, type: 3}
-  Color: {r: 0.3417625, g: 0.1635899, b: 0, a: 1}
+  Colors:
+  - {r: 0.3417625, g: 0.1635899, b: 0, a: 1}
   Prefab: {fileID: 919132149155446097, guid: f51bbb4e061749d42b507ac6d9bd361a, type: 3}
