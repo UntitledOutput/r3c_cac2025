@@ -22,9 +22,9 @@ MonoBehaviour:
   MegaStoppingOffset: 0
   MegaHealthOffset: 1
   MegaDamageMultiplier: 2.5
-  SvDetectionOffset: 0
+  SvDetectionOffset: 4
   SvStoppingOffset: 0
-  SvHealthOffset: 0
+  SvHealthOffset: 5
   SvDamageMultiplier: 10
   SeverityCurve:
     serializedVersion: 2
@@ -41,8 +41,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0

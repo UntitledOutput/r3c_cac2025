@@ -33,8 +33,8 @@ MonoBehaviour:
   PossibleNextRounds:
     list:
     - value: {fileID: 11400000}
-      weight: 0.375
-    - value: {fileID: 11400000, guid: 14e86a1adefd6db4ca8f07668c5d5ebd, type: 2}
-      weight: 0.25
+      weight: 0.5
     - value: {fileID: 11400000, guid: 9ca23f2e7e0b1ad428887c281be8d726, type: 2}
-      weight: 0.375
+      weight: 0.25
+    - value: {fileID: 11400000, guid: 02c92852f313cde4692a930d2977f814, type: 2}
+      weight: 0.25

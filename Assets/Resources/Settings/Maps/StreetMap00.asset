@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: StreetMap00
   m_EditorClassIdentifier: 
   StartSection: {fileID: 11400000, guid: 81ea9f3074dde0f4f9bce42f75ba428f, type: 2}
-  SectionCount: 3
-  MapCover: {fileID: 21300000, guid: 0b00d07d867e35f4899e8c555c463a89, type: 3}
-  MapName: Alleyway
-  TimeLimitInSeconds: 150
+  TimeLimitInSeconds: 300

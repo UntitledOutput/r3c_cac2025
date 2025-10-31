@@ -262,6 +262,7 @@ public class HomeController : MonoBehaviour
     {
         
         _playFrame.RecursiveFind("CoverPhoto").GetComponent<Image>().sprite = DataController.saveData.NextMap.MapCover;
+        _playFrame.RecursiveFind("SeveritySlider").GetComponent<Slider>().value = DataController.saveData.NextMap.SeverityLevel;
         _playFrame.RecursiveFind("NextMapText").GetComponent<TMP_Text>().text =
             $"Next Map:\n<b>{DataController.saveData.NextMap.MapName}</b>";
     }

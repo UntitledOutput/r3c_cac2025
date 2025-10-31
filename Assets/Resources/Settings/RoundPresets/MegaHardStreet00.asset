@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a5f3ce1e98f846b25c6ff350b35ed, type: 3}
   m_Name: MegaHardStreet00
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableObj.RoundPreset
-  RoundCount: 1
-  SectionCount: 2
+  RoundCount: 2
+  SectionCount: 6
   MapCover: {fileID: 21300000, guid: c530261c213b8f74c9692b11cbc76770, type: 3}
-  MapName: Sketchy Streetside
+  MapName: Weird Streetside
   SeverityLevel: 8
   SmallEnemies:
     list:
@@ -30,3 +30,5 @@ MonoBehaviour:
     list:
     - value: {fileID: 11400000}
       weight: 1
+    - value: {fileID: 11400000, guid: 14e86a1adefd6db4ca8f07668c5d5ebd, type: 2}
+      weight: 0.5

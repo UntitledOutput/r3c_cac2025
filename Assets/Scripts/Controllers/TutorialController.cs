@@ -258,7 +258,7 @@ public class TutorialController : MonoBehaviour {
 
         yield return DialogueController.Instance.ShowDialogue("Incoming transmission....", "???");
 
-        yield return DialogueController.Instance.ShowDialogue("Hey! {name}! You did it!", "???");
+        yield return DialogueController.Instance.ShowDialogue("Hey! You did it!", "???");
         yield return DialogueController.Instance.ShowDialogue(
             "You're a GreenShift employee now! I can't wait to start working with you.", "???");
 

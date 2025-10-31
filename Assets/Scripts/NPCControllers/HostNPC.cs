@@ -10,7 +10,7 @@ public class HostNPC : NPCController
 
     IEnumerator MeetingSequence()
     {
-        yield return DialogueController.Instance.ShowDialogue("{name}! It's you!", "???");
+        yield return DialogueController.Instance.ShowDialogue("It's you!", "???");
         yield return DialogueController.Instance.ShowDialogue("It's Bruce, by the way.", "Bruce");
         yield return DialogueController.Instance.ShowDialogue("Welcome to GreenShift! We're a recycling agency, and we use the trash for better tools, clothing, and more.", "Bruce");
         yield return DialogueController.Instance.ShowDialogue("The main thing you'll be doing is waste collection runs!", "Bruce");

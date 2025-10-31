@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: TestMap00
   m_EditorClassIdentifier: 
   StartSection: {fileID: 11400000, guid: e1970d245796851479f56d507a3466ca, type: 2}
-  SectionCount: 2
-  MapCover: {fileID: 21300000, guid: c530261c213b8f74c9692b11cbc76770, type: 3}
-  MapName: Bright Streetside
-  TimeLimitInSeconds: 150
+  TimeLimitInSeconds: 300
