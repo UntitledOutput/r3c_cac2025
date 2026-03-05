@@ -20,7 +20,7 @@ jobs:
       - name: Build (Linux)
         uses: game-ci/unity-builder@v4
         env:
-          # UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           # If you're using GameCI activation via username/password (not recommended), also set:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
