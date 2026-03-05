@@ -1,0 +1,39 @@
+name: Build Linux (GameCI)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    name: Build Linux Player
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # Builds a Linux standalone player using GameCI's Unity Builder
+      - name: Build (Linux)
+        uses: game-ci/unity-builder@v4
+        env:
+          # UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          # If you're using GameCI activation via username/password (not recommended), also set:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: StandaloneLinux64
+          # If your Unity project is not at repo root, set:
+          # projectPath: path/to/your/unity/project
+          buildName: linux
+          buildsPath: Builds
+
+      # Upload the build artifact (will be a Linux build produced on ubuntu runners)
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-StandaloneLinux64
+          path: Builds
