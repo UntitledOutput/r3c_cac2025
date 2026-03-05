@@ -9,7 +9,7 @@ jobs:
   build-linux:
     name: Build Linux Player
     runs-on: ubuntu-latest
-
+    environment: unity-linux # Specifies the environment
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,6 +30,7 @@ jobs:
           # projectPath: path/to/your/unity/project
           buildName: linux
           buildsPath: Builds
+          unityVersion: 6000.2.9f1
 
       # Upload the build artifact (will be a Linux build produced on ubuntu runners)
       - name: Upload build artifact
